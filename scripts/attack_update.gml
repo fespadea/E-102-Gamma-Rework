@@ -193,7 +193,7 @@ if(attack == AT_FSPECIAL){
 }
 
 //End Nspecial
-if(attack == AT_NSPECIAL){
+if (attack == AT_NSPECIAL){
 	can_shield = true;
 	if(!special_down && get_window_value(AT_NSPECIAL, 1, AG_WINDOW_TYPE) == 9){
 		if (down_down) {
