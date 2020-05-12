@@ -84,8 +84,8 @@ sprite_change_offset("nspecial_swallow_icon", 9, 9);
 sprite_change_offset("fspecial_marked", 40, 31);
 
 //HUD
-sprite_change_offset("dspecial_logo", 1, 23);
-sprite_change_offset("dspecial_bars", 1, 23);
+sprite_change_offset("dspecial_logo", 1, 46);
+sprite_change_offset("dspecial_bars", 1, 46);
 sprite_change_offset("dspecial_cooldown", 0, 0);
 sprite_change_offset("dspecial_charge", 0, 0);
 
