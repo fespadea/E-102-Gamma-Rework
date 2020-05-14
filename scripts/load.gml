@@ -90,4 +90,5 @@ sprite_change_offset("dspecial_cooldown", 0, 0);
 sprite_change_offset("dspecial_charge", 0, 0);
 
 // Kirby
-sprite_change_offset("gamma_nspecial", 115, 132);
+sprite_change_offset("gamma_nspecial", 120, 132);
+sprite_change_offset("Gamma_nspecial_kirby_icon", 0, 6);

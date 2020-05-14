@@ -159,10 +159,11 @@ if(!noPeacock){
 
 //kirby support
 if swallowed {
-	swallowed = 0
+	swallowed = 0;
 	var ability_spr = sprite_get("gamma_nspecial");
 	var ability_proj_spr = sprite_get("dspecial_proj");
-	var ability_hurt = sprite_get("gamma_nspecial_hurt")
+	var ability_hurt = sprite_get("gamma_nspecial_hurt");
+	var ability_icon = sprite_get("Gamma_nspecial_kirby_icon");
     with enemykirby {
 	// NSPECIAL
 	set_attack_value(AT_EXTRA_3, AG_CATEGORY, 2);
@@ -220,5 +221,7 @@ if swallowed {
 	set_hitbox_value(AT_EXTRA_3, 1, HG_VISUAL_EFFECT, 13);
 	set_hitbox_value(AT_EXTRA_3, 1, HG_VISUAL_EFFECT_X_OFFSET, 10);
 	set_hitbox_value(AT_EXTRA_3, 1, HG_VISUAL_EFFECT, 139);
+
+	newicon = ability_icon;
 	}
 }

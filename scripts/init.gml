@@ -103,7 +103,7 @@ bubble_y = 8;
 
 // Kirby Support
 kirbyability = 16;
-swallowed = 1;
+swallowed = 0;
 
 //Projectile variables
 
