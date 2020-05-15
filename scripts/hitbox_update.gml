@@ -99,5 +99,4 @@ if (attack == AT_DSPECIAL && hbox_num == 1) {
             outOfTime = true;
         }
     }
-    
 }
