@@ -92,3 +92,6 @@ sprite_change_offset("dspecial_charge", 0, 0);
 // Kirby
 sprite_change_offset("gamma_nspecial", 120, 132);
 sprite_change_offset("Gamma_nspecial_kirby_icon", 0, 6);
+
+// Feri
+sprite_change_offset("feri_costume_gamma", 84, 114);

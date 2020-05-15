@@ -101,10 +101,6 @@ air_dodge_sound = asset_get("sfx_quick_dodge");
 bubble_x = 0;
 bubble_y = 8;
 
-// Kirby Support
-kirbyability = 16;
-swallowed = 0;
-
 //Projectile variables
 
 //mines
@@ -163,3 +159,22 @@ playingFSpecialSFX = false;
 //VFX
 rocketHitVFX = hit_fx_create(sprite_get("fspecial_proj_hit"), 14);
 rocketMarked = sprite_get("fspecial_marked");
+
+// Support stuff
+
+// Kirby Support
+kirbyability = 16;
+swallowed = 0;
+
+// TCO Support
+tcoart = sprite_get("tcoartGamma");
+
+// Feri Support
+feri_costume = sprite_get("feri_costume_gamma");
+
+// Trummel and Alto Support
+trummelcodecneeded = false;
+trummelcodec_id = noone;
+
+// Otto Bobblehead Support
+otto_bobblehead_sprite = sprite_get("hudbobbleheadgamma");

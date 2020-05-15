@@ -225,3 +225,32 @@ if swallowed {
 	newicon = ability_icon;
 	}
 }
+
+// Trummel and Alto Support
+if trummelcodecneeded{
+    trummelcodec = 17;
+    trummelcodecmax = 1;
+    trummelcodecsprite1 = sprite_get("idle");
+    trummelcodecsprite2 = sprite_get("idle");
+    var page = 0;
+
+    //Page 0
+    trummelcodecspeaker[page] = 1;
+    trummelcodecexpression[page] = 2;
+
+    trummelcodecline[page,1] = "IS that E-102 Gamma? I";
+    trummelcodecline[page,2] = "thought he was dead.";
+    trummelcodecline[page,3] = "";
+    trummelcodecline[page,4] = "";
+    page++; 
+
+    //Page 1
+    trummelcodecspeaker[page] = 0;
+    trummelcodecexpression[page] = 0;
+
+    trummelcodecline[page,1] = "Yup";
+    trummelcodecline[page,2] = "";
+    trummelcodecline[page,3] = "";
+    trummelcodecline[page,4] = "";
+    page++;
+}
