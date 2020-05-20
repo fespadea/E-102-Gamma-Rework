@@ -12,30 +12,30 @@ jump_anim_speed = .25;
 doublejump_anim_speed = .25;
 pratfall_anim_speed = .25;
 
-walk_speed = 3.25;
-walk_accel = 0.25;
-walk_turn_time = 6;
-initial_dash_time = 10;
+walk_speed = 2.75;
+walk_accel = 0.15;
+walk_turn_time = 16;
+initial_dash_time = 8;
 initial_dash_speed = 7.5;
-dash_speed = 7;
-dash_turn_time = 10;
-dash_turn_accel = 1.75;
+dash_speed = 8.2;
+dash_turn_time = 6;
+dash_turn_accel = 1.25;
 dash_stop_time = 4;
 dash_stop_percent = .35; //the value to multiply your hsp by when going into idle from dash or dashstop
-ground_friction = .6;
+ground_friction = .95;
 moonwalk_accel = 1.6;
 
-jump_start_time = 5;
-jump_speed = 10.5;
-short_hop_speed = 6;
+jump_start_time = 6;
+jump_speed = 11;
+short_hop_speed = 7;
 djump_speed = 10;
 leave_ground_max = 7; //the maximum hsp you can have when you go from grounded to aerial without jumping
 max_jump_hsp = 6; //the maximum hsp you can have when jumping from the ground
-air_max_speed = 4; //the maximum hsp you can accelerate to when in a normal aerial state
+air_max_speed = 6; //the maximum hsp you can accelerate to when in a normal aerial state
 jump_change = 3; //maximum hsp when double jumping. If already going faster, it will not slow you down
-air_accel = .3;
-prat_fall_accel = .85; //multiplier of air_accel while in pratfall
-air_friction = .04;
+air_accel = .165;
+prat_fall_accel = 1; //multiplier of air_accel while in pratfall
+air_friction = .07;
 max_djumps = 1;
 double_jump_time = 32; //the number of frames to play the djump animation. Can't be less than 31.
 walljump_hsp = 7;
@@ -45,13 +45,13 @@ max_fall = 10; //maximum fall speed without fastfalling
 fast_fall = 14; //fast fall speed
 gravity_speed = .5;
 hitstun_grav = .5;
-knockback_adj = 1.1; //the multiplier to KB dealt to you. 1 = default, >1 = lighter, <1 = heavier
+knockback_adj = 1.07; //the multiplier to KB dealt to you. 1 = default, >1 = lighter, <1 = heavier
 
 //>
 
-land_time = 4; //normal landing frames
-prat_land_time = 10;
-wave_land_time = 8;
+land_time = 5; //normal landing frames
+prat_land_time = 15;
+wave_land_time = 7;
 wave_land_adj = 1.2; //the multiplier to your initial hsp when wavelanding. Usually greater than 1
 wave_friction = .12; //grounded deceleration when wavelanding
 
@@ -73,13 +73,13 @@ tech_recovery_frames = 2;
 techroll_startup_frames = 2
 techroll_active_frames = 2;
 techroll_recovery_frames = 2;
-techroll_speed = 9;
+techroll_speed = 8;
 
 //airdodge animation frames
 air_dodge_startup_frames = 1;
 air_dodge_active_frames = 1;
 air_dodge_recovery_frames = 2;
-air_dodge_speed = 7.5;
+air_dodge_speed = 6.5;
 
 //roll animation frames
 roll_forward_startup_frames = 2;
@@ -88,8 +88,8 @@ roll_forward_recovery_frames = 2;
 roll_back_startup_frames = 2;
 roll_back_active_frames = 4;
 roll_back_recovery_frames = 2;
-roll_forward_max = 10; //roll speed
-roll_backward_max = 10;
+roll_forward_max = 7.5; //roll speed
+roll_backward_max = 7.5;
 
 land_sound = sound_get("Gamma_Land");
 landing_lag_sound = sound_get("Gamma_Land");
