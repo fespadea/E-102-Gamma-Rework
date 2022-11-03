@@ -55,7 +55,6 @@ sprite_change_offset("fspecial_air", 134, 152);
 sprite_change_offset("fspecial_air_float_hurt", 134, 152);
 sprite_change_offset("jetpack", 134, 152);
 sprite_change_offset("uspecial", 128, 158);
-//sprite_change_offset("dspecial", 139, 168); old dspecial
 sprite_change_offset("taunt", 118, 170);
 
 sprite_change_offset("plat", 83, 3);
