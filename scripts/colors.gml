@@ -2,40 +2,39 @@
 
 // Main Bright
 set_color_profile_slot( 0, 0, 248, 32, 0 );
-set_color_profile_slot_range(0, 1, 1, 4);
+set_color_profile_slot_range( 0, 1, 1, 1 );
 
 // Main Dark
 set_color_profile_slot( 0, 1, 160, 0, 0 );
-set_color_profile_slot_range(1, 1, 1, 26);
+set_color_profile_slot_range( 1, 1, 1, 1 );
 
-// Don't know
+// Main Brighter
 set_color_profile_slot( 0, 2, 248, 152, 136 );
-set_color_profile_slot_range(2, 1, 1, 4);
+set_color_profile_slot_range( 2, 1, 1, 1 );
 
 // Accessory Bright
 set_color_profile_slot( 0, 3, 248, 200, 56 );
-set_color_profile_slot_range(3, 4, 34, 4);
+set_color_profile_slot_range( 3, 1, 1, 1 );
 
 // Accessory Dark
 set_color_profile_slot( 0, 4, 232, 136, 24 );
-set_color_profile_slot_range(4, 5, 7, 32);
+set_color_profile_slot_range( 4, 1, 1, 1 );
 
 // Eyes
 set_color_profile_slot( 0, 5, 56, 192, 0 );
-set_color_profile_slot_range(5, 1, 1, 3);
+set_color_profile_slot_range( 5, 1, 1, 1 );
 
 // Metal Shine
 set_color_profile_slot( 0, 6, 248, 248, 248 );
-set_color_profile_slot_range(6, 0, 0, 0);
+set_color_profile_slot_range( 6, 1, 1, 1 );
 
 // Metal
 set_color_profile_slot( 0, 7, 184, 184, 184 );
-set_color_profile_slot_range(7, 1, 1, 26);
-
+set_color_profile_slot_range( 7, 1, 1, 1 );
 
 
 // ALTERNATE COLORS
-set_num_palettes( 16 );
+set_num_palettes( 21 );
 
 // E-101 Beta
 set_color_profile_slot( 1, 0, 62, 62, 62 ); //Main Bright
@@ -145,7 +144,7 @@ set_color_profile_slot( 11, 3, 178, 80, 141 ); //Accessory Bright
 set_color_profile_slot( 11, 4, 118, 62, 109 ); //Accessory Dark
 set_color_profile_slot( 11, 5, 56, 192, 0 ); //Eyes
 set_color_profile_slot( 11, 6, 239, 246, 252 ); //Metal Shine
-set_color_profile_slot( 11, 7, 222, 232, 244 ); //Metal
+set_color_profile_slot( 11, 7, 184, 184, 184 ); //Metal
 
 // E-121 Phi
 set_color_profile_slot( 12, 0, 111, 111, 111 ); //Main Bright
@@ -187,8 +186,58 @@ set_color_profile_slot( 15, 5, 56, 192, 0 ); //Eyes
 set_color_profile_slot( 15, 6, 248, 248, 248 ); //Metal Shine
 set_color_profile_slot( 15, 7, 184, 184, 184 ); //Metal
 
+// Abyss
+set_color_profile_slot( 16, 0, 116, 94, 135 ); //Main Bright
+set_color_profile_slot( 16, 1, 111, 127, 188 ); //Main Dark
+set_color_profile_slot( 16, 2, 79, 61, 94 ); //Main Brighter
+set_color_profile_slot( 16, 3, 79, 61, 94 ); //Accessory Bright
+set_color_profile_slot( 16, 4, 224, 222, 220 ); //Accessory Dark
+set_color_profile_slot( 16, 5, 191, 178, 181 ); //Eyes
+set_color_profile_slot( 16, 6, 220, 113, 255 ); //Metal Shine
+set_color_profile_slot( 16, 7, 166, 172, 214 ); //Metal
 
-/* This is used by that one RoA colors.gml generator tool to store palette data
+// Early Access
+set_color_profile_slot( 17, 0, 83, 122, 62 ); //Main Bright
+set_color_profile_slot( 17, 1, 211, 226, 154 ); //Main Dark
+set_color_profile_slot( 17, 2, 167, 186, 74 ); //Main Brighter
+set_color_profile_slot( 17, 3, 83, 122, 62 ); //Accessory Bright
+set_color_profile_slot( 17, 4, 211, 226, 154 ); //Accessory Dark
+set_color_profile_slot( 17, 5, 211, 226, 154 ); //Eyes
+set_color_profile_slot( 17, 6, 83, 122, 62 ); //Metal Shine
+set_color_profile_slot( 17, 7, 167, 186, 74 ); //Metal
+
+// Wireframe
+set_color_profile_slot( 18, 0, 0, 255, 0 ); //Main Bright
+set_color_profile_slot( 18, 1, 0, 255, 0 ); //Main Dark
+set_color_profile_slot( 18, 2, 0, 255, 0 ); //Main Brighter
+set_color_profile_slot( 18, 3, 0, 255, 0 ); //Accessory Bright
+set_color_profile_slot( 18, 4, 0, 255, 0 ); //Accessory Dark
+set_color_profile_slot( 18, 5, 0, 255, 0 ); //Eyes
+set_color_profile_slot( 18, 6, 0, 255, 0 ); //Metal Shine
+set_color_profile_slot( 18, 7, 0, 255, 0 ); //Metal
+
+// Rainbow
+set_color_profile_slot( 19, 0, 248, 32, 0 ); //Main Bright
+set_color_profile_slot( 19, 1, 160, 0, 0 ); //Main Dark
+set_color_profile_slot( 19, 2, 248, 152, 136 ); //Main Brighter
+set_color_profile_slot( 19, 3, 248, 200, 56 ); //Accessory Bright
+set_color_profile_slot( 19, 4, 232, 136, 24 ); //Accessory Dark
+set_color_profile_slot( 19, 5, 56, 192, 0 ); //Eyes
+set_color_profile_slot( 19, 6, 248, 248, 248 ); //Metal Shine
+set_color_profile_slot( 19, 7, 184, 184, 184 ); //Metal
+
+// Random
+set_color_profile_slot( 20, 0, 255, 255, 255 ); //Main Bright
+set_color_profile_slot( 20, 1, 255, 255, 255 ); //Main Dark
+set_color_profile_slot( 20, 2, 255, 255, 255 ); //Main Brighter
+set_color_profile_slot( 20, 3, 255, 255, 255 ); //Accessory Bright
+set_color_profile_slot( 20, 4, 255, 255, 255 ); //Accessory Dark
+set_color_profile_slot( 20, 5, 255, 255, 255 ); //Eyes
+set_color_profile_slot( 20, 6, 255, 255, 255 ); //Metal Shine
+set_color_profile_slot( 20, 7, 255, 255, 255 ); //Metal
+
+
+/* This is a comment used by that one RoA colors.gml generator tool to store palette data. You can safely keep it in your colors.gml if you plan to re-use the tool later, or safely remove it if you don't.
 === BEGIN JSON PALETTE ===
 {"formatversion":1,"data":[{"name":"Main Bright","colors":[{"r":"248","g":"32","b":"0","main":true}]},{"name":"Main Dark","colors":[{"r":"160","g":"0","b":"0","main":true}]},{"name":"Main Brighter","colors":[{"r":"248","g":"152","b":"136","main":true}]},{"name":"Accessory Bright","colors":[{"r":"248","g":"200","b":"56","main":true}]},{"name":"Accessory Dark","colors":[{"r":"232","g":"136","b":"24","main":true}]},{"name":"Eyes","colors":[{"r":"56","g":"192","b":"0","main":true}]},{"name":"Metal Shine","colors":[{"r":"248","g":"248","b":"248","main":true}]},{"name":"Metal","colors":[{"r":"184","g":"184","b":"184","main":true}]}]}
 === END JSON PALETTE ===

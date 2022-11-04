@@ -8,7 +8,7 @@ sprite_change_offset("bighurt", 42, 74);
 sprite_change_offset("crouch", 135, 170);
 sprite_change_offset("walk", 132, 169);
 sprite_change_offset("walkloop", 132, 169);
-sprite_change_offset("walkturn", 124, 161);
+sprite_change_offset("walkturn", 124, 166);
 sprite_change_offset("dash", 132, 146);
 sprite_change_offset("dashstart", 132, 155);
 sprite_change_offset("dashstop", 132, 151);
@@ -17,7 +17,7 @@ sprite_change_offset("Gamma_hurt", 128, 160);
 sprite_change_offset("crouch_hurtbox", 135, 170);
 sprite_change_offset("air_hurtbox", 128, 158);
 
-sprite_change_offset("jumpstart", 128, 158);
+sprite_change_offset("jumpstart", 135, 170);
 sprite_change_offset("jump", 128, 158);
 sprite_change_offset("doublejump", 128, 158);
 sprite_change_offset("fall", 123, 145);

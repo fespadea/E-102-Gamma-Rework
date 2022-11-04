@@ -26,7 +26,7 @@ if (attack == AT_DSPECIAL) {
 //Rapid Jab
 if attack == AT_JAB{
 	if(attack_down)
-		set_window_value(AT_JAB, 6, AG_WINDOW_TYPE, 9);
+		set_window_value(AT_JAB, 7, AG_WINDOW_TYPE, 9);
 	if(window == get_attack_value(AT_JAB, AG_NUM_WINDOWS)-1 && !playingJabSFX){
 		sound_play(sound_get("GammaElectricity2"), true);
 		playingJabSFX = true;
@@ -52,7 +52,7 @@ if (attack == AT_FTILT && (attack_down || (spr_dir == 1 && right_stick_down) || 
 if !attack_down{
 	if(!(spr_dir == 1 && right_stick_down) && !(spr_dir == -1 && left_stick_down))
 		set_window_value(AT_FTILT, 2, AG_WINDOW_TYPE, 1);
-	set_window_value(AT_JAB, 6, AG_WINDOW_TYPE, 1);
+	set_window_value(AT_JAB, 7, AG_WINDOW_TYPE, 1);
 	if(!down_strong_down && !strong_down && !down_stick_down)
 		set_window_value(AT_DAIR, 2, AG_WINDOW_TYPE, 1);
 }
