@@ -123,12 +123,10 @@ xDistanceToTargetPoint = 16;
 yDistanceToTargetPoint = 5;
 distanceToTargetPoint = sqrt(xDistanceToTargetPoint*xDistanceToTargetPoint + yDistanceToTargetPoint*yDistanceToTargetPoint);
 angleToTargetPoint = arctan(yDistanceToTargetPoint/xDistanceToTargetPoint);
-markedPlayers[3] = 0; //this spot is never filled since only 3 other players can be in a game
-markedPlayers[2] = 0;
-markedPlayers[1] = 0;
-markedPlayers[0] = 0;
+markedPlayers = [];
 rocketsShot = 0;
 activeRockets = false;
+targetConfirmedSound = sound_get("TargetConfirmed");
 
 //birds
 noSwallow = true;
@@ -159,6 +157,73 @@ playingFSpecialSFX = false;
 //VFX
 rocketHitVFX = hit_fx_create(sprite_get("fspecial_proj_hit"), 14);
 rocketMarked = sprite_get("fspecial_marked");
+rocketFollowerVFX = hit_fx_create(sprite_get("fspecial_proj_follower"), 18);
+
+//Various sprites (I made these all at once when I realized I shouldn't be calling sprite_get in repeating scripts)
+floatSprite = sprite_get("float");
+fallSprite = sprite_get("fall");
+walkLoopSprite = sprite_get("walkloop");
+upHurtSprite = sprite_get("uphurt");
+bounceHurtSprite = sprite_get("bouncehurt");
+fspecialAirFloatHurtSprite = sprite_get("fspecial_air_float_hurt");
+dspecialBarsSprite = sprite_get("dspecial_bars");
+dspecialCooldownSprite = sprite_get("dspecial_cooldown");
+dspecialChargeSprite = sprite_get("dspecial_charge");
+dspecialLogoSprite = sprite_get("dspecial_logo");
+dspecialProjGround = sprite_get("dspecial_proj_ground");
+fspecialTargetingSprite = sprite_get("fspecial_targeting");
+fspecialLaser = sprite_get("fspecial_laser");
+fspecialLaserOld = sprite_get("fspecial_laser_old");
+nspecialPeacockIconSprite = sprite_get("nspecial_peacock_icon");
+nspecialSwallowIconSprite = sprite_get("nspecial_swallow_icon");
+nspecialParrotIconSprite = sprite_get("nspecial_parrot_icon");
+nspecialFlickyIconSprite = sprite_get("nspecial_flicky_icon");
+jetpackSprite = sprite_get("jetpack");
+gammaNspecialSprite = sprite_get("gamma_nspecial");
+gammaNspecialHurtSprite = sprite_get("gamma_nspecial_hurt");
+gammaNspecialKirbyIcon = sprite_get("Gamma_nspecial_kirby_icon");
+idleSprite = sprite_get("idle");
+nspecialFlickySprite = sprite_get("nspecial_flicky");
+
+//Various sounds (I made these all at once when I realized I shouldn't be calling sound_get in repeating scripts)
+gammaElectricity2Sound = sound_get("GammaElectricity2");
+gammaElectricitySound = sound_get("GammaElectricity");
+targeting2Sound = sound_get("targeting2");
+birdZetaSound = sound_get("BirdZeta");
+birdEpsilonSound = sound_get("BirdEpsilon");
+birdDeltaSound = sound_get("BirdDelta");
+birdBetaSound = sound_get("BirdBeta");
+
+// Alt stuff
+
+/*
+These are the variables to decide which bits of the synced variable you want to dedicate
+to allowing more alts (from bit 0 to 31). These should match what you put in css_init.gml.
+[Edit necessary]
+*/
+FIRST_BIT_UNLIMITED = 0;
+LAST_BIT_UNLIMITED = 31;
+
+// the currently selected unlimited alt
+unlimitedAlt = split_synced_var(FIRST_BIT_UNLIMITED, LAST_BIT_UNLIMITED-FIRST_BIT_UNLIMITED+1, 31-LAST_BIT_UNLIMITED)[1];
+
+// [Random alt on hit feature]
+randomAltOnHit = false; // holds whether this feature has been activated
+
+// Variable to hold the number of alts [Edit necessary]
+NUM_UNLIMITED_ALTS = 40;
+
+// [Random Alt]
+// Check if the random alt is selected
+randomSelected = false;
+if(unlimitedAlt == NUM_UNLIMITED_ALTS-1){ // This means the next alt isn't set which means this is the last alt
+    updateUnlimitedAlt(random_func(0, unlimitedAlt, true), false);
+    randomSelected = true;
+}
+
+// taunt sfx
+normalTauntSfx = sound_get("haha");
+EggBreakerTauntSfx = sound_get("MoreTheMerrier");
 
 // Support stuff
 
@@ -181,3 +246,30 @@ otto_bobblehead_sprite = sprite_get("hudbobbleheadgamma");
 
 // Hikaru Support
 Hikaru_Title = "E-Series";
+
+
+
+#define updateUnlimitedAlt
+unlimitedAlt = argument[0];
+var syncedVar = get_synced_var(player);
+var newSyncedVar = 0;
+newSyncedVar += syncedVar >> (LAST_BIT_UNLIMITED+1) << (LAST_BIT_UNLIMITED+1);
+newSyncedVar += (unlimitedAlt & ((1 << (LAST_BIT_UNLIMITED-FIRST_BIT_UNLIMITED+1))-1)) << FIRST_BIT_UNLIMITED;
+newSyncedVar += syncedVar & ((1 << (FIRST_BIT_UNLIMITED))-1);
+set_synced_var(player, newSyncedVar);
+
+#define split_synced_var
+///args chunk_lengths...
+var num_chunks = argument_count;
+var chunk_arr = array_create(argument_count);
+var synced_var = get_synced_var(player);
+var chunk_offset = 0
+for (var i = 0; i < num_chunks; i++) {
+    var chunk_len = argument[i]; //print(chunk_len);
+    var chunk_mask = (1 << chunk_len)-1
+    chunk_arr[i] = (synced_var >> chunk_offset) & chunk_mask;
+    //print(`matching shift = ${chunk_len}`);
+    chunk_offset += chunk_len;
+}
+// print(chunk_arr);
+return chunk_arr;

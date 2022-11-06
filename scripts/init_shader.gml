@@ -5,9 +5,9 @@
 
 // Special Alts
 // #macro RANDOM_ALT 33 (I've decided to always just make Random the last alt)
-#macro EA_ALT 17
-#macro RAINBOW_ALT 18
-#macro WIREFRAME_ALT 19
+#macro EA_ALT 36
+#macro RAINBOW_ALT 37
+#macro WIREFRAME_ALT 38
 
 /*
 I don't want this to break on the SSS, and I think checking if you're on the SSS would be more 

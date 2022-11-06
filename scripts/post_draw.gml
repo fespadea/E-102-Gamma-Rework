@@ -11,7 +11,7 @@ if(attack == AT_FSPECIAL && (state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR
     }
     if(window == 1){
         if(image_index > 0){
-            draw_sprite_ext(sprite_get("fspecial_targeting"), image_index-1, targeterBaseX, targeterBaseY, spr_dir, 1, 0, -1, 1);
+            draw_sprite_ext(fspecialTargetingSprite, image_index-1, targeterBaseX, targeterBaseY, spr_dir, 1, 0, -1, 1);
         }
         targeterDir = spr_dir;
     } else if (window == 2){
@@ -61,16 +61,16 @@ if(attack == AT_FSPECIAL && (state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR
         if(lengthLaser == 0 && !(laserX > LEFT_MAIN_STAGE_X_POS && laserX < RIGHT_MAIN_STAGE_X_POS && laserY > TOP_MAIN_STAGE_Y_POS)){
             lengthLaser = 1000;
         }
-        draw_sprite_ext(sprite_get("fspecial_targeting"), 3, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
+        draw_sprite_ext(fspecialTargetingSprite, 3, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
         if(state_timer < 100)
-            draw_sprite_ext(sprite_get("fspecial_laser"), 0, laserX, laserY, targeterDir*lengthLaser, 1, targeterRotation, -1, 0.3);
+            draw_sprite_ext(fspecialLaser, 0, laserX, laserY, targeterDir*lengthLaser, 1, targeterRotation, -1, 0.3);
         else
-            draw_sprite_ext(sprite_get("fspecial_laser_old"), 0, laserX, laserY, targeterDir*lengthLaser, 1, targeterRotation, -1, 0.3-(state_timer-100)/100);
+            draw_sprite_ext(fspecialLaserOld, 0, laserX, laserY, targeterDir*lengthLaser, 1, targeterRotation, -1, 0.3-(state_timer-100)/100);
     } else {
         if(image_index < 10){
-        draw_sprite_ext(sprite_get("fspecial_targeting"), 3, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
+        draw_sprite_ext(fspecialTargetingSprite, 3, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
         } else if(image_index < 13){
-        draw_sprite_ext(sprite_get("fspecial_targeting"), 12 - image_index, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
+        draw_sprite_ext(fspecialTargetingSprite, 12 - image_index, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
         }
     }
 }
@@ -78,41 +78,41 @@ if(attack == AT_FSPECIAL && (state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR
 //Bird overlay for nspecial
 if(attack == AT_NSPECIAL && special_down && (state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR)){
     if(!noPeacock){
-        draw_sprite_ext(sprite_get("nspecial_peacock_icon"), 0, x+10, y-10, 1, 1, 0, c_gray, .7);
-        draw_sprite_ext(sprite_get("nspecial_peacock_icon"), 0, x-10, y-10, -1, 1, 0, c_gray, .7);
+        draw_sprite_ext(nspecialPeacockIconSprite, 0, x+10, y-10, 1, 1, 0, c_gray, .7);
+        draw_sprite_ext(nspecialPeacockIconSprite, 0, x-10, y-10, -1, 1, 0, c_gray, .7);
     } else if(down_down && ((spr_dir == 1 && !left_down) || (spr_dir == -1 && right_down))){
-        draw_sprite_ext(sprite_get("nspecial_peacock_icon"), 0, x+10, y-10, 1, 1, 0, -1, 1);
-        draw_sprite_ext(sprite_get("nspecial_peacock_icon"), 0, x-10, y-10, -1, 1, 0, -1, .7);
+        draw_sprite_ext(nspecialPeacockIconSprite, 0, x+10, y-10, 1, 1, 0, -1, 1);
+        draw_sprite_ext(nspecialPeacockIconSprite, 0, x-10, y-10, -1, 1, 0, -1, .7);
     } else if(down_down && ((spr_dir == 1 && left_down) || (spr_dir == -1 && !right_down))){
-        draw_sprite_ext(sprite_get("nspecial_peacock_icon"), 0, x+10, y-10, 1, 1, 0, -1, .7);
-        draw_sprite_ext(sprite_get("nspecial_peacock_icon"), 0, x-10, y-10, -1, 1, 0, -1, 1);
+        draw_sprite_ext(nspecialPeacockIconSprite, 0, x+10, y-10, 1, 1, 0, -1, .7);
+        draw_sprite_ext(nspecialPeacockIconSprite, 0, x-10, y-10, -1, 1, 0, -1, 1);
     } else {
-        draw_sprite_ext(sprite_get("nspecial_peacock_icon"), 0, x+10, y-10, 1, 1, 0, -1, .7);
-        draw_sprite_ext(sprite_get("nspecial_peacock_icon"), 0, x-10, y-10, -1, 1, 0, -1, .7);
+        draw_sprite_ext(nspecialPeacockIconSprite, 0, x+10, y-10, 1, 1, 0, -1, .7);
+        draw_sprite_ext(nspecialPeacockIconSprite, 0, x-10, y-10, -1, 1, 0, -1, .7);
     }
     if(!noSwallow){
-        draw_sprite_ext(sprite_get("nspecial_swallow_icon"), 0, x+40, y-40, 1, 1, 0, c_gray, .7);
-        draw_sprite_ext(sprite_get("nspecial_swallow_icon"), 0, x-40, y-40, -1, 1, 0, c_gray, .7);
+        draw_sprite_ext(nspecialSwallowIconSprite, 0, x+40, y-40, 1, 1, 0, c_gray, .7);
+        draw_sprite_ext(nspecialSwallowIconSprite, 0, x-40, y-40, -1, 1, 0, c_gray, .7);
     } else if(right_down && !down_down){
-        draw_sprite_ext(sprite_get("nspecial_swallow_icon"), 0, x+40, y-40, 1, 1, 0, -1, 1);
-        draw_sprite_ext(sprite_get("nspecial_swallow_icon"), 0, x-40, y-40, -1, 1, 0, -1, .7);
+        draw_sprite_ext(nspecialSwallowIconSprite, 0, x+40, y-40, 1, 1, 0, -1, 1);
+        draw_sprite_ext(nspecialSwallowIconSprite, 0, x-40, y-40, -1, 1, 0, -1, .7);
     } else if(left_down && !down_down){
-        draw_sprite_ext(sprite_get("nspecial_swallow_icon"), 0, x+40, y-40, 1, 1, 0, -1, .7);
-        draw_sprite_ext(sprite_get("nspecial_swallow_icon"), 0, x-40, y-40, -1, 1, 0, -1, 1);
+        draw_sprite_ext(nspecialSwallowIconSprite, 0, x+40, y-40, 1, 1, 0, -1, .7);
+        draw_sprite_ext(nspecialSwallowIconSprite, 0, x-40, y-40, -1, 1, 0, -1, 1);
     } else {
-        draw_sprite_ext(sprite_get("nspecial_swallow_icon"), 0, x+40, y-40, 1, 1, 0, -1, .7);
-        draw_sprite_ext(sprite_get("nspecial_swallow_icon"), 0, x-40, y-40, -1, 1, 0, -1, .7);
+        draw_sprite_ext(nspecialSwallowIconSprite, 0, x+40, y-40, 1, 1, 0, -1, .7);
+        draw_sprite_ext(nspecialSwallowIconSprite, 0, x-40, y-40, -1, 1, 0, -1, .7);
     }
     if(!noParrot)
-        draw_sprite_ext(sprite_get("nspecial_parrot_icon"), 0, x, y-90, 1, 1, 0, c_gray, .9);
+        draw_sprite_ext(nspecialParrotIconSprite, 0, x, y-90, 1, 1, 0, c_gray, .9);
     else if(up_down && !right_down && !left_down && !down_down)
-        draw_sprite_ext(sprite_get("nspecial_parrot_icon"), 0, x, y-90, 1, 1, 0,  -1, 1);
+        draw_sprite_ext(nspecialParrotIconSprite, 0, x, y-90, 1, 1, 0,  -1, 1);
     else
-        draw_sprite_ext(sprite_get("nspecial_parrot_icon"), 0, x, y-90, 1, 1, 0, -1, .7);
+        draw_sprite_ext(nspecialParrotIconSprite, 0, x, y-90, 1, 1, 0, -1, .7);
     if(!noFlicky)
-        draw_sprite_ext(sprite_get("nspecial_flicky_icon"), 0, x, y-char_height/2, spr_dir, 1, 0, c_gray, .9);
+        draw_sprite_ext(nspecialFlickyIconSprite, 0, x, y-char_height/2, spr_dir, 1, 0, c_gray, .9);
     else if(joy_pad_idle)
-        draw_sprite_ext(sprite_get("nspecial_flicky_icon"), 0, x, y-char_height/2, spr_dir, 1, 0,  -1, 1);
+        draw_sprite_ext(nspecialFlickyIconSprite, 0, x, y-char_height/2, spr_dir, 1, 0,  -1, 1);
     else
-        draw_sprite_ext(sprite_get("nspecial_flicky_icon"), 0, x, y-char_height/2, spr_dir, 1, 0, -1, .7);
+        draw_sprite_ext(nspecialFlickyIconSprite, 0, x, y-char_height/2, spr_dir, 1, 0, -1, .7);
 }

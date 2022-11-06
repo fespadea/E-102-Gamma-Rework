@@ -1,6 +1,6 @@
 //article1_init
 
-sprite_index = sprite_get("nspecial_flicky");
+sprite_index = player_id.nspecialFlickySprite;
 image_index = 0;
 spr_dir = player_id.spr_dir;
 

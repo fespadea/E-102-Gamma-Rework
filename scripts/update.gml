@@ -19,21 +19,21 @@ if (state == PS_HITSTUN || state_cat == SC_GROUND_NEUTRAL || state_cat == SC_GRO
 
 
 if attack != AT_USPECIAL || state != PS_ATTACK_AIR {
-	sound_stop(sound_get("GammaFan"));
+	sound_stop(gammaFanSound);
 }
 
 if (playingJabSFX && !(attack == AT_JAB && window == get_attack_value( AT_JAB, AG_NUM_WINDOWS)-1)){
-	sound_stop(sound_get("GammaElectricity2"));
+	sound_stop(gammaElectricity2Sound);
 	playingJabSFX = false;
 }
 
 if (!(state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR) || (!(attack == AT_UAIR && window == get_attack_value( AT_UAIR, AG_NUM_WINDOWS)-1) && !(attack == AT_USTRONG && window == get_attack_value( AT_USTRONG, AG_NUM_WINDOWS)-1) && attack != AT_FSTRONG && (attack != AT_DAIR && window == get_attack_value( AT_DAIR, AG_NUM_WINDOWS)-1))){
-	sound_stop(sound_get("GammaElectricity"));
+	sound_stop(gammaElectricitySound);
 	playingDairSFX = false;
 }
 
 if (playingFSpecialSFX && !((state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR) && attack = AT_FSPECIAL && window == 2)){
-	sound_stop(sound_get("targeting2"));
+	sound_stop(targeting2Sound);
 	playingFSpecialSFX = false;
 }
 
@@ -101,32 +101,15 @@ if(activeMines){
 }
 
 //Open up mark slot if rocket no longer active
-if(activeRockets){
+if(activeRockets){ // This is undone in hitbox_update.gml if there is still an active rocket (using fact that update.gml runs first)
 	move_cooldown[AT_FSPECIAL] = 140;
-	for(var i = 0; i < 3; i++){
-		if(markedPlayers[i] != 0){
-			markedPlayers[i].gammaRocketMarked = false;
-			markedPlayers[i] = 0;
+	for(var i = 0; i < array_length(markedPlayers); i++){
+		if(instance_exists(markedPlayers[i])){
+			markedPlayers[i].gammaRocketMarked[player] = false;
 		}
 	}
-	with pHitBox{
-		if(orig_player == other.player && attack == AT_FSPECIAL && hbox_num == 1){
-			for(var i = 0; i < 3; i++){
-				if(other.markedPlayers[i] == 0){
-					other.markedPlayers[i] = targetPlayer;
-					targetPlayer.gammaRocketMarked = true;
-					break;
-				}
-			}
-		}
-	}
+	markedPlayers = [];
 	activeRockets = false;
-	for(var i = 0; i < 3; i++){
-		if(markedPlayers[i] != 0){
-			activeRockets = true;
-			break;
-		}
-	}
 } else {
 	move_cooldown[AT_FSPECIAL] = 0;
 }
@@ -157,13 +140,31 @@ if(!noPeacock){
 	}
 }
 
+// activate random alt on hit
+// The amount of frames into the match during which you can activate "random alt on hit" if you keep that feature. You can change this amount if you want. I believe the countdown is actually 122 frames, but allowing changes that late makes it possible to accidentally change alt while trying to do something early in the match. [Edit optional]
+#macro CHANGE_ALT_FRAME_LIMIT 100
+if (get_gameplay_time() < CHANGE_ALT_FRAME_LIMIT){ // you are still in the countdown
+    // [Random alt on hit feature]
+    // If you don't want this feature, get rid of this if statement. [Edit optional]
+    if(taunt_down & special_down && jump_down){ // if taunt pressed
+        randomAltOnHit = true; // activate "random alt on hit"
+    }
+}
+
+// You don't need this if you don't have a rainbow alt [Edit optional]
+// rainbow alt
+#macro RAINBOW_ALT 37
+if(unlimitedAlt == RAINBOW_ALT){ // check that you've selected the rainbow alt [Edit necessary]
+    init_shader(); // run init_shader to update the hue
+}
+
 //kirby support
 if swallowed {
 	swallowed = 0;
-	var ability_spr = sprite_get("gamma_nspecial");
-	var ability_proj_spr = sprite_get("dspecial_proj");
-	var ability_hurt = sprite_get("gamma_nspecial_hurt");
-	var ability_icon = sprite_get("Gamma_nspecial_kirby_icon");
+	var ability_spr = gammaNspecialSprite;
+	var ability_proj_spr = dspecialProjSprite;
+	var ability_hurt = gammaNspecialHurtSprite;
+	var ability_icon = gammaNspecialKirbyIcon;
     with enemykirby {
 	// NSPECIAL
 	set_attack_value(AT_EXTRA_3, AG_CATEGORY, 2);
@@ -193,7 +194,6 @@ if swallowed {
 
 	set_hitbox_value(AT_EXTRA_3, 1, HG_PARENT_HITBOX, 1);
 	set_hitbox_value(AT_EXTRA_3, 1, HG_HITBOX_TYPE, 2);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_EFFECT, 1);
 	set_hitbox_value(AT_EXTRA_3, 1, HG_WINDOW, 2);
 	set_hitbox_value(AT_EXTRA_3, 1, HG_WINDOW_CREATION_FRAME, 6);
 	set_hitbox_value(AT_EXTRA_3, 1, HG_LIFETIME, 100);
@@ -230,8 +230,8 @@ if swallowed {
 if trummelcodecneeded{
     trummelcodec = 17;
     trummelcodecmax = 1;
-    trummelcodecsprite1 = sprite_get("idle");
-    trummelcodecsprite2 = sprite_get("idle");
+    trummelcodecsprite1 = idleSprite;
+    trummelcodecsprite2 = idleSprite;
     var page = 0;
 
     //Page 0

@@ -16,8 +16,7 @@ if(attack == AT_DSPECIAL && hbox_num == 1){
     LEFT_BLASTZONE_X_POS = get_stage_data(SD_X_POS) - get_stage_data(SD_SIDE_BLASTZONE);
     RIGHT_BLASTZONE_X_POS = get_stage_data(SD_X_POS) + get_stage_data(SD_WIDTH) + get_stage_data(SD_SIDE_BLASTZONE);
 } //targeting rocket stuff
-else if (attack == AT_FSPECIAL && hbox_num == 1){
-    targetPlayer = 0;
+else if (attack == AT_FSPECIAL && hbox_num == 1){ // targetPlayer is created when hitbox is created in attack_update.gml
     maxSpeed = 2;
     angleToTarget = 0;
     percentAngle = 0;
@@ -28,7 +27,7 @@ else if (attack == AT_FSPECIAL && hbox_num == 1){
         spr_dir = 1;
     }else proj_angle = 0;
     //follower vfx
-    rocketFollowerVFX = hit_fx_create(sprite_get("fspecial_proj_follower"), 18);
+    rocketFollowerVFX = player_id.rocketFollowerVFX;
 } else if (attack == AT_NSPECIAL){ //make sure to instantiate timeToRejuvinate when creating this hitbox
     //stage variables
     TOP_BLASTZONE_Y_POS = get_stage_data(SD_Y_POS) - get_stage_data(SD_TOP_BLASTZONE);

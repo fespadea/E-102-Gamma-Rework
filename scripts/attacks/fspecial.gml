@@ -2,8 +2,10 @@ set_attack_value(AT_FSPECIAL, AG_CATEGORY, 2);
 set_attack_value(AT_FSPECIAL, AG_SPRITE, sprite_get("fspecial"));
 set_attack_value(AT_FSPECIAL, AG_NUM_WINDOWS, 4);
 set_attack_value(AT_FSPECIAL, AG_AIR_SPRITE, sprite_get("fspecial_air"));
-set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, sprite_get("fspecial_air_hurt"));
-set_attack_value(AT_FSPECIAL, AG_HURTBOX_SPRITE, sprite_get("fspecial_hurt"));
+fspecialAirHurtSprite = sprite_get("fspecial_air_hurt");
+set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, fspecialAirHurtSprite);
+fspecialHurtSprite = sprite_get("fspecial_hurt");
+set_attack_value(AT_FSPECIAL, AG_HURTBOX_SPRITE, fspecialHurtSprite);
 
 set_window_value(AT_FSPECIAL, 1, AG_WINDOW_TYPE, 1);
 set_window_value(AT_FSPECIAL, 1, AG_WINDOW_LENGTH, 10);
@@ -31,8 +33,8 @@ set_window_value(AT_FSPECIAL, 4, AG_WINDOW_ANIM_FRAME_START, 10);
 set_num_hitboxes(AT_FSPECIAL, 1);
 
 set_hitbox_value(AT_FSPECIAL, 1, HG_HITBOX_TYPE, 2);
-set_hitbox_value(AT_FSPECIAL, 1, HG_WINDOW, 3);
-set_hitbox_value(AT_FSPECIAL, 1, HG_WINDOW_CREATION_FRAME, 1);
+// set_hitbox_value(AT_FSPECIAL, 1, HG_WINDOW, 3);
+// set_hitbox_value(AT_FSPECIAL, 1, HG_WINDOW_CREATION_FRAME, 1);
 set_hitbox_value(AT_FSPECIAL, 1, HG_LIFETIME, 100);
 set_hitbox_value(AT_FSPECIAL, 1, HG_HITBOX_X, 40);
 set_hitbox_value(AT_FSPECIAL, 1, HG_HITBOX_Y, -40);

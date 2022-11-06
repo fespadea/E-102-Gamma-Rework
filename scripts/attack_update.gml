@@ -28,7 +28,7 @@ if attack == AT_JAB{
 	if(attack_down)
 		set_window_value(AT_JAB, 7, AG_WINDOW_TYPE, 9);
 	if(window == get_attack_value(AT_JAB, AG_NUM_WINDOWS)-1 && !playingJabSFX){
-		sound_play(sound_get("GammaElectricity2"), true);
+		sound_play(gammaElectricity2Sound, true);
 		playingJabSFX = true;
 	}
 }
@@ -38,7 +38,7 @@ if (attack == AT_DAIR) {
 	if(attack_down || down_strong_down || strong_down || down_stick_down)
 		set_window_value(AT_DAIR, 2, AG_WINDOW_TYPE, 9);
 	if(window == get_attack_value(AT_DAIR, AG_NUM_WINDOWS)-1 && !playingDairSFX){
-		sound_play(sound_get("GammaElectricity"), true);
+		sound_play(gammaElectricitySound, true);
 		playingDairSFX = true;
 	}
 }
@@ -94,7 +94,7 @@ if (attack == AT_USPECIAL){
     }
 	if !free{
 		set_state(PS_IDLE);
-		sound_stop(sound_get("GammaFan"));
+		sound_stop(gammaFanSound);
 	}
 }
 
@@ -117,12 +117,12 @@ if(attack == AT_FSPECIAL){
 	//float mechanic
 	if(state == PS_ATTACK_AIR){
 		if(floatActive){
-			set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, sprite_get("fspecial_air_float_hurt"));
+			set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, fspecialAirFloatHurtSprite);
 		} else {
-			set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, sprite_get("fspecial_air_hurt"));
+			set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, fspecialAirHurtSprite);
 		}
 	} else {
-		set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, sprite_get("fspecial_hurt"));
+		set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, fspecialHurtSprite);
 	}
 	hurtboxID.sprite_index = get_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE);
 	//holding laser
@@ -140,33 +140,38 @@ if(attack == AT_FSPECIAL){
 		can_move = true;
 		if(window == 2){
 			if(window_timer == 1 && !playingFSpecialSFX){
-				sound_play(sound_get("targeting2"), true);
+				sound_play(targeting2Sound, true);
 				playingFSpecialSFX = true;
 			}
-			if(markedPlayers[2] == 0){
-				var xLength = 2*lengthLaser*cos(targeterRotationRad)*targeterDir;
-				var yLength = 2*lengthLaser*sin(targeterRotationRad)*targeterDir;
-				var targetedPlayer = collision_line(laserX, laserY, laserX + xLength, laserY - yLength, oPlayer, false, true);
-				var duplicate = false;
-				for(var i = 0; i < 3; i++){
-					if(targetedPlayer == markedPlayers[i]){
-						duplicate = true;
-						break;
+			var xLength = 2*lengthLaser*cos(targeterRotationRad)*targeterDir;
+			var yLength = 2*lengthLaser*sin(targeterRotationRad)*targeterDir;
+			var playTargetConfirmedSound = false;
+			var unMarkedPlayer;
+			var targetedPlayer;
+			var i;
+			with oPlayer{
+				if(player != other.player && !(get_player_team(player) == get_player_team(other.player) && get_match_setting(SET_TEAMATTACK) == false)){
+					unMarkedPlayer = true;
+					for(i = 0; i < array_length(other.markedPlayers); i++){
+						if(other.markedPlayers[i] == id){
+							unMarkedPlayer = false;
+						}
+					}
+					if(unMarkedPlayer){
+						targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, id, false, false);
+						if(targetedPlayer != noone){
+							other.markedPlayers[array_length(other.markedPlayers)] = targetedPlayer;
+							gammaRocketMarked[other.player] = true;
+							playTargetConfirmedSound = true;
+						}
 					}
 				}
-				if(targetedPlayer != noone && !duplicate && !targetedPlayer.clone){
-					sound_play(sound_get("TargetConfirmed"));
-					targetedPlayer.gammaRocketMarked = true;
-					if(markedPlayers[0] == 0)
-						markedPlayers[0] = targetedPlayer;
-					else if(markedPlayers[1] == 0)
-						markedPlayers[1] = targetedPlayer;
-					else
-						markedPlayers[2] = targetedPlayer;
-				}
+			}
+			if(playTargetConfirmedSound){
+				sound_play(targetConfirmedSound);
 			}
 			if (state_timer > 130){
-				if(markedPlayers[0] == 0)
+				if(array_length(markedPlayers) == 0)
 					window = 4;
 				else
 					window = 3;
@@ -174,20 +179,19 @@ if(attack == AT_FSPECIAL){
 			}
 		}
 	} else if (window == 3){
-		if(window_timer == 1){
-			if(markedPlayers[rocketsShot] == 0){
+		if(window_timer == 2){
+			while(rocketsShot < array_length(markedPlayers) && !instance_exists(markedPlayers[rocketsShot])){
+				rocketsShot++;
+			}
+			if(rocketsShot >= array_length(markedPlayers)){
 				window = 4;
-				if(rocketsShot){
-					activeRockets = true;
-				}
+				activeRockets = true;
+			} else{
+				var newRocket = create_hitbox(attack, 1, x + spr_dir*get_hitbox_value(attack, 1, HG_HITBOX_X), y + get_hitbox_value(attack, 1, HG_HITBOX_Y) );
+				newRocket.targetPlayer = markedPlayers[rocketsShot];
+				newRocket.draw_xscale = 1;
+				rocketsShot++;
 			}
-		} else if(window_timer == 2){
-			with pHitBox {
-				if(orig_player == other.player && attack == AT_FSPECIAL && hbox_num == 1){
-					if(targetPlayer == 0) targetPlayer = other.markedPlayers[other.rocketsShot];
-				}
-			}
-			rocketsShot++;
 		}
 	}
 }
@@ -198,7 +202,7 @@ if (attack == AT_NSPECIAL){
 	if(!special_down && get_window_value(AT_NSPECIAL, 1, AG_WINDOW_TYPE) == 9){
 		if (down_down) {
 			if(noPeacock){
-				sound_play(sound_get("BirdZeta"));
+				sound_play(birdZetaSound);
 				if(spr_dir == 1 && left_down){
 					spr_dir = -1;
 					create_hitbox(AT_NSPECIAL, 3, x, y).timeToRejuvinate = 10000;
@@ -212,7 +216,7 @@ if (attack == AT_NSPECIAL){
 			}
 		} else if(right_down){
 			if(noSwallow){
-				sound_play(sound_get("BirdEpsilon"));
+				sound_play(birdEpsilonSound);
 				var temp_dir = spr_dir;
 				spr_dir = 1;
 				create_hitbox(AT_NSPECIAL, 1, x+40, y-40).timeToRejuvinate = 10000;
@@ -221,7 +225,7 @@ if (attack == AT_NSPECIAL){
 			}
 		} else if (left_down) {
 			if(noSwallow){
-				sound_play(sound_get("BirdEpsilon"));
+				sound_play(birdEpsilonSound);
 				var temp_dir = spr_dir;
 				spr_dir = -1;
 				create_hitbox(AT_NSPECIAL, 1, x-40, y-40).timeToRejuvinate = 10000;
@@ -230,13 +234,13 @@ if (attack == AT_NSPECIAL){
 			}
 		} else if (up_down) {
 			if(noParrot){
-				sound_play(sound_get("BirdDelta"));
+				sound_play(birdDeltaSound);
 				create_hitbox(AT_NSPECIAL, 2, x, y-80).timeToRejuvinate = 10000;
 				noParrot = false;
 			}
 		} else {
 			if(noFlicky){
-				sound_play(sound_get("BirdBeta"));
+				sound_play(birdBetaSound);
 				instance_create(x, y - char_height/2, "obj_article1");
 			} else{
 				with obj_article1 {

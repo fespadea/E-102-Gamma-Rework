@@ -50,6 +50,7 @@ if (state == 0){ //idle state
     }
     if(point_distance(x, y, player_id.x, player_id.y - player_id.char_height/2) < 20){
         despawn();
+        exit;
     }
     if(get_player_stocks(player_id.player) < 1)
         changeState(3);
@@ -59,6 +60,7 @@ if (state == 0){ //idle state
     vsp = lerp(-2, -20, percentSpeed);
     if(y < player_id.TOP_BLASTZONE_Y_POS){
         despawn();
+        exit;
     }
 }
 
@@ -73,4 +75,3 @@ state_timer = 0;
 #define despawn()
 player_id.noFlicky = true;
 instance_destroy();
-exit;

@@ -3,9 +3,9 @@
 if (attack == AT_DSPECIAL && hbox_num == 1) {
     if (player == orig_player) {
         if (hsp != 0) {
-            mask_index = sprite_get("dspecial_proj");
+            mask_index = player_id.dspecialProjSprite;
         } else {
-            mask_index = sprite_get("dspecial_proj_ground");
+            mask_index = player_id.dspecialProjGround;
         }
         if(age == 0) {
             length = 0;
@@ -20,7 +20,16 @@ if (attack == AT_DSPECIAL && hbox_num == 1) {
     if(!free || was_parried) destroyed = true;
     if(hitbox_timer < length - 30)
         maxSpeed = ease_quadIn(5, 20, hitbox_timer, length - 30);
-    if(targetPlayer != 0){
+    if(instance_exists(targetPlayer)){
+        if(targetPlayer.state == PS_RESPAWN || targetPlayer.state == PS_DEAD)
+            targetPlayer = noone;
+    }
+    if(instance_exists(targetPlayer)){
+        if(!targetPlayer.gammaRocketMarked[player]){
+            targetPlayer.gammaRocketMarked[player] = true;
+            player_id.markedPlayers[array_length(player_id.markedPlayers)] = targetPlayer;
+            player_id.activeRockets = true;
+        }
         angleToTarget = point_direction(x, y, targetPlayer.x, targetPlayer.y - targetPlayer.char_height/2);
         if(hitbox_timer < length - 30){
             if(hitbox_timer < (length-30)/2) percentAngle = ease_circIn(0, 1, hitbox_timer, (length - 30)/2);
@@ -52,10 +61,11 @@ if (attack == AT_DSPECIAL && hbox_num == 1) {
                 if(x > RIGHT_BLASTZONE_X_POS || x < LEFT_BLASTZONE_X_POS){
                     length = 0;
                 }
+                draw_xscale = hsp/abs(hsp);
             } else if(hbox_num == 2){
-                if(y < TOP_BLASTZONE_Y_POS){
+                if(y < TOP_BLASTZONE_Y_POS || y > BOTTOM_BLASTZONE_Y_POS){
                     length = 0;
-                    }
+                }
             } else if(hbox_num == 3){
                 if(x > RIGHT_BLASTZONE_X_POS || x < LEFT_BLASTZONE_X_POS || y > BOTTOM_BLASTZONE_Y_POS){
                     length = 0;
@@ -78,6 +88,8 @@ if (attack == AT_DSPECIAL && hbox_num == 1) {
                     else
                         image_index = 1;
                 }
+                if(hsp != 0)
+                    draw_xscale = hsp/abs(hsp);
             }
         } else {
             damage = 0;

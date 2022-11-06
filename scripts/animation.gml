@@ -6,9 +6,9 @@ switch (state){
 	case PS_TUMBLE:
     	if(vsp > 0 || prev_state == PS_ATTACK_AIR){
     		if (floatActive) {
-				sprite_index = sprite_get("float");
+				sprite_index = floatSprite;
 			} else {
-				sprite_index = sprite_get("fall");
+				sprite_index = fallSprite;
 			}
 			image_index = floor(state_timer*jump_anim_speed);
     	}
@@ -16,15 +16,15 @@ switch (state){
 
     case PS_WALK:
     	if(image_index > 0) {
-    		sprite_index = sprite_get("walkloop");
+    		sprite_index = walkLoopSprite;
     		image_index = floor(state_timer*walk_anim_speed);
     	}
     break;
 
 	case PS_HITSTUN:
-		if(state_timer == 5 && sprite_index == sprite_get("uphurt"))
+		if(state_timer == 5 && sprite_index == upHurtSprite)
 			image_index++;
-		if(sprite_index == sprite_get("bouncehurt")){
+		if(sprite_index == bounceHurtSprite){
 			if(state_timer < 10)
 				image_index = 0;
 			else if(state_timer < 20)
