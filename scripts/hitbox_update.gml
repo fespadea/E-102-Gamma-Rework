@@ -63,64 +63,48 @@ if (attack == AT_DSPECIAL && hbox_num == 1) {
         spawn_hit_fx(x, y, rocketFollowerVFX);
     }
 } else if (attack == AT_NSPECIAL){
-    if(outOfTime){
-        length = 0;
-    } else {
-        depth = player_id.depth + 1;
-        timeToRejuvinate--;
-        if(timeToRejuvinate > 0){
-            if(hbox_num == 1){
-                if(x > RIGHT_BLASTZONE_X_POS || x < LEFT_BLASTZONE_X_POS){
-                    length = 0;
-                }
-                draw_xscale = hsp/abs(hsp);
-            } else if(hbox_num == 2){
-                if(y < TOP_BLASTZONE_Y_POS || y > BOTTOM_BLASTZONE_Y_POS){
-                    length = 0;
-                }
-            } else if(hbox_num == 3){
-                if(x > RIGHT_BLASTZONE_X_POS || x < LEFT_BLASTZONE_X_POS || y > BOTTOM_BLASTZONE_Y_POS){
-                    length = 0;
-                }
-                if(!free){
-                    timeOnGround++;
-                    if(timeOnGround > 15){
-                        hsp = 5*spr_dir;
-                        vsp = -5;
-                        timeOnGround = 0;
-                    }
-                }
-                if(vsp > 0){
-                    kb_angle = -45;
-                    image_index = 2;
-                } else{
-                    kb_angle = 45;
-                    if(vsp < 0)
-                        image_index = 0;
-                    else
-                        image_index = 1;
-                }
-                if(hsp != 0)
-                    draw_xscale = hsp/abs(hsp);
+    depth = player_id.depth + 1;
+    for(var i = 0; i < array_length(timeToRejuvinate); i++){
+        if(can_hit[i] == 0){
+            timeToRejuvinate[i]--;
+            if(timeToRejuvinate[i] == 0){ // this avoids the values that started at -1
+                timeToRejuvinate[i] = 30;
+                can_hit[i] = 1;
             }
-        } else {
-            damage = 0;
-            kb_value = 0;
-            knockback_adj = 0;
-            hitpause = 0;
-            hitpause_growth = 0;
-            sound_effect = 0;
-            newHitbox = create_hitbox(AT_NSPECIAL, hbox_num, x, y);
-            newHitbox.vsp = vsp;
-            newHitbox.hsp = hsp;
-            newHitbox.spr_dir = spr_dir;
-            newHitbox.image_index = image_index;
-            newHitbox.kb_angle = kb_angle;
-            if(hbox_num == 3){
-                newHitbox.timeOnGround = timeOnGround;
-            }
-            newHitbox.timeToRejuvinate = 10000;
-            outOfTime = true;
         }
+    }
+    if(hbox_num == 1){
+        if(x > RIGHT_BLASTZONE_X_POS || x < LEFT_BLASTZONE_X_POS){
+            length = 0;
+        }
+        draw_xscale = hsp/abs(hsp);
+    } else if(hbox_num == 2){
+        if(y < TOP_BLASTZONE_Y_POS || y > BOTTOM_BLASTZONE_Y_POS){
+            length = 0;
+        }
+    } else if(hbox_num == 3){
+        if(x > RIGHT_BLASTZONE_X_POS || x < LEFT_BLASTZONE_X_POS || y > BOTTOM_BLASTZONE_Y_POS){
+            length = 0;
+        }
+        if(!free){
+            timeOnGround++;
+            if(timeOnGround > 15){
+                hsp = 5*spr_dir;
+                vsp = -5;
+                timeOnGround = 0;
+            }
+        }
+        if(vsp > 0){
+            kb_angle = -45;
+            image_index = 2;
+        } else{
+            kb_angle = 45;
+            if(vsp < 0)
+                image_index = 0;
+            else
+                image_index = 1;
+        }
+        if(hsp != 0)
+            draw_xscale = hsp/abs(hsp);
     }
 }

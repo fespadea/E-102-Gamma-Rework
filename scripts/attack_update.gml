@@ -243,13 +243,13 @@ switch(attack){
 					sound_play(birdZetaSound);
 					if(spr_dir == 1 && left_down){
 						spr_dir = -1;
-						create_hitbox(AT_NSPECIAL, 3, x, y).timeToRejuvinate = 10000;
+						create_hitbox(AT_NSPECIAL, 3, x, y);
 						spr_dir = 1;
 					} else if(spr_dir == -1 && right_down){
 						spr_dir = 1;
-						create_hitbox(AT_NSPECIAL, 3, x, y).timeToRejuvinate = 10000;
+						create_hitbox(AT_NSPECIAL, 3, x, y);
 						spr_dir = -1;
-					} else create_hitbox(AT_NSPECIAL, 3, x, y).timeToRejuvinate = 10000;
+					} else create_hitbox(AT_NSPECIAL, 3, x, y);
 					noPeacock = false;
 				}
 			} else if(right_down){
@@ -257,7 +257,7 @@ switch(attack){
 					sound_play(birdEpsilonSound);
 					var temp_dir = spr_dir;
 					spr_dir = 1;
-					create_hitbox(AT_NSPECIAL, 1, x+40, y-40).timeToRejuvinate = 10000;
+					create_hitbox(AT_NSPECIAL, 1, x+40, y-40);
 					spr_dir = temp_dir;
 					noSwallow = false;
 				}
@@ -266,14 +266,14 @@ switch(attack){
 					sound_play(birdEpsilonSound);
 					var temp_dir = spr_dir;
 					spr_dir = -1;
-					create_hitbox(AT_NSPECIAL, 1, x-40, y-40).timeToRejuvinate = 10000;
+					create_hitbox(AT_NSPECIAL, 1, x-40, y-40);
 					spr_dir = temp_dir;
 					noSwallow = false;
 				}
 			} else if (up_down) {
 				if(noParrot){
 					sound_play(birdDeltaSound);
-					create_hitbox(AT_NSPECIAL, 2, x, y-80).timeToRejuvinate = 10000;
+					create_hitbox(AT_NSPECIAL, 2, x, y-80);
 					noParrot = false;
 				}
 			} else {
