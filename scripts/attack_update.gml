@@ -292,6 +292,11 @@ switch(attack){
 			set_window_value(AT_NSPECIAL, 1, AG_WINDOW_TYPE, 0);
 		}
 		break;
+	case AT_FSTRONG:
+		if(window == 2){
+			set_hitbox_value(AT_FSTRONG, 3, HG_PROJECTILE_HSPEED, 3 + 6*strong_charge/60);
+		}
+		break;
 }
 
 // Undo Rapids

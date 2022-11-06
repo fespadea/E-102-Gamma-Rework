@@ -64,7 +64,6 @@ set_hitbox_value(AT_FSTRONG, 2, HG_VISUAL_EFFECT, 197);
 set_hitbox_value(AT_FSTRONG, 2, HG_VISUAL_EFFECT_X_OFFSET, 24);
 set_hitbox_value(AT_FSTRONG, 2, HG_HIT_SFX, asset_get("sfx_absa_uair"));
 
-set_hitbox_value(AT_FSTRONG, 3, HG_PARENT_HITBOX, 0);
 set_hitbox_value(AT_FSTRONG, 3, HG_HITBOX_TYPE, 2);
 set_hitbox_value(AT_FSTRONG, 3, HG_WINDOW, 3);
 set_hitbox_value(AT_FSTRONG, 3, HG_WINDOW_CREATION_FRAME, 0);
@@ -84,6 +83,6 @@ set_hitbox_value(AT_FSTRONG, 3, HG_VISUAL_EFFECT, 125);
 set_hitbox_value(AT_FSTRONG, 3, HG_PROJECTILE_SPRITE, sprite_get("plasma_proj"));
 set_hitbox_value(AT_FSTRONG, 3, HG_PROJECTILE_MASK, sprite_get("plasma_proj"));
 set_hitbox_value(AT_FSTRONG, 3, HG_PROJECTILE_ANIM_SPEED, .5);
-set_hitbox_value(AT_FSTRONG, 3, HG_PROJECTILE_HSPEED, 6);
+// set_hitbox_value(AT_FSTRONG, 3, HG_PROJECTILE_HSPEED, 6); // Set in attack_update.gml
 set_hitbox_value(AT_FSTRONG, 3, HG_PROJECTILE_VSPEED, 0);
 set_hitbox_value(AT_FSTRONG, 3, HG_HIT_SFX, asset_get("sfx_clairen_hit_med"));

@@ -35,6 +35,22 @@ switch (state){
 				image_index = 3;
 		}
 	break;
+
+	case PS_ATTACK_GROUND:
+	case PS_ATTACK_AIR:
+		switch(attack){
+			case AT_DSPECIAL:
+				if(window == 2){
+					image_index = 6 + ((mine_charge % 12 > 5) ? 1 : 0);
+				}
+				break;
+			case AT_FSTRONG:
+				if(window == 1){
+					if(strong_charge > 0)
+						image_index = 7 + floor(strong_charge/3) % 5;
+				}
+				break;
+		}
     
     default: break;
 }
