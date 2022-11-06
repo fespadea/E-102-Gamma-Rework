@@ -5,9 +5,9 @@
 
 // Special Alts
 // #macro RANDOM_ALT 33 (I've decided to always just make Random the last alt)
-#macro EA_ALT 36
-#macro RAINBOW_ALT 37
-#macro WIREFRAME_ALT 38
+#macro EA_ALT 37
+#macro RAINBOW_ALT 38
+#macro WIREFRAME_ALT 39
 
 /*
 I don't want this to break on the SSS, and I think checking if you're on the SSS would be more 
@@ -24,7 +24,7 @@ var unlimitedAlt = split_synced_var(FIRST_BIT_UNLIMITED, LAST_BIT_UNLIMITED-FIRS
 
 // You can get rid of this part if none of your alts change the default shading [Edit optional]
 // set the shading of the color slots
-if(unlimitedAlt == EA_ALT){ // EA alt (change this to check for whichever of your alts have no shading) [Edit necessary]
+if(unlimitedAlt == EA_ALT || unlimitedAlt == RAINBOW_ALT){ // EA alt and rainbow alt need no shading (shading just looks bad on rainbow)
     // set shading to 0 for every color slot
     for(var i = 0; i < 8; i++){
         set_character_color_shading(i, 0);

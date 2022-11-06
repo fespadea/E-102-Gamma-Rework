@@ -15,5 +15,4 @@ free = true;
 hitstop = 0;
 
 player_id.noFlicky = false;
-enemyPlayer = noone;
 despawn = false;

@@ -127,7 +127,7 @@ if (get_gameplay_time() < CHANGE_ALT_FRAME_LIMIT){ // you are still in the count
 
 // You don't need this if you don't have a rainbow alt [Edit optional]
 // rainbow alt
-#macro RAINBOW_ALT 37
+#macro RAINBOW_ALT 38
 if(unlimitedAlt == RAINBOW_ALT){ // check that you've selected the rainbow alt [Edit necessary]
     init_shader(); // run init_shader to update the hue
 }
@@ -147,11 +147,11 @@ if swallowed {
 	set_attack_value(AT_EXTRA_3, AG_AIR_SPRITE, ability_spr);
 	set_attack_value(AT_EXTRA_3, AG_HURTBOX_SPRITE, ability_hurt);
 
-	set_window_value(AT_EXTRA_3, 1, AG_WINDOW_TYPE, 1);
+	set_window_value(AT_EXTRA_3, 1, AG_WINDOW_TYPE, 0);
 	set_window_value(AT_EXTRA_3, 1, AG_WINDOW_LENGTH, 9);
 	set_window_value(AT_EXTRA_3, 1, AG_WINDOW_ANIM_FRAMES, 7);
 
-	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_TYPE, 1);
+	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_TYPE, 0);
 	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_LENGTH, 20);
 	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_ANIM_FRAMES, 3);
 	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_HAS_SFX, 1);
@@ -159,14 +159,13 @@ if swallowed {
 	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_SFX_FRAME, 1);
 	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_ANIM_FRAME_START, 6);
 
-	set_window_value(AT_EXTRA_3, 3, AG_WINDOW_TYPE, 1);
+	set_window_value(AT_EXTRA_3, 3, AG_WINDOW_TYPE, 0);
 	set_window_value(AT_EXTRA_3, 3, AG_WINDOW_LENGTH, 9);
 	set_window_value(AT_EXTRA_3, 3, AG_WINDOW_ANIM_FRAMES, 2);
 	set_window_value(AT_EXTRA_3, 3, AG_WINDOW_ANIM_FRAME_START, 9);
 
 	set_num_hitboxes(AT_EXTRA_3,1);
 
-	set_hitbox_value(AT_EXTRA_3, 1, HG_PARENT_HITBOX, 1);
 	set_hitbox_value(AT_EXTRA_3, 1, HG_HITBOX_TYPE, 2);
 	set_hitbox_value(AT_EXTRA_3, 1, HG_WINDOW, 2);
 	set_hitbox_value(AT_EXTRA_3, 1, HG_WINDOW_CREATION_FRAME, 6);

@@ -22,7 +22,7 @@ if(curGameAlt != prevAlt){ // you switched alt
 }
 // You don't need this if you don't have a rainbow alt [Edit optional]
 // rainbow alt [Edit necessary]
-#macro RAINBOW_ALT 37
+#macro RAINBOW_ALT 38
 if(unlimitedAlt == RAINBOW_ALT){
     init_shader(); // run init_shader to update the hue
 }

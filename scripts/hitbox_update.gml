@@ -47,7 +47,7 @@ if (attack == AT_DSPECIAL && hbox_num == 1) {
             } else if (newAngle < proj_angle - MAX_ANGLE_CHANGE){
                 newAngle = proj_angle - MAX_ANGLE_CHANGE;
             }
-            if(abs(angleToTarget - proj_angle) > 175){ // avoid turning toward solid blocks if turning direction is negligible
+            if(abs(angleToTarget - proj_angle) > 160){ // avoid turning toward solid blocks if turning direction is negligible
                 var testAngle = newAngle + 90*(newAngle-proj_angle)/abs(newAngle-proj_angle);
                 var testAngleOpposite = newAngle - 90*(newAngle-proj_angle)/abs(newAngle-proj_angle);
                 if(collision_line(x, y, x+dcos(testAngle)*player_id.char_height*1.5, y+dsin(testAngle)*player_id.char_height*1.5, player_id.solidBlockObject, false, true) < 0 && collision_line(x, y, x+dcos(testAngleOpposite)*player_id.char_height*1.5, y+dsin(testAngleOpposite)*player_id.char_height*1.5, player_id.solidBlockObject, false, true) >= 0){

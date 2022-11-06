@@ -12,28 +12,28 @@ jump_anim_speed = .25;
 doublejump_anim_speed = .25;
 pratfall_anim_speed = .25;
 
-walk_speed = 2.75;
-walk_accel = 0.15;
-walk_turn_time = 16;
+walk_speed = 3;
+walk_accel = 0.2;
+walk_turn_time = 6;
 initial_dash_time = 8;
-initial_dash_speed = 7.5;
-dash_speed = 8.2;
-dash_turn_time = 6;
-dash_turn_accel = 1.25;
+initial_dash_speed = 6;
+dash_speed = 7;
+dash_turn_time = 10;
+dash_turn_accel = 0.5;
 dash_stop_time = 4;
 dash_stop_percent = .35; //the value to multiply your hsp by when going into idle from dash or dashstop
 ground_friction = .95;
 moonwalk_accel = 1.6;
 
-jump_start_time = 6;
+jump_start_time = 5;
 jump_speed = 11;
 short_hop_speed = 7;
 djump_speed = 10;
 leave_ground_max = 7; //the maximum hsp you can have when you go from grounded to aerial without jumping
 max_jump_hsp = 6; //the maximum hsp you can have when jumping from the ground
-air_max_speed = 6; //the maximum hsp you can accelerate to when in a normal aerial state
+air_max_speed = 5; //the maximum hsp you can accelerate to when in a normal aerial state
 jump_change = 3; //maximum hsp when double jumping. If already going faster, it will not slow you down
-air_accel = .165;
+air_accel = .3;
 prat_fall_accel = 1; //multiplier of air_accel while in pratfall
 air_friction = .07;
 max_djumps = 1;
@@ -202,6 +202,10 @@ birdEpsilonSound = sound_get("BirdEpsilon");
 birdDeltaSound = sound_get("BirdDelta");
 birdBetaSound = sound_get("BirdBeta");
 failedSound = sound_get("failed");
+sfxBirdSidespecialStartSound = asset_get("sfx_bird_sidespecial_start");
+
+// Clairen Field Object
+plasmaFieldObj = asset_get("plasma_field_obj");
 
 // Alt stuff
 
@@ -220,7 +224,7 @@ unlimitedAlt = split_synced_var(FIRST_BIT_UNLIMITED, LAST_BIT_UNLIMITED-FIRST_BI
 randomAltOnHit = false; // holds whether this feature has been activated
 
 // Variable to hold the number of alts [Edit necessary]
-NUM_UNLIMITED_ALTS = 40;
+NUM_UNLIMITED_ALTS = 41;
 
 // [Random Alt]
 // Check if the random alt is selected

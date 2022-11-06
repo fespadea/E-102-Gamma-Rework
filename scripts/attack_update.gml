@@ -15,7 +15,7 @@ switch(attack){
 				mine_charge++;
 				set_hitbox_value(AT_DSPECIAL, 1, HG_PROJECTILE_HSPEED, 4 + (mine_charge/10.0));
 			} else {
-				set_window_value(AT_DSPECIAL, 2, AG_WINDOW_TYPE, 1);
+				set_window_value(AT_DSPECIAL, 2, AG_WINDOW_TYPE, 0);
 				move_cooldown[AT_DSPECIAL] = 80;
 			}
 		} else if (window == 3) {
@@ -118,7 +118,7 @@ switch(attack){
 			if(special_down){
 				set_window_value(AT_FSPECIAL, 2, AG_WINDOW_TYPE, 9);
 			} else {
-				set_window_value(AT_FSPECIAL, 2, AG_WINDOW_TYPE, 1);
+				set_window_value(AT_FSPECIAL, 2, AG_WINDOW_TYPE, 0);
 			}
 			//cancel early
 			can_jump = true;
@@ -188,7 +188,7 @@ switch(attack){
 						window = 4;
 					else
 						window = 3;
-					set_window_value(AT_FSPECIAL, 2, AG_WINDOW_TYPE, 1);
+					set_window_value(AT_FSPECIAL, 2, AG_WINDOW_TYPE, 0);
 				}
 			}
 		} else if (window == 3){
@@ -297,10 +297,10 @@ switch(attack){
 // Undo Rapids
 if !attack_down{
 	if(!(spr_dir == 1 && right_stick_down) && !(spr_dir == -1 && left_stick_down))
-		set_window_value(AT_FTILT, 2, AG_WINDOW_TYPE, 1);
-	set_window_value(AT_JAB, 7, AG_WINDOW_TYPE, 1);
+		set_window_value(AT_FTILT, 2, AG_WINDOW_TYPE, 0);
+	set_window_value(AT_JAB, 7, AG_WINDOW_TYPE, 0);
 	if(!down_strong_down && !strong_down && !down_stick_down)
-		set_window_value(AT_DAIR, 2, AG_WINDOW_TYPE, 1);
+		set_window_value(AT_DAIR, 2, AG_WINDOW_TYPE, 0);
 }
 
 

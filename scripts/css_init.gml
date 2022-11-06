@@ -53,6 +53,7 @@ altName[i++]  = "E-104 Epsilon";
 altName[i++]  = "E-105 Zeta";
 altName[i++]  = "E-100 Alpha (ZERO)";
 altName[i++]  = "E-106 Eta";
+altName[i++]  = "E-107 Theta";
 altName[i++]  = "E-108 Iota";
 altName[i++]  = "E-109 Kappa";
 altName[i++]  = "E-110 Lambda";
