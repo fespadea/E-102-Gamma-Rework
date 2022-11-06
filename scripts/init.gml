@@ -127,6 +127,14 @@ markedPlayers = [];
 rocketsShot = 0;
 activeRockets = false;
 targetConfirmedSound = sound_get("TargetConfirmed");
+if(!("gammaRocketMarked" in self))
+    gammaRocketMarked = [];
+for(var i = 0; i <= player; i++){
+    gammaRocketMarked[i] = false;
+}
+solidBlockObject = asset_get("par_block");
+targeterBaseX = x-10*spr_dir;
+targeterBaseY = y-69;
 
 //birds
 noSwallow = true;

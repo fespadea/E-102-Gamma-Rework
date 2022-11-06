@@ -11,7 +11,9 @@ switch(attack){
     case AT_TAUNT: //change taunt sfx depending on alt (set here instead of init cause of changing alt mid-match)
         if(unlimitedAlt = 23){ // Egg Breaker alt number
             set_window_value(AT_TAUNT, 1, AG_WINDOW_SFX, EggBreakerTauntSfx);
+            sound_stop(EggBreakerTauntSfx);
         } else{
             set_window_value(AT_TAUNT, 1, AG_WINDOW_SFX, normalTauntSfx);
+            sound_stop(normalTauntSfx);
         }
 }

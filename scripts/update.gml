@@ -83,7 +83,7 @@ if(!((state == PS_ATTACK_AIR || state == PS_ATTACK_GROUND) && attack == AT_DSPEC
 if(activeMines){
 	numMines = 0;
 	with pHitBox {
-		if(other.player == orig_player){
+		if(other.player == player && other.player == orig_player){
 			if(attack == AT_DSPECIAL && hbox_num == 1){
 				other.numMines++;
 			}
@@ -91,7 +91,7 @@ if(activeMines){
 	}
 	if(numMines == 1){
 		with pHitBox {
-			if(other.player == orig_player){
+			if(other.player == player && other.player == orig_player){
 				if(attack == AT_DSPECIAL && hbox_num == 1){
 					age = 2;
 				}
@@ -112,32 +112,6 @@ if(activeRockets){ // This is undone in hitbox_update.gml if there is still an a
 	activeRockets = false;
 } else {
 	move_cooldown[AT_FSPECIAL] = 0;
-}
-
-//check for active birds
-if(!noSwallow){
-	noSwallow = true;
-	with pHitBox {
-		if(orig_player == other.player && attack == AT_NSPECIAL && hbox_num == 1){
-			other.noSwallow = false;
-		}
-	}
-}
-if(!noParrot){
-	noParrot = true;
-	with pHitBox {
-		if(orig_player == other.player && attack == AT_NSPECIAL && hbox_num == 2){
-			other.noParrot = false;
-		}
-	}
-}
-if(!noPeacock){
-	noPeacock = true;
-	with pHitBox {
-		if(orig_player == other.player && attack == AT_NSPECIAL && hbox_num == 3){
-			other.noPeacock = false;
-		}
-	}
 }
 
 // activate random alt on hit

@@ -1,23 +1,28 @@
 //hitbox_update
 
 if (attack == AT_DSPECIAL && hbox_num == 1) {
-    if (player == orig_player) {
-        if (hsp != 0) {
-            mask_index = player_id.dspecialProjSprite;
-        } else {
-            mask_index = player_id.dspecialProjGround;
-        }
-        if(age == 0) {
-            length = 0;
-        }
-        if (x > RIGHT_BLASTZONE_X_POS || x < LEFT_BLASTZONE_X_POS || y > BOTTOM_BLASTZONE_Y_POS){
-            length = 0;
-        }
+    if(was_parried){
+        age = 2;
+    }
+    if (hsp != 0) {
+        mask_index = player_id.dspecialProjSprite;
     } else {
-        destroyed = true;
+        mask_index = player_id.dspecialProjGround;
+    }
+    collision_sprite = mask_index;
+    if(age == 0) {
+        length = 0;
+    }
+    if (x > RIGHT_BLASTZONE_X_POS || x < LEFT_BLASTZONE_X_POS || y > BOTTOM_BLASTZONE_Y_POS){
+        length = 0;
     }
 } else if (attack == AT_FSPECIAL && hbox_num == 1){
-    if(!free || was_parried) destroyed = true;
+    if(!free) destroyed = true;
+    if(was_parried && targetPlayer != player_id) {
+        targetPlayer = player_id;
+        proj_angle += 180;
+        if(proj_angle > 360) proj_angle -= 360;
+    }
     if(hitbox_timer < length - 30)
         maxSpeed = ease_quadIn(5, 20, hitbox_timer, length - 30);
     if(instance_exists(targetPlayer)){
@@ -25,8 +30,8 @@ if (attack == AT_DSPECIAL && hbox_num == 1) {
             targetPlayer = noone;
     }
     if(instance_exists(targetPlayer)){
-        if(!targetPlayer.gammaRocketMarked[player]){
-            targetPlayer.gammaRocketMarked[player] = true;
+        if(!targetPlayer.gammaRocketMarked[orig_player]){
+            targetPlayer.gammaRocketMarked[orig_player] = true;
             player_id.markedPlayers[array_length(player_id.markedPlayers)] = targetPlayer;
             player_id.activeRockets = true;
         }
@@ -42,11 +47,18 @@ if (attack == AT_DSPECIAL && hbox_num == 1) {
             } else if (newAngle < proj_angle - MAX_ANGLE_CHANGE){
                 newAngle = proj_angle - MAX_ANGLE_CHANGE;
             }
+            if(abs(angleToTarget - proj_angle) > 175){ // avoid turning toward solid blocks if turning direction is negligible
+                var testAngle = newAngle + 90*(newAngle-proj_angle)/abs(newAngle-proj_angle);
+                var testAngleOpposite = newAngle - 90*(newAngle-proj_angle)/abs(newAngle-proj_angle);
+                if(collision_line(x, y, x+dcos(testAngle)*player_id.char_height*1.5, y+dsin(testAngle)*player_id.char_height*1.5, player_id.solidBlockObject, false, true) < 0 && collision_line(x, y, x+dcos(testAngleOpposite)*player_id.char_height*1.5, y+dsin(testAngleOpposite)*player_id.char_height*1.5, player_id.solidBlockObject, false, true) >= 0){
+                    newAngle = proj_angle + proj_angle - newAngle;
+                }
+            }
             proj_angle = newAngle;
         }
     }
-    hsp = maxSpeed*cos(degtorad(proj_angle));
-    vsp = -maxSpeed*sin(degtorad(proj_angle));
+    hsp = maxSpeed*dcos(proj_angle);
+    vsp = -maxSpeed*dsin(proj_angle);
     if(hitbox_timer % 8 == 0){
         spawn_hit_fx(x, y, rocketFollowerVFX);
     }

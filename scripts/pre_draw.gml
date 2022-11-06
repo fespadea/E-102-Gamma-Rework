@@ -9,7 +9,7 @@ if(attack == AT_FSPECIAL && state == PS_ATTACK_AIR && floatActive){
 if(activeMines){
     activeMines = false;
     with pHitBox {
-        if(attack == AT_DSPECIAL && hbox_num == 1 && other.player == player){
+        if(attack == AT_DSPECIAL && hbox_num == 1 && other.player == orig_player){
             if (hsp != 0) {
                 if (age == 2){
                     draw_sprite_ext(other.dspecialProjSprite, hitbox_timer*img_spd, x, y, dir, 1, 0, -1, 1);
