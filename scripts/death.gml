@@ -1,6 +1,6 @@
 // called when the character gets KO'd
 
-sound_play( sound_get( "failed" ) );
+sound_play(failedSound);
 
 //destroy mines
 if(activeMines){

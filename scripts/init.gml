@@ -193,6 +193,7 @@ birdZetaSound = sound_get("BirdZeta");
 birdEpsilonSound = sound_get("BirdEpsilon");
 birdDeltaSound = sound_get("BirdDelta");
 birdBetaSound = sound_get("BirdBeta");
+failedSound = sound_get("failed");
 
 // Alt stuff
 

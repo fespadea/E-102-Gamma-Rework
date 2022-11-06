@@ -10,7 +10,7 @@
 
 //Jump Sound
 if (state == PS_FIRST_JUMP && state_timer == 1){
-    sound_play(sound_get("sfx_e102jump"));
+    sound_play(djump_sound);
 }
 
 if (state == PS_HITSTUN || state_cat == SC_GROUND_NEUTRAL || state_cat == SC_GROUND_COMMITTED || state == PS_WALL_JUMP) {
