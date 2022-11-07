@@ -28,20 +28,15 @@ markLoaded = 0;
 temp_x = x + 8;
 temp_y = y + 9;
 
-// css UI sprites
-cssUnlimitedScrollButton = sprite_get("css_unlimited_scroll_button");
-sprite_change_offset( "css_unlimited_scroll_button", 0,  0);
-cssUnlimitedScrollButtonDivision = sprite_get("css_unlimited_scroll_button_division");
-sprite_change_offset( "css_unlimited_scroll_button_division", 0,  0);
+// css UI sprite
+cssUnlimitedRowButton = sprite_get("css_unlimited_row_button");
 
-holdUnlimitedUpButton = false;
-holdUnlimitedDownButton = false;
+hoverUnlimitedRowButton = false;
+holdUnlimitedRowButton = false;
 altSwitchSound = asset_get("mfx_change_color");
 
-unlimitedUpButtonX = temp_x+182;
-unlimitedUpButtonY = temp_y+88;
-unlimitedDownButtonX = unlimitedUpButtonX;
-unlimitedDownButtonY = unlimitedUpButtonY+34;
+unlimitedRowButtonX = 0;
+unlimitedRowButtonY = 0;
 
 //Alt names [Edit necessary]
 altName = [];

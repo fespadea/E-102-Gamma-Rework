@@ -27,13 +27,29 @@ if(unlimitedAlt == RAINBOW_ALT){
     init_shader(); // run init_shader to update the hue
 }
 
-suppress_cursor = false;
-if(get_instance_x(cursor_id) >= unlimitedUpButtonX && get_instance_x(cursor_id) <= unlimitedUpButtonX + sprite_get_width(cssUnlimitedScrollButton) 
-	&& get_instance_y(cursor_id) >= unlimitedUpButtonY && get_instance_y(cursor_id) <= unlimitedUpButtonY + sprite_get_height(cssUnlimitedScrollButton)){
-    suppress_cursor = true;
+
+if (player == 0){ // got this from Lilac which I think got it from Dr. Flux
+    unlimitedRowButtonX = temp_x + 172;
+    unlimitedRowButtonY = temp_y + 30;
+} else{
+    if (get_player_hud_color(player) == 8421504)
+    {
+        unlimitedRowButtonX = temp_x + 52;
+        unlimitedRowButtonY = temp_y + 169;
+    }
+    else
+    {
+        unlimitedRowButtonX = temp_x + 67;
+        unlimitedRowButtonY = temp_y + 169;
+    }
+}
+
+if(get_instance_x(cursor_id) >= unlimitedRowButtonX && get_instance_x(cursor_id) <= unlimitedRowButtonX + sprite_get_width(cssUnlimitedRowButton) 
+	&& get_instance_y(cursor_id) >= unlimitedRowButtonY && get_instance_y(cursor_id) <= unlimitedRowButtonY + sprite_get_height(cssUnlimitedRowButton)){
+    hoverUnlimitedRowButton = true;
     if(menu_a_pressed){
-        if(!holdUnlimitedUpButton){
-            holdUnlimitedUpButton = true;
+        if(!holdUnlimitedRowButton){
+            holdUnlimitedRowButton = true;
             sound_play(altSwitchSound);
             unlimitedAlt += 16;
             if(unlimitedAlt >= array_length(altName)){
@@ -41,19 +57,9 @@ if(get_instance_x(cursor_id) >= unlimitedUpButtonX && get_instance_x(cursor_id) 
             }
             updateUnlimitedAlt();
         }
-    } else if(!menu_a_down){
-        holdUnlimitedUpButton = false;
-    }
-} else{
-    holdUnlimitedUpButton = false;
-}
-
-if(get_instance_x(cursor_id) >= unlimitedDownButtonX && get_instance_x(cursor_id) <= unlimitedDownButtonX + sprite_get_width(cssUnlimitedScrollButton) 
-	&& get_instance_y(cursor_id) >= unlimitedDownButtonY - sprite_get_height(cssUnlimitedScrollButton) && get_instance_y(cursor_id) <= unlimitedDownButtonY){
-    suppress_cursor = true;
-    if(menu_a_pressed){
-        if(!holdUnlimitedDownButton){
-            holdUnlimitedDownButton = true;
+    } else if(back_pressed){
+        if(!holdUnlimitedRowButton){
+            holdUnlimitedRowButton = true;
             sound_play(altSwitchSound);
             unlimitedAlt -= 16;
             if(unlimitedAlt < 0){
@@ -63,11 +69,13 @@ if(get_instance_x(cursor_id) >= unlimitedDownButtonX && get_instance_x(cursor_id
             }
             updateUnlimitedAlt();
         }
-    } else if(!menu_a_down){
-        holdUnlimitedDownButton = false;
+    
+    }else if(!menu_a_down && !back_pressed){
+        holdUnlimitedRowButton = false;
     }
 } else{
-    holdUnlimitedDownButton = false;
+    holdUnlimitedRowButton = false;
+    hoverUnlimitedRowButton = false;
 }
 
 
