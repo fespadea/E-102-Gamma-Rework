@@ -1,5 +1,6 @@
 // css update
 
+cpu_hover_update();
 
 var curGameAlt = get_player_color(player); // the current base game alt
 unlimitedAlt = split_synced_var(FIRST_BIT_UNLIMITED, LAST_BIT_UNLIMITED-FIRST_BIT_UNLIMITED+1, 31-LAST_BIT_UNLIMITED)[1]; // the currently selected alt
@@ -47,6 +48,7 @@ if (player == 0){ // got this from Lilac which I think got it from Dr. Flux
 if(get_instance_x(cursor_id) >= unlimitedRowButtonX && get_instance_x(cursor_id) <= unlimitedRowButtonX + sprite_get_width(cssUnlimitedRowButton) 
 	&& get_instance_y(cursor_id) >= unlimitedRowButtonY && get_instance_y(cursor_id) <= unlimitedRowButtonY + sprite_get_height(cssUnlimitedRowButton)){
     hoverUnlimitedRowButton = true;
+    suppress_cursor = true;
     if(menu_a_pressed){
         if(!holdUnlimitedRowButton){
             holdUnlimitedRowButton = true;
@@ -57,7 +59,7 @@ if(get_instance_x(cursor_id) >= unlimitedRowButtonX && get_instance_x(cursor_id)
             }
             updateUnlimitedAlt();
         }
-    } else if(back_pressed){
+    } else if(menu_b_pressed){
         if(!holdUnlimitedRowButton){
             holdUnlimitedRowButton = true;
             sound_play(altSwitchSound);
@@ -69,15 +71,34 @@ if(get_instance_x(cursor_id) >= unlimitedRowButtonX && get_instance_x(cursor_id)
             }
             updateUnlimitedAlt();
         }
-    
-    }else if(!menu_a_down && !back_pressed){
+    } else if(menu_rb_pressed){
+        if(!holdUnlimitedRowButton){
+            holdUnlimitedRowButton = true;
+            sound_play(altSwitchSound);
+            unlimitedAlt++;
+            if(unlimitedAlt == array_length(altName)){
+                unlimitedAlt = 0;
+            }
+            updateUnlimitedAlt();
+        }
+    } else if(menu_lb_pressed){
+        if(!holdUnlimitedRowButton){
+            holdUnlimitedRowButton = true;
+            sound_play(altSwitchSound);
+            if(unlimitedAlt == 0){
+                unlimitedAlt = array_length(altName); 
+            }
+            unlimitedAlt--;
+            updateUnlimitedAlt();
+        }
+    }else if(!menu_a_down && !menu_b_down && !menu_lb_down && !menu_rb_down ){
         holdUnlimitedRowButton = false;
     }
 } else{
     holdUnlimitedRowButton = false;
     hoverUnlimitedRowButton = false;
+    suppress_cursor = false;
 }
-
 
 #define updateUnlimitedAlt
 var syncedVar = get_synced_var(player);
@@ -104,3 +125,56 @@ for (var i = 0; i < num_chunks; i++) {
 }
 // print(chunk_arr);
 return chunk_arr;
+
+#define cpu_hover_update()
+var p = player;
+var is_cpu = (get_player_hud_color(p) == 8421504);
+
+if (is_cpu) {
+    var pb = plate_bounds, cs = cursors;
+    if (cpu_is_hovered) {
+        var c = cs[@cpu_hovering_player]
+        cursor_id = c;
+        var cx = get_instance_x(c),
+            cy = get_instance_y(c);
+        if (cpu_hover_time < 10) cpu_hover_time++;
+        if (cpu_color_swap_time < 5) cpu_color_swap_time++;
+        if (cx != clamp(cx, pb[0],pb[2]) || cy != clamp(cy, pb[1],pb[3])) {
+            cpu_is_hovered = false;
+            c = cs[@p];
+            cursor_id = c;
+        }
+    } else {
+        var hplayer = get_new_hovering_player();
+        if (cpu_hover_time > 0) cpu_hover_time--;
+        if (hplayer != -1) {
+            cpuh_new_color = get_player_hud_color(hplayer);
+            if (cpu_hover_time > 0) {
+                cpuh_prev_color = get_player_hud_color(cpu_hovering_player);
+                cpu_color_swap_time = 0;
+            } else { //if the player indicator is not being displayed already
+                cpuh_prev_color = cpuh_new_color;
+                cpu_color_swap_time = 10;
+            }
+            cpu_is_hovered = true;
+            cpu_hovering_player = hplayer;
+            cursor_id = cs[@hplayer];
+        }
+    }
+} else {
+    cursor_id = cursors[player];
+    cpu_is_hovered = false;
+    cpu_hover_time = 0;
+}
+
+#define get_new_hovering_player()
+var pb = plate_bounds, cs = cursors;
+for (var i = 1; i <= 4; i++) {
+    var c = cs[@i];
+    var cx = get_instance_x(c);
+    var cy = get_instance_y(c);
+    if cx == clamp(cx, pb[@0], pb[@2]) && cy == clamp(cy, pb[@1], pb[@3]) {
+        return i;
+    } 
+}
+return -1;
