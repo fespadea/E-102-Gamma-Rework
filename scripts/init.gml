@@ -124,6 +124,7 @@ yDistanceToTargetPoint = 5;
 distanceToTargetPoint = sqrt(xDistanceToTargetPoint*xDistanceToTargetPoint + yDistanceToTargetPoint*yDistanceToTargetPoint);
 angleToTargetPoint = arctan(yDistanceToTargetPoint/xDistanceToTargetPoint);
 markedPlayers = [];
+drawTargets = [];
 rocketsShot = 0;
 activeRockets = false;
 targetConfirmedSound = sound_get("TargetConfirmed");
@@ -139,6 +140,7 @@ for(var i = 0; i <= largestPlayerNumber; i++){
 solidBlockObject = asset_get("par_block");
 targeterBaseX = x-10*spr_dir;
 targeterBaseY = y-69;
+multiplier = 1;
 
 //birds
 noSwallow = true;
@@ -204,6 +206,7 @@ gammaNspecialHurtSprite = sprite_get("gamma_nspecial_hurt");
 gammaNspecialKirbyIcon = sprite_get("Gamma_nspecial_kirby_icon");
 idleSprite = sprite_get("idle");
 nspecialFlickySprite = sprite_get("nspecial_flicky");
+emptySprite = asset_get("empty_sprite");
 
 //Various sounds (I made these all at once when I realized I shouldn't be calling sound_get in repeating scripts)
 gammaElectricity2Sound = sound_get("GammaElectricity2");
@@ -286,6 +289,8 @@ var rune_letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"]
 for (var rune_num = 0; rune_num < array_length(rune_letters); rune_num++) {
     variable_instance_set(self, "rune" + rune_letters[rune_num], has_rune(rune_letters[rune_num]));
 }
+// variable used to activate runesUpdated at the start of the match
+runesEnabled = get_match_setting(SET_RUNES);
 ab_hud_x = 0;
 ab_hud_y = 0;
 
@@ -302,20 +307,21 @@ abyssMods[@ runes.B] = [3, "USPECIAL goes twice as high."];
 abyssMods[@ runes.C] = [2, "Old USTRONG."];
 abyssMods[@ runes.D] = [2, "Old FSTRONG."];
 abyssMods[@ runes.E] = [2, "Old DAIR."];
-abyssMods[@ runes.F] = [2, "Taunt has a strong hitbox."];
+abyssMods[@ runes.F] = [3, "Auto Float on Bottom Screen Barrier."];
 // value 2
-abyssMods[@ runes.G] = [3, "Lock onto articles during FSPECIAL."];
+abyssMods[@ runes.G] = [3, "Lock onto nonhittable articles and projectiles during FSPECIAL."];
 abyssMods[@ runes.H] = [0, "Beta windbox twice as strong."];
-abyssMods[@ runes.I] = [1, "Shoot two missiles per target of FSPECIAL."];
-abyssMods[@ runes.J] = [2, "Taunt has a strong hitbox."];
-abyssMods[@ runes.K] = [2, "Taunt has a strong hitbox."];
+abyssMods[@ runes.I] = [1, "Shoot twice as many missiles per target of FSPECIAL."];
+abyssMods[@ runes.J] = [3, "USPECIAL has no time limit."];
+abyssMods[@ runes.K] = [1, "The birds bounce off the screen borders."];
 // value 3
 abyssMods[@ runes.L] = [3, "No bird limits."];
-abyssMods[@ runes.M] = [3, "Auto Float on Bottom Screen Barrier."];
-abyssMods[@ runes.N] = [3, "USPECIAL has no time limit."];
-abyssMods[@ runes.0] = [2, "Taunt has a strong hitbox."];
+abyssMods[@ runes.M] = [1, "No mine limit."];
+abyssMods[@ runes.N] = [1, "Shoot thrice as many missiles per target of FSPECIAL."];
+abyssMods[@ runes.O] = [1, "Aim and shoot FSPECIAL through solid blocks and platforms."];
 
-
+// count = -1;
+// objects = [];
 
 #define updateUnlimitedAlt
 unlimitedAlt = argument[0];

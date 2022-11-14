@@ -70,6 +70,19 @@ if(attack == AT_NSPECIAL && special_down && (state == PS_ATTACK_GROUND || state 
         draw_sprite_ext(nspecialFlickyIconSprite, 0, x, y-char_height/2, spr_dir, 1, 0, -1, .7);
 }
 
+for(var i = 0; i < array_length(markedPlayers); i++){
+    if(drawTargets[i] && instance_exists(markedPlayers[i])){
+        if(!("object_index" in markedPlayers[i])){
+            shader_start();
+            draw_sprite_ext(rocketMarked, state_timer/6, get_instance_x(markedPlayers[i]), get_instance_y(markedPlayers[i]), 1, 1, 0, -1, .5);
+            shader_end();
+        }else if(markedPlayers[i].object_index != oPlayer){
+            shader_start();
+            draw_sprite_ext(rocketMarked, state_timer/6, markedPlayers[i].x + markedPlayers[i].gammaTargetWidth/2, markedPlayers[i].y - markedPlayers[i].char_height/2, 1, 1, 0, -1, .5);
+            shader_end();
+        }
+    }
+}
 
 
 

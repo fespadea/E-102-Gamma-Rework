@@ -32,11 +32,13 @@ if(!hitpause){
 			}
 			break;
 		case AT_DAIR: // Rapid Dair
-			if(attack_down || down_strong_down || strong_down || down_stick_down)
-				set_window_value(AT_DAIR, 2, AG_WINDOW_TYPE, 9);
-			if(window == get_attack_value(AT_DAIR, AG_NUM_WINDOWS)-1 && !playingDairSFX){
-				gammaElectricitySoundInstance = sound_play(gammaElectricitySound, true);
-				playingDairSFX = true;
+			if(!runeE){
+				if(attack_down || down_strong_down || strong_down || down_stick_down)
+					set_window_value(AT_DAIR, 2, AG_WINDOW_TYPE, 9);
+				if(window == get_attack_value(AT_DAIR, AG_NUM_WINDOWS)-1 && !playingDairSFX){
+					gammaElectricitySoundInstance = sound_play(gammaElectricitySound, true);
+					playingDairSFX = true;
+				}
 			}
 			break;
 		case AT_FTILT: // Rapid Ftilt
@@ -47,7 +49,7 @@ if(!hitpause){
 		case AT_USPECIAL: // CDs
 			if (window == 2){
 				if (window_timer == get_window_value(attack, 2, AG_WINDOW_LENGTH)){
-					if (times_through < 2){
+					if (times_through < 2 || runeJ){
 						times_through++;
 						window_timer = 0;
 					}
@@ -71,12 +73,27 @@ if(!hitpause){
 				can_wall_jump = true;
 				move_cooldown[AT_USPECIAL] = 999;
 				if special_down {
-					vsp = -1.5;
+					vsp = -1.5*(runeB ? 2 : 1);
 				}
 			}
 			if !free{
 				set_state(PS_IDLE);
 				sound_stop(gammaFanSoundInstance);
+			}
+			break;
+		case AT_USPECIAL_2:
+			can_jump = true;
+			can_attack = true;
+			can_fast_fall = false;
+			can_shield = true;
+			can_wall_jump = true;
+			can_special = true;
+			can_djump = true;
+			move_cooldown[AT_USPECIAL] = 0;
+			djumps = 0;
+			vsp = (y > view_get_yview() + view_get_hview() - 30 ? -1 : 0) + (state_timer % 62 > 30 ? (15 - state_timer % 31) : (state_timer % 31 - 15))/14;
+			if(down_hard_pressed){
+				set_state(PS_IDLE_AIR);
 			}
 			break;
 		case AT_DATTACK: // Dash Attack transitions into dash
@@ -159,20 +176,91 @@ if(!hitpause){
 					var unMarkedPlayer;
 					var targetedPlayer;
 					var i;
+					var j;
+					var k;
+					var largestPlayerNumber = 0; // used for articles and projectiles after this
 					with oPlayer{
+						if(player > largestPlayerNumber){
+							largestPlayerNumber = player;
+						}
 						if(player != other.player && !(get_player_team(player) == get_player_team(other.player) && get_match_setting(SET_TEAMATTACK) == false)){
 							unMarkedPlayer = true;
 							for(i = 0; i < array_length(other.markedPlayers); i++){
-								if(other.markedPlayers[i] == id){
+								if(other.markedPlayers[i] == self){
 									unMarkedPlayer = false;
 								}
 							}
 							if(unMarkedPlayer){
 								targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, id, false, false);
 								if(targetedPlayer != noone){
+									other.drawTargets[array_length(other.markedPlayers)] = false;
 									other.markedPlayers[array_length(other.markedPlayers)] = targetedPlayer;
 									gammaRocketMarked[other.player] = true;
 									playTargetConfirmedSound = true;
+								}
+							}
+						}
+					}
+					var articles = [obj_article1, obj_article2, obj_article3, obj_article_solid, obj_article_platform, pHitBox];
+					for(i = 0; i < array_length(articles); i++){
+						with articles[i] {
+							if(player != other.player && !(get_player_team(player) == get_player_team(other.player) && get_match_setting(SET_TEAMATTACK) == false)){
+								if((i < 5 && is_hittable) || other.runeG){
+									unMarkedPlayer = true;
+									for(j = 0; j < array_length(other.markedPlayers); j++){
+										if(other.markedPlayers[j] == self){
+											unMarkedPlayer = false;
+										}
+									}
+									if(unMarkedPlayer){
+										targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, id, false, false);
+										if(targetedPlayer != noone){
+											other.drawTargets[array_length(other.markedPlayers)] = true;
+											other.markedPlayers[array_length(other.markedPlayers)] = targetedPlayer;
+											for(k = ("gammaRocketMarked" in self ? array_length(gammaRocketMarked) : 0); k <= largestPlayerNumber; k++){
+												gammaRocketMarked[k] = false;
+											}
+											gammaRocketMarked[other.player] = true;
+											playTargetConfirmedSound = true;
+											if(!("char_height" in self)){
+												if(sprite_index == other.emptySprite){
+													char_height = (sprite_get_yoffset(mask_index) - sprite_get_height(mask_index)/2)*2;
+												} else{
+													char_height = (sprite_get_yoffset(sprite_index) - sprite_get_height(sprite_index)/2)*2;
+												}
+											}
+											if(!("gammaTargetWidth" in self)){
+												if(sprite_index == other.emptySprite){
+													gammaTargetWidth = (sprite_get_xoffset(mask_index) - sprite_get_width(mask_index)/2)*2;
+												} else{
+													gammaTargetWidth = (sprite_get_xoffset(sprite_index) - sprite_get_width(sprite_index)/2)*2;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					var baseArticles = [asset_get("rock_obj"), asset_get("pillar_obj"), asset_get("smoke_obj"), asset_get("frog_bubble_obj"), asset_get("olymp_gem_obj"), asset_get("steam_bubble_obj"), asset_get("chester_obj"), asset_get("hodan_spirit_obj"), asset_get("moth_bomb_obj"), asset_get("gus_anchor_obj"), asset_get("orb_obj"), asset_get("steam_bomb_obj"), asset_get("ice_obj"), asset_get("cloud_obj"), asset_get("puddle_obj"), asset_get("wind_obj"), asset_get("wolf_bud_obj"), asset_get("wolf_grass_obj"), asset_get("plasma_field_obj"), asset_get("plant_obj"), asset_get("pBurnBox")];
+					for(i = 0; i < array_length(baseArticles); i++){
+						with baseArticles[i] {
+							if(get_instance_player(self) != other.player && !(get_player_team(get_instance_player(self)) == get_player_team(other.player) && get_match_setting(SET_TEAMATTACK) == false)){
+								if(i < 5 || other.runeG){
+									unMarkedPlayer = true;
+									for(j = 0; j < array_length(other.markedPlayers); j++){
+										if(other.markedPlayers[j] == self){
+											unMarkedPlayer = false;
+										}
+									}
+									if(unMarkedPlayer){
+										targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, self, false, false);
+										if(targetedPlayer != noone){
+											other.drawTargets[array_length(other.markedPlayers)] = true;
+											other.markedPlayers[array_length(other.markedPlayers)] = targetedPlayer;
+											playTargetConfirmedSound = true;
+										}
+									}
 								}
 							}
 						}
@@ -190,17 +278,20 @@ if(!hitpause){
 				}
 			} else if (window == 3){
 				if(window_timer == 1){
-					if(rocketsShot >= array_length(markedPlayers)){
+					while(rocketsShot < array_length(markedPlayers)*multiplier && !instance_exists(markedPlayers[floor(rocketsShot/multiplier)])){
+						rocketsShot++;
+					} 
+					if(rocketsShot >= array_length(markedPlayers)*multiplier){
 						window = 4;
 						activeRockets = true;
 					}
 				}else if(window_timer == 2){
-					while(rocketsShot < array_length(markedPlayers) && !instance_exists(markedPlayers[rocketsShot])){
+					while(rocketsShot < array_length(markedPlayers)*multiplier && !instance_exists(markedPlayers[floor(rocketsShot/multiplier)])){
 						rocketsShot++;
 					} 
-					if(rocketsShot < array_length(markedPlayers)){
+					if(rocketsShot < array_length(markedPlayers)*multiplier){
 						var newRocket = create_hitbox(attack, 1, x + spr_dir*get_hitbox_value(attack, 1, HG_HITBOX_X), y + get_hitbox_value(attack, 1, HG_HITBOX_Y) );
-						newRocket.targetPlayer = markedPlayers[rocketsShot];
+						newRocket.targetPlayer = markedPlayers[floor(rocketsShot/multiplier)];
 						newRocket.draw_xscale = 1;
 						rocketsShot++;
 					}
@@ -210,6 +301,12 @@ if(!hitpause){
 		case AT_NSPECIAL: // End Nspecial
 			can_shield = true;
 			//check for active birds
+			if(runeL){
+				noSwallow = true;
+				noParrot = true;
+				noPeacock = true;
+				noFlicky = true;
+			}
 			if(!noSwallow){
 				noSwallow = true;
 				with pHitBox {
@@ -293,24 +390,21 @@ if(!hitpause){
 			}
 			break;
 		case AT_FSTRONG:
-			if(window == 2){
-				if(window_timer == 1){
-					gammaElectricitySoundInstance = sound_play(gammaElectricitySound);
+			if(!runeD){
+				if(window == 2){
+					if(window_timer == 1){
+						gammaElectricitySoundInstance = sound_play(gammaElectricitySound);
+					}
+					set_hitbox_value(AT_FSTRONG, 3, HG_PROJECTILE_HSPEED, 3 + 6*strong_charge/60);
 				}
-				set_hitbox_value(AT_FSTRONG, 3, HG_PROJECTILE_HSPEED, 3 + 6*strong_charge/60);
-			}
-			break;
-		case AT_TAUNT:
-			if(unlimitedAlt = 24){ // Egg Breaker alt number
-				tauntSoundInstance = sound_play(EggBreakerTauntSfx);
-			} else{
-				tauntSoundInstance = sound_play(normalTauntSfx);
 			}
 			break;
 		case AT_USTRONG:
-			if(window == 2){
-				if(window_timer == 1){
-					gammaElectricitySoundInstance = sound_play(gammaElectricitySound);
+			if(!runeC){
+				if(window == 2){
+					if(window_timer == 1){
+						gammaElectricitySoundInstance = sound_play(gammaElectricitySound);
+					}
 				}
 			}
 			break;
@@ -328,8 +422,10 @@ if(!hitpause){
 		if(!(spr_dir == 1 && right_stick_down) && !(spr_dir == -1 && left_stick_down))
 			set_window_value(AT_FTILT, 2, AG_WINDOW_TYPE, 0);
 		set_window_value(AT_JAB, 8, AG_WINDOW_TYPE, 0);
-		if(!down_strong_down && !strong_down && !down_stick_down)
-			set_window_value(AT_DAIR, 2, AG_WINDOW_TYPE, 0);
+		if(!runeE){
+			if(!down_strong_down && !strong_down && !down_stick_down)
+				set_window_value(AT_DAIR, 2, AG_WINDOW_TYPE, 0);
+		}
 	}
 }
 
@@ -342,7 +438,7 @@ sx = lengthdir_x(range,dir);
 sy = lengthdir_y(range,dir);
 dx = ox + sx;
 dy = oy + sy;
-if (collision_line(ox,oy,dx,dy,object,prec,notme) < 0) {
+if (runeO || collision_line(ox,oy,dx,dy,object,prec,notme) < 0) {
 	distance = range;
 }else{
 	while ((abs(sx) >= 1) || (abs(sy) >= 1)) {

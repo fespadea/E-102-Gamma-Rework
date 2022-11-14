@@ -17,7 +17,14 @@ switch(attack){
         }
         break;
     case AT_USPECIAL:
-        gammaFanSoundInstance = sound_play(gammaFanSound);
+        sound_stop(gammaFanSoundInstance);
+        gammaFanSoundInstance = sound_play(gammaFanSound, true);
         times_through = 0;
         break;
 }
+
+// count = -1;
+// with all{
+//     other.objects[array_length(other.objects)] = self;
+// }
+// print("start");

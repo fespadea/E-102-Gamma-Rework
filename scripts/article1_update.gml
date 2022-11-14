@@ -20,9 +20,10 @@ switch(state){
                 spawn_hit_fx(x, y, 194);
             var enemyPlayer = noone;
             with oPlayer {
-                if(player != other.player_id.player && !(get_player_team(player) == get_player_team(other.player_id.player) && get_match_setting(SET_TEAMATTACK) == false)){  
+                if(player != other.player_id.player && !(get_player_team(player) == get_player_team(other.player_id.player) && !get_match_setting(SET_TEAMATTACK))){  
                     enemyPlayer = collision_circle(other.x, other.y, 60, id, false, false);
-                    break;
+                    if(enemyPlayer != noone)
+                        break;
                 }
             }
             if(enemyPlayer != noone){
@@ -34,10 +35,13 @@ switch(state){
         vsp = hover()
         if(state_timer == 1){ // also create a vfx eventually
             with oPlayer {
-                if(player != other.player_id.player && !(get_player_team(player) == get_player_team(other.player_id.player) && get_match_setting(SET_TEAMATTACK) == false)){
+                if(player != other.player_id.player && !(get_player_team(player) == get_player_team(other.player_id.player) && !get_match_setting(SET_TEAMATTACK))){
                     if(collision_circle(other.x, other.y, 60, id, false, false)){
                         var windboxAngle = degtorad(point_direction(other.x, other.y, x, y - char_height/2));
                         var windboxPower = sqrt(sqr(hsp)+sqr(vsp))/10+2;
+                        if(other.player_id != other.kirby && other.player_id.runeH){
+                            windboxPower *= 2;
+                        }
                         var windHSP = windboxPower*cos(windboxAngle);
                         var windVSP = -windboxPower*sin(windboxAngle);
                         switch(state){

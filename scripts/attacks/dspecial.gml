@@ -37,7 +37,7 @@ set_hitbox_value(AT_DSPECIAL, 1, HG_BASE_KNOCKBACK, 3);
 set_hitbox_value(AT_DSPECIAL, 1, HG_KNOCKBACK_SCALING, .65);
 set_hitbox_value(AT_DSPECIAL, 1, HG_BASE_HITPAUSE, 4);
 set_hitbox_value(AT_DSPECIAL, 1, HG_HITPAUSE_SCALING, 1.25);
-set_hitbox_value(AT_DSPECIAL, 1, HG_PROJECTILE_SPRITE, sprite_get("empty"));
+set_hitbox_value(AT_DSPECIAL, 1, HG_PROJECTILE_SPRITE, asset_get("empty_sprite"));
 dspecialProjSprite = sprite_get("dspecial_proj");
 set_hitbox_value(AT_DSPECIAL, 1, HG_PROJECTILE_MASK, dspecialProjSprite);
 set_hitbox_value(AT_DSPECIAL, 1, HG_PROJECTILE_COLLISION_SPRITE, dspecialProjSprite);
