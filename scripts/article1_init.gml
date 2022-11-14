@@ -14,5 +14,8 @@ ignores_walls = true;
 free = true;
 hitstop = 0;
 
-player_id.noFlicky = false;
 despawn = false;
+
+if(!("kirby" in self)){
+    kirby = -1;
+}

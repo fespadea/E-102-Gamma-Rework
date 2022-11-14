@@ -29,9 +29,11 @@ if(unlimitedAlt == RAINBOW_ALT){
 }
 
 
-if (player == 0){ // got this from Lilac which I think got it from Dr. Flux
+if (onlineCSS){ // got this from Lilac which I think got it from Dr. Flux
     unlimitedRowButtonX = temp_x + 172;
     unlimitedRowButtonY = temp_y + 30;
+    // unlimitedRowButtonX = temp_x + 26;
+    // unlimitedRowButtonY = temp_y + 139;
 } else{
     if (get_player_hud_color(player) == 8421504)
     {

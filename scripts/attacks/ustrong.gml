@@ -10,9 +10,9 @@ set_window_value(AT_USTRONG, 1, AG_WINDOW_ANIM_FRAME_START, 0);
 
 set_window_value(AT_USTRONG, 2, AG_WINDOW_LENGTH, 14);
 set_window_value(AT_USTRONG, 2, AG_WINDOW_ANIM_FRAMES, 14);
-set_window_value(AT_USTRONG, 2, AG_WINDOW_HAS_SFX, 1);
-set_window_value(AT_USTRONG, 2, AG_WINDOW_SFX, sound_get("GammaElectricity"));
-set_window_value(AT_USTRONG, 2, AG_WINDOW_SFX_FRAME, 0);
+// set_window_value(AT_USTRONG, 2, AG_WINDOW_HAS_SFX, 1);
+// set_window_value(AT_USTRONG, 2, AG_WINDOW_SFX, sound_get("GammaElectricity"));
+// set_window_value(AT_USTRONG, 2, AG_WINDOW_SFX_FRAME, 0);
 set_window_value(AT_USTRONG, 2, AG_WINDOW_ANIM_FRAME_START, 6);
 set_window_value(AT_USTRONG, 2, AG_WINDOW_HAS_WHIFFLAG, 10);
 

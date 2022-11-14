@@ -38,6 +38,12 @@ altSwitchSound = asset_get("mfx_change_color");
 unlimitedRowButtonX = 0;
 unlimitedRowButtonY = 0;
 
+// css alt effect warning sprite
+cssAltEffectWarning = sprite_get("css_alt_effect_warning");
+
+altEffectWarningX = temp_x;
+altEffectWarningY = temp_y + 34;
+
 //Alt names [Edit necessary]
 altName = [];
 i = 0;

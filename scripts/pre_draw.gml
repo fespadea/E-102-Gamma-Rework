@@ -2,7 +2,9 @@
 
 //draw the jetpack during fspecial if floating
 if(attack == AT_FSPECIAL && state == PS_ATTACK_AIR && floatActive){
+    shader_start();
     draw_sprite_ext(jetpackSprite, state_timer*jump_anim_speed, x, y, spr_dir, 1, 0, -1, 1);
+    shader_end();
 }
 
 //draw the mines

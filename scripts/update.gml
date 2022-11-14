@@ -19,21 +19,21 @@ if (state == PS_HITSTUN || state_cat == SC_GROUND_NEUTRAL || state_cat == SC_GRO
 
 
 if attack != AT_USPECIAL || state != PS_ATTACK_AIR {
-	sound_stop(gammaFanSound);
+	sound_stop(gammaFanSoundInstance);
 }
 
 if (playingJabSFX && !(attack == AT_JAB && window == get_attack_value( AT_JAB, AG_NUM_WINDOWS)-1)){
-	sound_stop(gammaElectricity2Sound);
+	sound_stop(gammaElectricity2SoundInstance);
 	playingJabSFX = false;
 }
 
-if (!(state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR) || (!(attack == AT_UAIR && window == get_attack_value( AT_UAIR, AG_NUM_WINDOWS)-1) && !(attack == AT_USTRONG && window == get_attack_value( AT_USTRONG, AG_NUM_WINDOWS)-1) && attack != AT_FSTRONG && (attack != AT_DAIR && window == get_attack_value( AT_DAIR, AG_NUM_WINDOWS)-1))){
-	sound_stop(gammaElectricitySound);
+if (!(state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR) || (!(attack == AT_UAIR && window == get_attack_value( AT_UAIR, AG_NUM_WINDOWS)-1) && !(attack == AT_USTRONG && window == get_attack_value( AT_USTRONG, AG_NUM_WINDOWS)-1) && attack != AT_FSTRONG && !(attack == AT_DAIR && window == get_attack_value( AT_DAIR, AG_NUM_WINDOWS)-1))){
+	sound_stop(gammaElectricitySoundInstance);
 	playingDairSFX = false;
 }
 
 if (playingFSpecialSFX && !((state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR) && attack = AT_FSPECIAL && window == 2)){
-	sound_stop(targeting2Sound);
+	sound_stop(targeting2SoundInstance);
 	playingFSpecialSFX = false;
 }
 
@@ -135,67 +135,46 @@ if(unlimitedAlt == RAINBOW_ALT){ // check that you've selected the rainbow alt [
 //kirby support
 if swallowed {
 	swallowed = 0;
-	var ability_spr = gammaNspecialSprite;
-	var ability_proj_spr = dspecialProjSprite;
-	var ability_hurt = gammaNspecialHurtSprite;
 	var ability_icon = gammaNspecialKirbyIcon;
+	print("hi");
     with enemykirby {
-	// NSPECIAL
-	set_attack_value(AT_EXTRA_3, AG_CATEGORY, 2);
-	set_attack_value(AT_EXTRA_3, AG_SPRITE, ability_spr);
-	set_attack_value(AT_EXTRA_3, AG_NUM_WINDOWS, 3);
-	set_attack_value(AT_EXTRA_3, AG_AIR_SPRITE, ability_spr);
-	set_attack_value(AT_EXTRA_3, AG_HURTBOX_SPRITE, ability_hurt);
-
-	set_window_value(AT_EXTRA_3, 1, AG_WINDOW_TYPE, 0);
-	set_window_value(AT_EXTRA_3, 1, AG_WINDOW_LENGTH, 9);
-	set_window_value(AT_EXTRA_3, 1, AG_WINDOW_ANIM_FRAMES, 7);
-
-	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_TYPE, 0);
-	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_LENGTH, 20);
-	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_ANIM_FRAMES, 3);
-	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_HAS_SFX, 1);
-	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_SFX, asset_get("sfx_plant_shoot"));
-	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_SFX_FRAME, 1);
-	set_window_value(AT_EXTRA_3, 2, AG_WINDOW_ANIM_FRAME_START, 6);
-
-	set_window_value(AT_EXTRA_3, 3, AG_WINDOW_TYPE, 0);
-	set_window_value(AT_EXTRA_3, 3, AG_WINDOW_LENGTH, 9);
-	set_window_value(AT_EXTRA_3, 3, AG_WINDOW_ANIM_FRAMES, 2);
-	set_window_value(AT_EXTRA_3, 3, AG_WINDOW_ANIM_FRAME_START, 9);
-
-	set_num_hitboxes(AT_EXTRA_3,1);
-
-	set_hitbox_value(AT_EXTRA_3, 1, HG_HITBOX_TYPE, 2);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_WINDOW, 2);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_WINDOW_CREATION_FRAME, 6);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_LIFETIME, 100);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_HITBOX_X, -20);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_HITBOX_Y, -50);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_WIDTH, 90);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_HEIGHT, 60);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_PRIORITY, 3);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_DAMAGE, 2);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_ANGLE, 50);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_BASE_KNOCKBACK, 3);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_KNOCKBACK_SCALING, .65);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_BASE_HITPAUSE, 4);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_HITPAUSE_SCALING, 1.25);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_VISUAL_EFFECT_Y_OFFSET, -16);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_PROJECTILE_SPRITE, ability_proj_spr);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_PROJECTILE_MASK, ability_proj_spr);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_PROJECTILE_ANIM_SPEED, 0.2);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_PROJECTILE_HSPEED, 4);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_PROJECTILE_VSPEED, -6);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_PROJECTILE_GRAVITY, 0.5);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_PROJECTILE_GROUND_BEHAVIOR, 0);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_PROJECTILE_GROUND_FRICTION, 100);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_HIT_SFX, asset_get("sfx_abyss_explosion"));
-	set_hitbox_value(AT_EXTRA_3, 1, HG_VISUAL_EFFECT, 13);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_VISUAL_EFFECT_X_OFFSET, 10);
-	set_hitbox_value(AT_EXTRA_3, 1, HG_VISUAL_EFFECT, 139);
-
-	newicon = ability_icon;
+		newicon = ability_icon;
+		other.kirbies[player] = id;
+		betaArticleInstance = -1;
+	}
+}
+for(var i = 0; i < array_length(kirbies); i++){
+	if(kirbies[i] != -1){
+		if(instance_exists(kirbies[i]) && kirbies[i].newicon == gammaNspecialKirbyIcon){
+			with kirbies[i] {
+				move_cooldown[AT_EXTRA_3] = max(3, move_cooldown[AT_EXTRA_3]);
+				if(state != PS_ATTACK_AIR && state != PS_ATTACK_GROUND){
+					if(move_cooldown[AT_EXTRA_3] <= 3){
+						if(special_pressed && joy_pad_idle){
+							move_cooldown[AT_EXTRA_3] = 20;
+							if(betaArticleInstance != -1 && instance_exists(betaArticleInstance)){
+								with betaArticleInstance {
+									if(state == 0){
+										state = 2;
+										state_timer = 0;
+									}
+								}
+							} else{
+								var tempBetaArticleInstance = -1;
+								sound_play(other.kirbyBetaSfx);
+								with other{
+									tempBetaArticleInstance = instance_create(other.x, other.y - other.char_height/2, "obj_article1");
+									tempBetaArticleInstance.kirby = other;
+								}
+								betaArticleInstance = tempBetaArticleInstance;
+							}
+						}
+					}
+				}
+			}
+		} else{
+			kirbies[i] = -1;
+		}
 	}
 }
 
@@ -226,4 +205,14 @@ if trummelcodecneeded{
     trummelcodecline[page,3] = "";
     trummelcodecline[page,4] = "";
     page++;
+}
+
+
+//runes
+if runesUpdated {
+	if runeA {
+		set_hitbox_value(AT_FSPECIAL, 1, HG_ANGLE_FLIPPER, 9);
+	} else {
+		set_hitbox_value(AT_FSPECIAL, 1, HG_ANGLE_FLIPPER, 8);
+	}
 }

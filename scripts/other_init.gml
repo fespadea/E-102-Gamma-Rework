@@ -1,7 +1,11 @@
 //init of other players
 
-if(!("gammaRocketMarked" in self))
-    gammaRocketMarked = [];
-for(var i = 0; i <= other_player_id.player; i++){
+var largestPlayerNumber = 0;
+with oPlayer{
+    if(player > largestPlayerNumber){
+        largestPlayerNumber = player;
+    }
+}
+for(var i = 0; i <= largestPlayerNumber; i++){
     gammaRocketMarked[i] = false;
 }

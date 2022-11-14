@@ -11,9 +11,9 @@ set_window_value(AT_USPECIAL, 1, AG_WINDOW_ANIM_FRAMES, 2);
 set_window_value(AT_USPECIAL, 1, AG_WINDOW_HSPEED_TYPE, 1);
 set_window_value(AT_USPECIAL, 1, AG_WINDOW_VSPEED, -3);
 set_window_value(AT_USPECIAL, 1, AG_WINDOW_VSPEED_TYPE, 1);
-set_window_value(AT_USPECIAL, 1, AG_WINDOW_HAS_SFX, 1);
-gammaFanSound = sound_get("GammaFan");
-set_window_value(AT_USPECIAL, 1, AG_WINDOW_SFX, gammaFanSound);
+// set_window_value(AT_USPECIAL, 1, AG_WINDOW_HAS_SFX, 1);
+// gammaFanSound = sound_get("GammaFan");
+// set_window_value(AT_USPECIAL, 1, AG_WINDOW_SFX, gammaFanSound);
 
 set_window_value(AT_USPECIAL, 2, AG_WINDOW_LENGTH, 28);
 set_window_value(AT_USPECIAL, 2, AG_WINDOW_ANIM_FRAMES, 7);

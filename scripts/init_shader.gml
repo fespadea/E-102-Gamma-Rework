@@ -76,7 +76,12 @@ if(unlimitedAlt == RAINBOW_ALT){ // make this check for your rainbow alt
 ///args chunk_lengths...
 var num_chunks = argument_count;
 var chunk_arr = array_create(argument_count);
-var synced_var = get_synced_var(player);
+var synced_var;
+if("onlineCSS" in self && onlineCSS){
+    synced_var = get_synced_var(0);
+} else{
+    synced_var = get_synced_var(player);
+}
 var chunk_offset = 0
 for (var i = 0; i < num_chunks; i++) {
     var chunk_len = argument[i]; //print(chunk_len);

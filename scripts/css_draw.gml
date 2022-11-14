@@ -20,6 +20,9 @@ for(var i = 0; i < ceil(array_length(altName)/16); i++){ // draw the rectangles 
 draw_set_halign(fa_left);
 
 draw_sprite_ext(cssUnlimitedRowButton, holdUnlimitedRowButton ? 2 : (hoverUnlimitedRowButton ? 1 : 0), unlimitedRowButtonX, unlimitedRowButtonY, 1, 1, 0, c_white, 1);
+draw_sprite_ext(cssAltEffectWarning, get_player_color(player) == 13 ? 2 : (get_player_color(player) == 18 ? 1 : 0), altEffectWarningX, altEffectWarningY, 1, 1, 0, c_white, 1);
+// draw_sprite_ext(cssAltEffectWarning, 2, altEffectWarningX, altEffectWarningY, 1, 1, 0, c_white, 1);
+
 
 //include alt. name
 // display the name of the currently selected alt

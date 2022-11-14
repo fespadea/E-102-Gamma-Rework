@@ -9,11 +9,15 @@ switch(attack){
         rocketsShot = 0;
         break;
     case AT_TAUNT: //change taunt sfx depending on alt (set here instead of init cause of changing alt mid-match)
+        sound_stop(tauntSoundInstance);
         if(unlimitedAlt = 24){ // Egg Breaker alt number
-            set_window_value(AT_TAUNT, 1, AG_WINDOW_SFX, EggBreakerTauntSfx);
-            sound_stop(EggBreakerTauntSfx);
+            tauntSoundInstance = sound_play(EggBreakerTauntSfx);
         } else{
-            set_window_value(AT_TAUNT, 1, AG_WINDOW_SFX, normalTauntSfx);
-            sound_stop(normalTauntSfx);
+            tauntSoundInstance = sound_play(normalTauntSfx);
         }
+        break;
+    case AT_USPECIAL:
+        gammaFanSoundInstance = sound_play(gammaFanSound);
+        times_through = 0;
+        break;
 }

@@ -127,9 +127,13 @@ markedPlayers = [];
 rocketsShot = 0;
 activeRockets = false;
 targetConfirmedSound = sound_get("TargetConfirmed");
-if(!("gammaRocketMarked" in self))
-    gammaRocketMarked = [];
-for(var i = 0; i <= player; i++){
+var largestPlayerNumber = 0;
+with oPlayer{
+    if(player > largestPlayerNumber){
+        largestPlayerNumber = player;
+    }
+}
+for(var i = 0; i <= largestPlayerNumber; i++){
     gammaRocketMarked[i] = false;
 }
 solidBlockObject = asset_get("par_block");
@@ -161,6 +165,14 @@ goingUp = false;
 playingJabSFX = false;
 playingDairSFX = false;
 playingFSpecialSFX = false;
+
+//SFXInstanceIDs
+tauntSoundInstance = -1;
+gammaFanSoundInstance = -1;
+gammaElectricitySoundInstance = -1;
+gammaElectricity2SoundInstance = -1;
+targeting2SoundInstance = -1;
+
 
 //VFX
 rocketHitVFX = hit_fx_create(sprite_get("fspecial_proj_hit"), 14);
@@ -203,6 +215,7 @@ birdDeltaSound = sound_get("BirdDelta");
 birdBetaSound = sound_get("BirdBeta");
 failedSound = sound_get("failed");
 sfxBirdSidespecialStartSound = asset_get("sfx_bird_sidespecial_start");
+gammaFanSound = sound_get("GammaFan");
 
 // Clairen Field Object
 plasmaFieldObj = asset_get("plasma_field_obj");
@@ -243,6 +256,11 @@ EggBreakerTauntSfx = sound_get("MoreTheMerrier");
 // Kirby Support
 kirbyability = 16;
 swallowed = 0;
+kirbyBetaSfx = sound_get("kirbyBeta");
+kirbies = []
+for(var i = 0; i <= largestPlayerNumber; i++){ // largestPlayerNumber comes from above
+    kirbies[i] = -1;
+}
 
 // TCO Support
 tcoart = sprite_get("tcoartGamma");
@@ -259,6 +277,43 @@ otto_bobblehead_sprite = sprite_get("hudbobbleheadgamma");
 
 // Hikaru Support
 Hikaru_Title = "E-Series";
+
+// Rune Buddy/Base Game Runes
+abyssEnabled = false;
+enum runes {A = 1,B = 2,C = 3,D = 4,E = 5,F = 6,G = 7,H = 8,I = 9,J = 10,K = 11,L = 12,M = 13,N = 14,O = 15}
+runesUpdated = false;
+var rune_letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"];
+for (var rune_num = 0; rune_num < array_length(rune_letters); rune_num++) {
+    variable_instance_set(self, "rune" + rune_letters[rune_num], has_rune(rune_letters[rune_num]));
+}
+ab_hud_x = 0;
+ab_hud_y = 0;
+
+//abyssMods[1 to 15] = [type, description];
+//types are: -1 - disabled
+// 0 - object mod: Modifies a static object left behind after an attack.
+// 1 - ranged mod: Modifies a projectile attack.
+// 2 - hit mod: Modifies a direct physical interaction with an opponent.
+// 3 - ability boost: Powers up a character attribute or action.
+abyssMods = array_create(16,[-1,"Not Implemented."]);
+// value 1
+abyssMods[@ runes.A] = [1, "Missiles send inward instead of outward."];
+abyssMods[@ runes.B] = [3, "USPECIAL goes twice as high."];
+abyssMods[@ runes.C] = [2, "Old USTRONG."];
+abyssMods[@ runes.D] = [2, "Old FSTRONG."];
+abyssMods[@ runes.E] = [2, "Old DAIR."];
+abyssMods[@ runes.F] = [2, "Taunt has a strong hitbox."];
+// value 2
+abyssMods[@ runes.G] = [3, "Lock onto articles during FSPECIAL."];
+abyssMods[@ runes.H] = [0, "Beta windbox twice as strong."];
+abyssMods[@ runes.I] = [1, "Shoot two missiles per target of FSPECIAL."];
+abyssMods[@ runes.J] = [2, "Taunt has a strong hitbox."];
+abyssMods[@ runes.K] = [2, "Taunt has a strong hitbox."];
+// value 3
+abyssMods[@ runes.L] = [3, "No bird limits."];
+abyssMods[@ runes.M] = [3, "Auto Float on Bottom Screen Barrier."];
+abyssMods[@ runes.N] = [3, "USPECIAL has no time limit."];
+abyssMods[@ runes.0] = [2, "Taunt has a strong hitbox."];
 
 
 
