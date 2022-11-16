@@ -223,36 +223,14 @@ gammaFanSound = sound_get("GammaFan");
 // Clairen Field Object
 plasmaFieldObj = asset_get("plasma_field_obj");
 
-// Alt stuff
-
-/*
-These are the variables to decide which bits of the synced variable you want to dedicate
-to allowing more alts (from bit 0 to 31). These should match what you put in css_init.gml.
-[Edit necessary]
-*/
-FIRST_BIT_UNLIMITED = 0;
-LAST_BIT_UNLIMITED = 31;
-
-// the currently selected unlimited alt
-unlimitedAlt = split_synced_var(FIRST_BIT_UNLIMITED, LAST_BIT_UNLIMITED-FIRST_BIT_UNLIMITED+1, 31-LAST_BIT_UNLIMITED)[1];
-
-// [Random alt on hit feature]
-randomAltOnHit = false; // holds whether this feature has been activated
-
-// Variable to hold the number of alts [Edit necessary]
-NUM_UNLIMITED_ALTS = 41;
-
-// [Random Alt]
-// Check if the random alt is selected
-randomSelected = false;
-if(unlimitedAlt == NUM_UNLIMITED_ALTS-1){ // This means the next alt isn't set which means this is the last alt
-    updateUnlimitedAlt(random_func(0, unlimitedAlt, true), false);
-    randomSelected = true;
-}
+// alt stuff
+unlimitedAltEvent = "init";
+user_event(0);
 
 // taunt sfx
 normalTauntSfx = sound_get("haha");
 EggBreakerTauntSfx = sound_get("MoreTheMerrier");
+
 
 // Support stuff
 
@@ -322,28 +300,3 @@ abyssMods[@ runes.O] = [1, "Aim and shoot FSPECIAL through solid blocks and plat
 
 // count = -1;
 // objects = [];
-
-#define updateUnlimitedAlt
-unlimitedAlt = argument[0];
-var syncedVar = get_synced_var(player);
-var newSyncedVar = 0;
-newSyncedVar += syncedVar >> (LAST_BIT_UNLIMITED+1) << (LAST_BIT_UNLIMITED+1);
-newSyncedVar += (unlimitedAlt & ((1 << (LAST_BIT_UNLIMITED-FIRST_BIT_UNLIMITED+1))-1)) << FIRST_BIT_UNLIMITED;
-newSyncedVar += syncedVar & ((1 << (FIRST_BIT_UNLIMITED))-1);
-set_synced_var(player, newSyncedVar);
-
-#define split_synced_var
-///args chunk_lengths...
-var num_chunks = argument_count;
-var chunk_arr = array_create(argument_count);
-var synced_var = get_synced_var(player);
-var chunk_offset = 0
-for (var i = 0; i < num_chunks; i++) {
-    var chunk_len = argument[i]; //print(chunk_len);
-    var chunk_mask = (1 << chunk_len)-1
-    chunk_arr[i] = (synced_var >> chunk_offset) & chunk_mask;
-    //print(`matching shift = ${chunk_len}`);
-    chunk_offset += chunk_len;
-}
-// print(chunk_arr);
-return chunk_arr;

@@ -120,23 +120,8 @@ if(activeRockets){ // This is undone in hitbox_update.gml if there is still an a
 	move_cooldown[AT_FSPECIAL] = 0;
 }
 
-// activate random alt on hit
-// The amount of frames into the match during which you can activate "random alt on hit" if you keep that feature. You can change this amount if you want. I believe the countdown is actually 122 frames, but allowing changes that late makes it possible to accidentally change alt while trying to do something early in the match. [Edit optional]
-#macro CHANGE_ALT_FRAME_LIMIT 100
-if (get_gameplay_time() < CHANGE_ALT_FRAME_LIMIT){ // you are still in the countdown
-    // [Random alt on hit feature]
-    // If you don't want this feature, get rid of this if statement. [Edit optional]
-    if(taunt_down & special_down && jump_down){ // if taunt pressed
-        randomAltOnHit = true; // activate "random alt on hit"
-    }
-}
-
-// You don't need this if you don't have a rainbow alt [Edit optional]
-// rainbow alt
-#macro RAINBOW_ALT 38
-if(unlimitedAlt == RAINBOW_ALT){ // check that you've selected the rainbow alt [Edit necessary]
-    init_shader(); // run init_shader to update the hue
-}
+unlimitedAltEvent = "update";
+user_event(0);
 
 //kirby support
 if swallowed {
