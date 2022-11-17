@@ -17,20 +17,29 @@ know what it is, so you don't need to touch it if you don't. [Edit necessary]
 #macro HAS_RAINBOW_ALT true
 #macro HAS_WIREFRAME_ALT true
 
+// Feature toggles
+#macro RANDOM_ALT_ON_HIT true
+#macro GHOST_MODE true
+#macro INVISIBLE_MODE true
+#macro CSS_BUTTON true
+#macro CSS_MUNO true
+#macro CSS_ALT_EFFECT_WARNING true
+#macro SAME_ALT_COLOR_CHANGE true
+
 //Alt names [Edit necessary]
 var altName = [];
 var altNum = 0;
-altName[altNum++]  = "E-102 Gamma";
-altName[altNum++]  = "E-101 Beta";
-altName[altNum++]  = "E-103 Delta";
-altName[altNum++]  = "E-104 Epsilon";
-altName[altNum++]  = "E-105 Zeta";
-altName[altNum++]  = "E-100 Alpha (ZERO)";
-altName[altNum++]  = "E-106 Eta";
-altName[altNum++]  = "E-107 Theta";
-altName[altNum++]  = "E-108 Iota";
-altName[altNum++]  = "E-109 Kappa";
-altName[altNum++]  = "E-110 Lambda";
+altName[altNum++] = "E-102 Gamma";
+altName[altNum++] = "E-101 Beta";
+altName[altNum++] = "E-103 Delta";
+altName[altNum++] = "E-104 Epsilon";
+altName[altNum++] = "E-105 Zeta";
+altName[altNum++] = "E-100 Alpha (ZERO)";
+altName[altNum++] = "E-106 Eta";
+altName[altNum++] = "E-107 Theta";
+altName[altNum++] = "E-108 Iota";
+altName[altNum++] = "E-109 Kappa";
+altName[altNum++] = "E-110 Lambda";
 altName[altNum++] = "E-113 Xi";
 altName[altNum++] = "E-118 Tau";
 altName[altNum++] = "E-121 Phi";
@@ -181,7 +190,7 @@ switch(unlimitedAltEvent){
                     if(unlimitedAlt >= array_length(altName)){
                         unlimitedAlt = unlimitedAlt % 16;
                     }
-                    updateUnlimitedAlt(updateUnlimitedAlt);
+                    updateUnlimitedAlt(unlimitedAlt);
                 }
             } else if(menu_b_pressed){
                 if(!holdUnlimitedRowButton){
@@ -193,7 +202,7 @@ switch(unlimitedAltEvent){
                             unlimitedAlt += 16;
                         }
                     }
-                    updateUnlimitedAlt(updateUnlimitedAlt);
+                    updateUnlimitedAlt(unlimitedAlt);
                 }
             } else if(menu_rb_pressed){
                 if(!holdUnlimitedRowButton){
@@ -203,7 +212,7 @@ switch(unlimitedAltEvent){
                     if(unlimitedAlt == array_length(altName)){
                         unlimitedAlt = 0;
                     }
-                    updateUnlimitedAlt(updateUnlimitedAlt);
+                    updateUnlimitedAlt(unlimitedAlt);
                 }
             } else if(menu_lb_pressed){
                 if(!holdUnlimitedRowButton){
@@ -213,7 +222,7 @@ switch(unlimitedAltEvent){
                         unlimitedAlt = array_length(altName); 
                     }
                     unlimitedAlt--;
-                    updateUnlimitedAlt(updateUnlimitedAlt);
+                    updateUnlimitedAlt(unlimitedAlt);
                 }
             }else if(!menu_a_down && !menu_b_down && !menu_lb_down && !menu_rb_down ){
                 holdUnlimitedRowButton = false;
@@ -278,14 +287,35 @@ switch(unlimitedAltEvent){
             alphaValue = 0; // invisible
         } else { // normal alts
             alphaValue = 255; // fully visible
+        } 
+        
+        var numSameAlt = 0;
+        var sameAltPlayers = [];
+        for(var i = 0; i < player; i++){ // I don't assume a maximum length in case rivals increases the player limit
+            sameAltPlayers[i] = false;
+        }
+        with oPlayer{
+            if(url == other.url && player < other.player && unlimitedAlt == other.unlimitedAlt){
+                sameAltPlayers[player] = true; // I'm doing this like this to avoid double counting clones
+            }
+        }
+        for(var i = 0; i < array_length(sameAltPlayers); i++){
+            if(sameAltPlayers[i]){
+                numSameAlt++;
+            }
         }
 
         // Your alt's color rows are set here
         switch(unlimitedAlt){ // this switch statement is just here in case you want specific behavior for certain alts
             default: // any row without a specfic case
                 for(var i = 0; i < NUM_COLOR_ROWS; i++){ // this is where your current color is set to the alt you have selected according to the system
-                    set_character_color_slot(i, get_color_profile_slot_r(unlimitedAlt, i), get_color_profile_slot_g(unlimitedAlt, i), get_color_profile_slot_b(unlimitedAlt, i), alphaValue); // the character color slots are set according to the corresponding alt that you set up in colors.gml
-                    set_article_color_slot(i, get_color_profile_slot_r(unlimitedAlt, i), get_color_profile_slot_g(unlimitedAlt, i), get_color_profile_slot_b(unlimitedAlt, i), alphaValue); // the article (and everything other than the player) color slots are set according to the corresponding alt that you set up in colors.gml
+                    var rowColor = merge_color(make_color_rgb(get_color_profile_slot_r(unlimitedAlt, i), get_color_profile_slot_g(unlimitedAlt, i), get_color_profile_slot_b(unlimitedAlt, i)), numSameAlt % 2 ? c_black : c_white, (0.05  + 0.15*(numSameAlt % 2))*floor((numSameAlt+1)/2) + 0.2*(numSameAlt > 0));
+                    // rowColorHue = color_get_hue(rowColor);
+                    // rowColorSat = color_get_saturation(rowColor)/((numSameAlt%2)*floor(numSameAlt/2)+1);
+                    // rowColorVal = color_get_value(rowColor)/((numSameAlt%2)*floor((numSameAlt+1)/2)+1);
+                    // rowColor = make_color_hsv(rowColorHue, rowColorSat, rowColorVal);
+                    set_character_color_slot(i, color_get_red(rowColor), color_get_green(rowColor), color_get_blue(rowColor), alphaValue); // the character color slots are set according to the corresponding alt that you set up in colors.gml
+                    set_article_color_slot(i, color_get_red(rowColor), color_get_green(rowColor), color_get_blue(rowColor), alphaValue); // the article (and everything other than the player) color slots are set according to the corresponding alt that you set up in colors.gml
                 }
                 break;
         }
@@ -314,6 +344,15 @@ switch(unlimitedAltEvent){
         // [Random alt on hit feature]
         randomAltOnHit = false; // holds whether this feature has been activated
 
+        // [Ghost mode feature]
+        ghostMode = false;
+
+        // [Invisible mode feature]
+        invisibleMode = false;
+
+        // variable to avoid changing toggle multiple times with single press
+        toggleHeld = false;
+
         // [Random Alt]
         // Check if the random alt is selected
         if(unlimitedAlt == randomAlt){ //
@@ -325,16 +364,27 @@ switch(unlimitedAltEvent){
         }
         break;
     case "update":
-        // activate random alt on hit
-        // The amount of frames into the match during which you can activate "random alt on hit" if you keep that feature. You can change this amount if you want. I believe the countdown is actually 122 frames, but allowing changes that late makes it possible to accidentally change alt while trying to do something early in the match. [Edit optional]
-        if (get_gameplay_time() < 100){ // you are still in the countdown
-            // [Random alt on hit feature]
-            // If you don't want this feature, get rid of this if statement. [Edit optional]
-            if(taunt_down & special_down && jump_down){ // if taunt pressed
-                randomAltOnHit = true; // activate "random alt on hit"
+        var toggleRequirement = taunt_down && down_down && jump_down;
+        if(toggleRequirement && special_down){
+            if(!toggleHeld){
+                toggleHeld = true;
+                randomAltOnHit = !randomAltOnHit; // activate "random alt on hit"
             }
+        } else if(toggleRequirement && strong_down && attack_down){
+            if(!toggleHeld){
+                toggleHeld = true;
+                ghostMode = !ghostMode; // toggle ghost mode
+                invisibleMode = false;
+            }
+        } else if(toggleRequirement && strong_down && shield_down){
+            if(!toggleHeld){
+                toggleHeld = true;
+                ghostMode = false;
+                invisibleMode = !invisibleMode; // toggle invisible mode
+            }
+        } else{
+            toggleHeld = false;
         }
-
         // You don't need this if you don't have a rainbow alt [Edit optional]
         if(unlimitedAlt == rainbowAlt){
             init_shader(); // run init_shader to update the hue
@@ -353,6 +403,45 @@ switch(unlimitedAltEvent){
                 unlimitedAlt = random_func(0, array_length(altName), true);
             }
             init_shader(); // update the alt visually
+        }
+        break;
+    case "pre_draw":
+        if(ghostMode){
+            gpu_push_state();
+            gpu_set_blendmode_ext(bm_src_color, bm_inv_src_color);
+        } else if(invisibleMode){
+            gpu_push_state();
+            gpu_set_blendmode_ext(bm_zero, bm_one);
+        }
+        break;
+    case "post_draw":
+    // case "post_draw_1":
+    //     var sameAltPlayers = [];
+    //     for(var i = 0; i < player; i++){ // I don't assume a maximum length in case rivals increases the player limit
+    //         sameAltPlayers[i] = false;
+    //     }
+    //     with oPlayer{
+    //         if(url == other.url && player < other.player && unlimitedAlt == other.unlimitedAlt){
+    //             sameAltPlayers[player] = true; // I'm doing this like this to avoid double counting clones
+    //         }
+    //     }
+    //     var numSameAlt = 0;
+    //     for(var i = 0; i < array_length(sameAltPlayers); i++){
+    //         if(sameAltPlayers[i]){
+    //             numSameAlt++;
+    //         }
+    //     }
+    //     if(numSameAlt > 0){
+    //         shader_start();
+    //         draw_sprite_ext(sprite_index, image_index, x+draw_x, y+draw_y, (1+small_sprites)*spr_dir, (1+small_sprites), spr_angle, make_colour_rgb(150,150,150)/numSameAlt, 1);
+    //         shader_end();
+    //     }
+    //     if(unlimitedAltEvent == "post_draw_1"){
+    //         break;
+    //     }
+    // case "post_draw_2":
+        if(ghostMode || invisibleMode){
+            gpu_pop_state();
         }
         break;
 }

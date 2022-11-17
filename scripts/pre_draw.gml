@@ -29,3 +29,6 @@ if(activeMines){
         }
     }
 }
+
+unlimitedAltEvent = "pre_draw";
+user_event(0);
