@@ -264,7 +264,14 @@ switch(unlimitedAltEvent){
         break;
     case "init_shader":
         if(!("unlimitedAlt" in self)){
-            loadUnlimitedAlt();
+            if("onlineCSS" in self && onlineCSS){
+                var savePlayer = player;
+                player = 0;
+                loadUnlimitedAlt();
+                player = savePlayer;
+            } else{
+                loadUnlimitedAlt();
+            }
         }
 
         // You can get rid of this part if none of your alts change the default shading [Edit optional]
