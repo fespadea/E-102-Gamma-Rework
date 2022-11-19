@@ -458,7 +458,7 @@ switch(unlimitedAltEvent){
 
 #define loadUnlimitedAlt
 var syncedVar = get_synced_var(player);
-unlimitedAlt = (syncedVar >> FIRST_BIT_UNLIMITED) & ((1 << (LAST_BIT_UNLIMITED-FIRST_BIT_UNLIMITED+1))-1)
+unlimitedAlt = (syncedVar >> FIRST_BIT_UNLIMITED) & ((1 << (LAST_BIT_UNLIMITED-FIRST_BIT_UNLIMITED+1))-1);
 
 
 #define updateUnlimitedAlt(newUnlimitedAlt)

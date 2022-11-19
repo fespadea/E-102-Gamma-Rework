@@ -62,7 +62,7 @@ sprite_change_offset("taunt", 118, 170);
 
 sprite_change_offset("plat", 83, 3);
 
-set_victory_theme( sound_get( "GammaWin" ));
+set_victory_theme( sound_get( "missionComplete" ));
 
 //projectiles
 sprite_change_offset("dspecial_proj", 7, 29);
