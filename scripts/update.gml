@@ -100,25 +100,8 @@ if(activeMines){
 	}
 }
 
-//Open up mark slot if rocket no longer active
-multiplier = (runeI ? 2 : 1)*(runeN ? 3 : 1);
-for(var i = 0; i < min(array_length(markedPlayers), floor(rocketsShot/multiplier)); i++){
-	drawTargets[i] = false;
-}
-if(activeRockets){ // This is undone in hitbox_update.gml if there is still an active rocket (using fact that update.gml runs first)
-	move_cooldown[AT_FSPECIAL] = 140;
-	for(var i = 0; i < array_length(markedPlayers); i++){
-		if(instance_exists(markedPlayers[i])){
-			if("gammaRocketMarked" in markedPlayers[i]){
-				markedPlayers[i].gammaRocketMarked[player] = false;
-			}
-		}
-	}
-	markedPlayers = [];
-	activeRockets = false;
-} else {
-	move_cooldown[AT_FSPECIAL] = 0;
-}
+fspecialEvent = "update";
+user_event(1);
 
 unlimitedAltEvent = "update";
 user_event(0);

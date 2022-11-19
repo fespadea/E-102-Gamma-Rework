@@ -12,3 +12,6 @@ if(activeMines){
         }
     }
 }
+
+fspecialEvent = "death";
+user_event(1);

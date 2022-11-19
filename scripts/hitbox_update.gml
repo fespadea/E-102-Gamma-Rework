@@ -18,8 +18,10 @@ if (attack == AT_DSPECIAL && hbox_num == 1) {
     }
 } else if (attack == AT_FSPECIAL && hbox_num == 1){
     if(!free && !player_id.runeO) destroyed = true;
-    if(was_parried && targetPlayer != player_id) {
-        targetPlayer = player_id;
+    if(was_parried) {
+        was_parried = false;
+        targetPlayer = currentOwner;
+        currentOwner = last_player_id;
         proj_angle += 180;
         if(proj_angle > 360) proj_angle -= 360;
     }

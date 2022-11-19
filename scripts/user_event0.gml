@@ -11,6 +11,13 @@ know what it is, so you don't need to touch it if you don't. [Edit necessary]
 // set this to the number of color rows you use (Rivals has a max of 8)
 #macro NUM_COLOR_ROWS 8
 
+/*
+Set this to some unique value that other characters won't use.
+I recommend using your character's url value.
+You can't access the url value on the CSS, so you have to set it manually here.
+*/
+#macro URL "2885505316"
+
 // Use these if you don't want these special alts [Edit necessary]
 #macro HAS_RANDOM_ALT true
 #macro HAS_EA_ALT true
@@ -105,14 +112,17 @@ switch(unlimitedAltEvent){
         onlineCSS = player == 0; // true if on the online CSS
 
         // get selected unlimited alt
-        if(init == 1 || "markLoaded" in self){
-            updateUnlimitedAlt(0);
+        if(("savedUnlimitedAlt" + URL) in self){
+            updateUnlimitedAlt(variable_instance_get(self, "savedUnlimitedAlt" + URL));
         } else{
             loadUnlimitedAlt();
+            if(unlimitedAlt >= array_length(altName)){
+                updateUnlimitedAlt(get_player_color(player));
+            }
+            variable_instance_set(self, "savedUnlimitedAlt" + URL, unlimitedAlt);
         }
         prevAlt = get_player_color(player);
         init_shader();
-        markLoaded = 0;
 
         // base x and y values
         temp_x = x + 8;
@@ -463,6 +473,9 @@ unlimitedAlt = (syncedVar >> FIRST_BIT_UNLIMITED) & ((1 << (LAST_BIT_UNLIMITED-F
 
 #define updateUnlimitedAlt(newUnlimitedAlt)
 unlimitedAlt = newUnlimitedAlt;
+if(("savedUnlimitedAlt" + URL) in self){
+    variable_instance_set(self, "savedUnlimitedAlt" + URL, unlimitedAlt);
+}
 var syncedVar = get_synced_var(player);
 var newSyncedVar = 0;
 newSyncedVar += syncedVar >> (LAST_BIT_UNLIMITED+1) << (LAST_BIT_UNLIMITED+1);

@@ -1,15 +1,9 @@
 // pre-draw
 
-//draw the jetpack during fspecial if floating
-if(attack == AT_FSPECIAL && state == PS_ATTACK_AIR && floatActive){
-    shader_start();
-    draw_sprite_ext(jetpackSprite, state_timer*jump_anim_speed, x, y, spr_dir, 1, 0, -1, 1);
-    shader_end();
-}
-
 //draw the mines
 if(activeMines){
     activeMines = false;
+    shader_start();
     with pHitBox {
         if(attack == AT_DSPECIAL && hbox_num == 1 && other.player == orig_player){
             if (hsp != 0) {
@@ -28,7 +22,11 @@ if(activeMines){
             other.activeMines = true;
         }
     }
+    shader_end();
 }
 
 unlimitedAltEvent = "pre_draw";
 user_event(0);
+
+fspecialEvent = "pre_draw";
+user_event(1);

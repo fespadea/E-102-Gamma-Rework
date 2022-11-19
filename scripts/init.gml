@@ -99,7 +99,7 @@ air_dodge_sound = asset_get("sfx_quick_dodge");
 
 //visual offsets for when you're in Ranno's bubble
 bubble_x = 0;
-bubble_y = 8;
+bubble_y = 0;
 
 //Projectile variables
 
@@ -108,39 +108,6 @@ mine_charge = 0;
 drawMines = false;
 numMines = 0;
 activeMines = false;
-
-//targeting
-drawTargeter = false;
-targerterRotation = 0;
-targeterRotationRad = 0;
-targerterDir = 1;
-laserX = 0.0;
-laserY = 0.0;
-lengthLaser = 0;
-maxPositiveRotation = 30;
-minNegativeRotation = -maxPositiveRotation;
-xDistanceToTargetPoint = 16;
-yDistanceToTargetPoint = 5;
-distanceToTargetPoint = sqrt(xDistanceToTargetPoint*xDistanceToTargetPoint + yDistanceToTargetPoint*yDistanceToTargetPoint);
-angleToTargetPoint = arctan(yDistanceToTargetPoint/xDistanceToTargetPoint);
-markedPlayers = [];
-drawTargets = [];
-rocketsShot = 0;
-activeRockets = false;
-targetConfirmedSound = sound_get("TargetConfirmed");
-var largestPlayerNumber = 0;
-with oPlayer{
-    if(player > largestPlayerNumber){
-        largestPlayerNumber = player;
-    }
-}
-for(var i = 0; i <= largestPlayerNumber; i++){
-    gammaRocketMarked[i] = false;
-}
-solidBlockObject = asset_get("par_block");
-targeterBaseX = x-10*spr_dir;
-targeterBaseY = y-69;
-multiplier = 1;
 
 //birds
 noSwallow = true;
@@ -160,26 +127,21 @@ RIGHT_BLASTZONE_X_POS = RIGHT_MAIN_STAGE_X_POS + get_stage_data(SD_SIDE_BLASTZON
 //Float Mechanic Variables
 floatActive = false;
 floatable = false;
-aerialFSpecialActive = false;
 goingUp = false;
 
 //SFX
 playingJabSFX = false;
 playingDairSFX = false;
-playingFSpecialSFX = false;
 
 //SFXInstanceIDs
 tauntSoundInstance = -1;
 gammaFanSoundInstance = -1;
 gammaElectricitySoundInstance = -1;
 gammaElectricity2SoundInstance = -1;
-targeting2SoundInstance = -1;
 
-
-//VFX
-rocketHitVFX = hit_fx_create(sprite_get("fspecial_proj_hit"), 14);
-rocketMarked = sprite_get("fspecial_marked");
-rocketFollowerVFX = hit_fx_create(sprite_get("fspecial_proj_follower"), 18);
+// fspecial stuff
+fspecialEvent = "init";
+user_event(1);
 
 //Various sprites (I made these all at once when I realized I shouldn't be calling sprite_get in repeating scripts)
 floatSprite = sprite_get("float");
@@ -239,7 +201,13 @@ kirbyability = 16;
 swallowed = 0;
 kirbyBetaSfx = sound_get("kirbyBeta");
 kirbies = []
-for(var i = 0; i <= largestPlayerNumber; i++){ // largestPlayerNumber comes from above
+var largestPlayerNumber = 0;
+with oPlayer{
+    if(player > largestPlayerNumber){
+        largestPlayerNumber = player;
+    }
+}
+for(var i = 0; i <= largestPlayerNumber; i++){
     kirbies[i] = -1;
 }
 
