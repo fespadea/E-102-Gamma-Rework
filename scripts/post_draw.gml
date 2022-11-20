@@ -4,7 +4,6 @@
 fspecialEvent = "post_draw";
 user_event(1);
 
-
 //Bird overlay for nspecial
 if(attack == AT_NSPECIAL && special_down && (state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR)){
     if(!noPeacock){

@@ -110,7 +110,6 @@ user_event(0);
 if swallowed {
 	swallowed = 0;
 	var ability_icon = gammaNspecialKirbyIcon;
-	print("hi");
     with enemykirby {
 		newicon = ability_icon;
 		other.kirbies[player] = id;
@@ -726,11 +725,6 @@ if(runeF){
 	}
 }
 
-// count++;
-// if(count < array_length(objects))
-// 	// if(0 < count && count < 16)
-// 		with objects[count] {
-// 			if(garbageName == "hi"){
-// 				// print("made it")
-// 			}
-// 		}
+
+debugEvent = "update";
+user_event(2);

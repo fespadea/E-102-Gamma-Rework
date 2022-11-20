@@ -1,7 +1,8 @@
 // fspecial
 
-#macro NORMAL_ARTICLES_ARRAY 5
+#macro NORMAL_ARTICLES_ARRAY 8
 #macro NORMAL_BASE_ARTICLES_ARRAY 6
+#macro NORMAL_NEUTRAL_BASE_ARTICLES_ARRAY 11
 
 
 switch(fspecialEvent){
@@ -39,11 +40,14 @@ switch(fspecialEvent){
         targeterBaseY = y-69;
         multiplier = 1;
         smokeObject = asset_get("smoke_obj");
-        articles = [obj_article1, obj_article2, obj_article3, obj_article_solid, obj_article_platform, pHitBox];
+        holyGuyObject = asset_get("holy_guy_obj");
+        articles = [obj_article1, obj_article2, obj_article3, obj_article_solid, obj_article_platform, obj_stage_article, obj_stage_article_platform, obj_stage_article_solid, pHitBox];
         baseArticles = [asset_get("rock_obj"), asset_get("pillar_obj"), asset_get("smoke_obj"), asset_get("frog_bubble_obj"), asset_get("olymp_gem_obj"), asset_get("pomme_guard_obj"), asset_get("steam_bubble_obj"), asset_get("chester_obj"), asset_get("hodan_spirit_obj"), asset_get("moth_bomb_obj"), asset_get("gus_anchor_obj"), asset_get("orb_obj"), asset_get("steam_bomb_obj"), asset_get("ice_obj"), asset_get("cloud_obj"), asset_get("puddle_obj"), asset_get("wind_obj"), asset_get("wolf_bud_obj"), asset_get("wolf_grass_obj"), asset_get("plasma_field_obj"), asset_get("plant_obj"), asset_get("pBurnBox"),
             asset_get("promo_sword_obj"), asset_get("promo_ball_obj"), asset_get("bubble_obj"), asset_get("big_bubble_obj"), asset_get("abyss_tornado_obj"), asset_get("promo_flag_obj"), asset_get("kragg_statue_obj"), asset_get("kragg_genesis_obj"), asset_get("falling_cactus_obj"), asset_get("decoy_cactus_obj"), asset_get("dream_star_obj"), asset_get("mark_leaf_obj"), asset_get("penguin_ball_obj"), asset_get("genesis_tv_obj"), asset_get("etalus_icecream_obj"), asset_get("etalus_icecream_splat_obj"), asset_get("promo_shard_obj"), asset_get("promo_cape_obj"), asset_get("tongue_obj"),
             asset_get("frog_small_bubble_obj"), asset_get("clairen_pong_ball_obj"), asset_get("clairen_cactus_obj"), asset_get("wolf_ftilt_obj"), asset_get("wolf_vine_ball_obj"), asset_get("wolf_bair_vine_obj"), asset_get("steam_mech_obj"), asset_get("steam_claw_obj"), asset_get("gus_gem"), asset_get("moneybag_obj"), asset_get("gus_rock_obj"), asset_get("exclamation_obj"), asset_get("treasure_rock_obj"), asset_get("mobile_gear_obj"), asset_get("shield_knight_obj"), asset_get("champ_sk_item_obj"), asset_get("hodan_whirl_obj"), asset_get("pomme_field_obj"), asset_get("mud_pop_obj"),
             asset_get("olymp_crystal_shatter_obj"), asset_get("olymp_dsmash_crystal_obj"), asset_get("seasonal_obj"), asset_get("graffiti_obj"), asset_get("graffiti_can_obj"), asset_get("ratcopter_obj"), asset_get("promo_plush_obj"), asset_get("fors_plush_obj")];
+        // the noone is holding the spot of holyGuyObject which is only hittable/targettable under certain conditions
+        neutralBaseArticles = [noone, asset_get("obj_tetherball"), asset_get("abyss_pinata_obj"), asset_get("target_obj"), asset_get("abyss_seed_obj"), asset_get("abyss_root_obj"), asset_get("abyss_bomb_obj"), asset_get("boss_eye_obj"), asset_get("troupple_fish_obj"), asset_get("ice_wall_obj"), asset_get("rockwall_support_obj"), asset_get("holy_bug_obj"), asset_get("holy_plant_obj"), asset_get("holy_law_obj"), asset_get("troupple_king_obj"), asset_get("abyss_portal_obj"), asset_get("abyss_capture_point_obj"), asset_get("abyss_cpu_explode_obj"), asset_get("abyss_mine_obj")];
 
         // whether Gamma is floating during fspecial
         aerialFSpecialActive = false;
@@ -166,10 +170,10 @@ switch(fspecialEvent){
                         }
                     }
                 }
-                for(i = 0; i < array_length(articles); i++){
+                for(i = 0; i < (runeG ? array_length(articles) : NORMAL_ARTICLES_ARRAY); i++){
                     with articles[i] {
                         if(player != other.player && !(get_player_team(player) == get_player_team(other.player) && get_match_setting(SET_TEAMATTACK) == false)){
-                            if((i < NORMAL_ARTICLES_ARRAY && is_hittable) || other.runeG){
+                            if((other.runeG && other.articles[i] != obj_stage_article_platform && other.articles[i] != obj_stage_article_solid) || is_hittable){
                                 unMarkedPlayer = true;
                                 for(j = 0; j < array_length(other.markedPlayers); j++){
                                     if(other.markedPlayers[j] == self){
@@ -206,34 +210,48 @@ switch(fspecialEvent){
                         }
                     }
                 }
-                for(i = 0; i < array_length(baseArticles); i++){
+                for(i = 0; i < (runeG ? array_length(baseArticles) : NORMAL_BASE_ARTICLES_ARRAY); i++){
                     with baseArticles[i] {
                         if(get_instance_player(self) != other.player && !(get_player_team(get_instance_player(self)) == get_player_team(other.player) && get_match_setting(SET_TEAMATTACK) == false)){
-                            if(i < NORMAL_BASE_ARTICLES_ARRAY || other.runeG){
-                                unMarkedPlayer = true;
-                                for(j = 0; j < array_length(other.markedPlayers); j++){
-                                    if(other.markedPlayers[j] == self){
-                                        unMarkedPlayer = false;
-                                    }
+                            unMarkedPlayer = true;
+                            for(j = 0; j < array_length(other.markedPlayers); j++){
+                                if(other.markedPlayers[j] == self){
+                                    unMarkedPlayer = false;
                                 }
-                                if(unMarkedPlayer){
-                                    targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, self, false, false);
-                                    if(targetedPlayer != noone){
-                                        other.drawTargets[array_length(other.markedPlayers)] = true;
-                                        other.markedPlayers[array_length(other.markedPlayers)] = targetedPlayer;
-                                        playTargetConfirmedSound = true;
-                                    }
+                            }
+                            if(unMarkedPlayer){
+                                targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, self, false, false);
+                                if(targetedPlayer != noone){
+                                    other.drawTargets[array_length(other.markedPlayers)] = true;
+                                    other.markedPlayers[array_length(other.markedPlayers)] = targetedPlayer;
+                                    playTargetConfirmedSound = true;
                                 }
                             }
                         }
                     }
                 }
-                // with all {
-                //     targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, self, false, false);
-                //     if(targetedPlayer != noone){
-                //         other.objects[array_length(other.objects)] = targetedPlayer;
-                //     }
-                // }
+                for(i = 0; i < (runeG ? array_length(neutralBaseArticles) : NORMAL_NEUTRAL_BASE_ARTICLES_ARRAY); i++){
+                    if(neutralBaseArticles[i] != noone){
+                        with neutralBaseArticles[i] {
+                            unMarkedPlayer = true;
+                            for(j = 0; j < array_length(other.markedPlayers); j++){
+                                if(other.markedPlayers[j] == self){
+                                    unMarkedPlayer = false;
+                                }
+                            }
+                            if(unMarkedPlayer){
+                                targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, self, false, false);
+                                if(targetedPlayer != noone){
+                                    other.drawTargets[array_length(other.markedPlayers)] = true;
+                                    other.markedPlayers[array_length(other.markedPlayers)] = targetedPlayer;
+                                    playTargetConfirmedSound = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                debugEvent = "attack_update";
+                user_event(2);
                 if(playTargetConfirmedSound){
                     sound_play(targetConfirmedSound);
                 }
@@ -286,6 +304,22 @@ switch(fspecialEvent){
             activeRockets = false;
         } else {
             move_cooldown[AT_FSPECIAL] = 0;
+        }
+
+        // check for living Eid
+        with holyGuyObject {
+            if(get_instance_x(self) == 620){
+                other.neutralBaseArticles[0] = other.holyGuyObject;
+            }
+            if(other.neutralBaseArticles[0] != noone){
+                if(get_instance_x(self) >= 620 && get_instance_x(self) <= 660){
+                    if(place_meeting(get_instance_x(self), get_instance_y(self), pHitBox)){
+                        other.neutralBaseArticles[0] = noone;
+                    }
+                } else{
+                    other.neutralBaseArticles[0] = noone;
+                }
+            }
         }
         break;
     case "other_post_draw": // this stuff is just done in other_post_draw.gml

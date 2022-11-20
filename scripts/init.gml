@@ -98,7 +98,7 @@ djump_sound = sound_get("sfx_e102jump");
 air_dodge_sound = asset_get("sfx_quick_dodge");
 
 //visual offsets for when you're in Ranno's bubble
-bubble_x = 0;
+bubble_x = 4;
 bubble_y = 0;
 
 //Projectile variables
@@ -266,5 +266,7 @@ abyssMods[@ runes.M] = [1, "No mine limit."];
 abyssMods[@ runes.N] = [1, "Shoot thrice as many missiles per target of FSPECIAL."];
 abyssMods[@ runes.O] = [1, "Aim and shoot FSPECIAL through solid blocks and platforms."];
 
-// count = -1;
-// objects = [];
+
+
+debugEvent = "init";
+user_event(2);

@@ -116,7 +116,7 @@ if (attack == AT_DSPECIAL && hbox_num == 1) {
         if(x > RIGHT_BLASTZONE_X_POS || x < LEFT_BLASTZONE_X_POS || y > BOTTOM_BLASTZONE_Y_POS){
             length = 0;
         }
-        if(!free || y >= view_get_yview() + view_get_hview()){
+        if(!free || (player_id.runeK && y >= view_get_yview() + view_get_hview())){
             vsp = 0;
             hsp = 0;
             timeOnGround++;

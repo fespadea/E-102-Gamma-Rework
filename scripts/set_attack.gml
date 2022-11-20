@@ -23,9 +23,5 @@ switch(attack){
         break;
 }
 
-// count = -1;
-// objects = [];
-// // with all{
-// //     other.objects[array_length(other.objects)] = self;
-// // }
-// print("start");
+debugEvent = "set_attack";
+user_event(2);
