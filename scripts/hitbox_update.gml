@@ -17,13 +17,13 @@ if (attack == AT_DSPECIAL && hbox_num == 1) {
         length = 0;
     }
 } else if (attack == AT_FSPECIAL && hbox_num == 1){
-    if(!free && !player_id.runeO) destroyed = true;
+    if((!free || (vsp == 0 && (proj_angle != 0 && proj_angle != 180 && proj_angle != 360))) && !player_id.runeO) destroyed = true;
     if(was_parried) {
         was_parried = false;
         targetPlayer = currentOwner;
         currentOwner = last_player_id;
         proj_angle += 180;
-        if(proj_angle > 360) proj_angle -= 360;
+        if(proj_angle >= 360) proj_angle -= 360;
     }
     if(hitbox_timer < length - 30)
         maxSpeed = ease_quadIn(5, 20, hitbox_timer, length - 30);
