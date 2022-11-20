@@ -7,7 +7,6 @@
 		spr_dir = 1;
 	}
 }*/
-
 //Jump Sound
 if (state == PS_FIRST_JUMP && state_timer == 1){
     sound_play(djump_sound);

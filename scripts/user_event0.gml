@@ -122,16 +122,17 @@ switch(unlimitedAltEvent){
             updateUnlimitedAlt(variable_instance_get(self, "savedUnlimitedAlt" + URL));
         } else{
             loadUnlimitedAlt();
-            print("hi2")
             if(unlimitedAlt >= array_length(altName)){
-                print("hi3")
                 updateUnlimitedAlt(get_player_color(player));
             }
             variable_instance_set(self, "savedUnlimitedAlt" + URL, unlimitedAlt);
         }
         prevAlt = get_player_color(player);
 
-        // base x and y values
+        with asset_get("cs_cpu_lvl_down_but"){
+            print(get_instance_x(self))
+        }
+
         temp_x = x + 8;
         temp_y = y + 9;
 
@@ -155,6 +156,7 @@ switch(unlimitedAltEvent){
         if(!("unlimitedAlt" in self)){
             exit;
         }
+
         var curGameAlt = get_player_color(player); // the current base game alt
 
         if(curGameAlt != prevAlt && allowUnlimitedSwitching){ // you switched alt
@@ -172,32 +174,12 @@ switch(unlimitedAltEvent){
             }
             prevAlt = curGameAlt;
             updateUnlimitedAlt(unlimitedAlt);
-            print("hi")
         }
         allowUnlimitedSwitching = false;
         // You don't need this if you don't have a rainbow alt [Edit optional]
         // if(unlimitedAlt == rainbowAlt){
         //     init_shader(); // run init_shader to update the hue
         // }
-
-
-        if (onlineCSS){ // got this from Lilac which I think got it from Dr. Flux
-            unlimitedRowButtonX = temp_x + 172;
-            unlimitedRowButtonY = temp_y + 30;
-            // unlimitedRowButtonX = temp_x + 26;
-            // unlimitedRowButtonY = temp_y + 139;
-        } else{
-            if (get_player_hud_color(player) == 8421504)
-            {
-                unlimitedRowButtonX = temp_x + 52;
-                unlimitedRowButtonY = temp_y + 169;
-            }
-            else
-            {
-                unlimitedRowButtonX = temp_x + 67;
-                unlimitedRowButtonY = temp_y + 169;
-            }
-        }
 
         if(get_instance_x(cursor_id) >= unlimitedRowButtonX && get_instance_x(cursor_id) <= unlimitedRowButtonX + sprite_get_width(cssUnlimitedRowButton) 
             && get_instance_y(cursor_id) >= unlimitedRowButtonY && get_instance_y(cursor_id) <= unlimitedRowButtonY + sprite_get_height(cssUnlimitedRowButton)){
@@ -264,6 +246,57 @@ switch(unlimitedAltEvent){
         
         if("cssUnlimitedTimer" in self){
             cssUnlimitedTimer++;
+        }
+
+        
+        var positions = [124, 124, 362, 600, 838]; // hopefully the online css also starts at 124
+        var myPositionObject = noone;
+        with asset_get("cs_info_but") {
+            if(get_instance_x(self) == positions[other.player]){
+                myPositionObject = self;
+            }
+        }
+
+        // base x and y values
+        if(myPositionObject != noone){
+            temp_x = get_instance_x(myPositionObject) - 102;
+            temp_y = get_instance_y(myPositionObject) - 169;
+        }
+
+        var cpuPositions = [108, 108, 346, 584, 822];
+        var isCPU = false;
+        var cpuButton = noone;
+        with asset_get("cs_cpu_lvl_down_but") {
+            // print(get_instance_x(self))
+            if(get_instance_x(self) == cpuPositions[other.player]){
+                cpuButton = self;
+            }
+        }
+        if(cpuButton){
+            with cursor_id {
+                if(instance_place(get_instance_x(cpuButton), get_instance_y(cpuButton), cpuButton)){
+                    isCPU = true;
+                }
+            }
+        }
+        print(isCPU)
+
+        if (onlineCSS){ // got this from Lilac which I think got it from Dr. Flux
+            unlimitedRowButtonX = temp_x + 172;
+            unlimitedRowButtonY = temp_y + 30;
+            // unlimitedRowButtonX = temp_x + 26;
+            // unlimitedRowButtonY = temp_y + 139;
+        } else{
+            if (get_player_hud_color(player) == 8421504)
+            {
+                unlimitedRowButtonX = temp_x + 52;
+                unlimitedRowButtonY = temp_y + 169;
+            }
+            else
+            {
+                unlimitedRowButtonX = temp_x + 67;
+                unlimitedRowButtonY = temp_y + 169;
+            }
         }
 
         // This offsets the alt name stuff when on the online CSS so that the picture thing doesn't cover it up. Set this to 0 if you don't like it. [Edit optional]

@@ -1,9 +1,11 @@
 // css init
 
-// if choclate == false
 
 unlimitedAltEvent = "css_init";
 user_event(0);
+
+debugEvent = "css_init";
+user_event(2);
 
 cpu_hover_init();
 

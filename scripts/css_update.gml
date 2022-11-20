@@ -5,6 +5,9 @@ cpu_hover_update();
 unlimitedAltEvent = "css_update";
 user_event(0);
 
+debugEvent = "css_update";
+user_event(2);
+
 
 #define cpu_hover_update()
 var p = player;
