@@ -115,6 +115,17 @@ switch(attack){
             if(hitbox_timer % 8 == 0){
                 spawn_hit_fx(x, y, rocketFollowerVFX);
             }
+            var distance = 25;
+            var xOffset = x + distance*dcos(proj_angle);
+            var yOffset = y - distance*dsin(proj_angle);
+            with pHitBox{
+                if(player != other.player && !(get_player_team(player) == get_player_team(other.player) && !get_match_setting(SET_TEAMATTACK))){
+                    if(collision_circle(xOffset, yOffset, 10, self, false, false)){
+                        other.destroyed = true;
+                        break;
+                    }
+                }
+            }
         }
         break;
     case AT_NSPECIAL:
