@@ -75,7 +75,7 @@ if(!hitpause){
 				can_fast_fall = false;
 				can_wall_jump = true;
 				can_special = true;
-				move_cooldown[AT_USPECIAL] = 999;
+				move_cooldown[AT_USPECIAL] = 2147483647;
 				if(up_down || special_down){
 					vsp = -1.5*(runeB ? 2 : 1);
 				}

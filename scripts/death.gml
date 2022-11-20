@@ -13,5 +13,7 @@ if(activeMines){
     }
 }
 
+move_cooldown[AT_USPECIAL] = 0;
+
 fspecialEvent = "death";
 user_event(1);
