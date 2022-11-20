@@ -24,6 +24,21 @@ switch(attack){
     case AT_DATTACK:
         set_attack_value(attack, AG_USES_CUSTOM_GRAVITY, false);
         break;
+    case AT_USTRONG:
+        if(runeC){
+            attack = AT_USTRONG_2;
+        }
+        break;
+    case AT_FSTRONG:
+        if(runeD){
+            attack = AT_FSTRONG_2;
+        }
+        break;
+    case AT_DAIR:
+        if(runeE){
+            attack = AT_EXTRA_1;
+        }
+        break;
 }
 
 debugEvent = "set_attack";

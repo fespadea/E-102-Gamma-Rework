@@ -154,8 +154,12 @@ if(!hitpause){
 					}
 				}
 			}
+			var down_winner = (down_counter < up_counter && down_counter < right_counter && down_counter < left_counter && down_pressed) || down_down;
+			var right_winner = ((right_winner < up_counter && right_winner < down_counter && right_winner < left_counter && right_pressed) || right_down) && !down_winner;
+			var left_winner = ((left_winner < up_counter && left_winner < right_counter && left_winner < down_counter && left_pressed) || left_down) && !down_winner && !right_winner;
+			var up_winner = ((up_winner < down_counter && up_winner < right_counter && up_winner < left_counter && up_pressed) || up_down) && !down_winner && !right_winner && !left_winner;
 			if(!special_down && get_window_value(AT_NSPECIAL, 1, AG_WINDOW_TYPE) == 9){
-				if (down_down) {
+				if (down_winner) {
 					if(noPeacock){
 						sound_play(birdZetaSound);
 						if(spr_dir == 1 && left_down){
@@ -169,7 +173,7 @@ if(!hitpause){
 						} else create_hitbox(AT_NSPECIAL, 3, x, y);
 						noPeacock = false;
 					}
-				} else if(right_down){
+				} else if(right_winner){
 					if(noSwallow){
 						sound_play(birdEpsilonSound);
 						var temp_dir = spr_dir;
@@ -178,7 +182,7 @@ if(!hitpause){
 						spr_dir = temp_dir;
 						noSwallow = false;
 					}
-				} else if (left_down) {
+				} else if (left_winner) {
 					if(noSwallow){
 						sound_play(birdEpsilonSound);
 						var temp_dir = spr_dir;
@@ -187,7 +191,7 @@ if(!hitpause){
 						spr_dir = temp_dir;
 						noSwallow = false;
 					}
-				} else if (up_down) {
+				} else if (up_winner) {
 					if(noParrot){
 						sound_play(birdDeltaSound);
 						create_hitbox(AT_NSPECIAL, 2, x, y-80);

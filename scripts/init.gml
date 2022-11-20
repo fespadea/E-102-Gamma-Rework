@@ -115,6 +115,12 @@ noParrot = true;
 noPeacock = true;
 noFlicky = true;
 
+//input counters
+down_counter = 0;
+left_counter = 0;
+right_counter = 0;
+up_counter = 0;
+
 //Stage Data
 LEFT_MAIN_STAGE_X_POS = get_stage_data(SD_X_POS);
 RIGHT_MAIN_STAGE_X_POS = get_stage_data(SD_WIDTH) + LEFT_MAIN_STAGE_X_POS;

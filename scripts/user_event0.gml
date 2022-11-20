@@ -129,9 +129,9 @@ switch(unlimitedAltEvent){
         }
         prevAlt = get_player_color(player);
 
-        with asset_get("cs_cpu_lvl_down_but"){
-            print(get_instance_x(self))
-        }
+        // with asset_get("cs_cpu_lvl_down_but"){
+        //     print(get_instance_x(self))
+        // }
 
         temp_x = x + 8;
         temp_y = y + 9;
@@ -263,23 +263,23 @@ switch(unlimitedAltEvent){
             temp_y = get_instance_y(myPositionObject) - 169;
         }
 
-        var cpuPositions = [108, 108, 346, 584, 822];
-        var isCPU = false;
-        var cpuButton = noone;
-        with asset_get("cs_cpu_lvl_down_but") {
-            // print(get_instance_x(self))
-            if(get_instance_x(self) == cpuPositions[other.player]){
-                cpuButton = self;
-            }
-        }
-        if(cpuButton){
-            with cursor_id {
-                if(instance_place(get_instance_x(cpuButton), get_instance_y(cpuButton), cpuButton)){
-                    isCPU = true;
-                }
-            }
-        }
-        print(isCPU)
+        // var cpuPositions = [108, 108, 346, 584, 822];
+        // var isCPU = false;
+        // var cpuButton = noone;
+        // with asset_get("cs_cpu_lvl_down_but") {
+        //     // print(get_instance_x(self))
+        //     if(get_instance_x(self) == cpuPositions[other.player]){
+        //         cpuButton = self;
+        //     }
+        // }
+        // if(cpuButton){
+        //     with cursor_id {
+        //         if(instance_place(get_instance_x(cpuButton), get_instance_y(cpuButton), cpuButton)){
+        //             isCPU = true;
+        //         }
+        //     }
+        // }
+        // print(isCPU)
 
         if (onlineCSS){ // got this from Lilac which I think got it from Dr. Flux
             unlimitedRowButtonX = temp_x + 172;
