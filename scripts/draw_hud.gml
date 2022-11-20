@@ -1,4 +1,4 @@
-//draw_hud
+// draw_hud
 
 //Dspecial HUD
 draw_sprite(dspecialBarsSprite, 0, temp_x-15, temp_y);
