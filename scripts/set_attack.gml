@@ -21,6 +21,9 @@ switch(attack){
         gammaFanSoundInstance = sound_play(gammaFanSound, true);
         times_through = 0;
         break;
+    case AT_DATTACK:
+        set_attack_value(attack, AG_USES_CUSTOM_GRAVITY, false);
+        break;
 }
 
 debugEvent = "set_attack";

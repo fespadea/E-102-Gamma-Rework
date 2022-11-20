@@ -111,18 +111,25 @@ switch(unlimitedAltEvent){
         // player is set to 0 online
         onlineCSS = player == 0; // true if on the online CSS
 
+        cssUnlimitedTimer = 0;
+        cssUnlimitedPrevTimer = 0;
+
+        // this is necessary to prevent your alt from switching before the character has fully loaded
+        allowUnlimitedSwitching = true;
+
         // get selected unlimited alt
         if(("savedUnlimitedAlt" + URL) in self){
             updateUnlimitedAlt(variable_instance_get(self, "savedUnlimitedAlt" + URL));
         } else{
             loadUnlimitedAlt();
+            print("hi2")
             if(unlimitedAlt >= array_length(altName)){
+                print("hi3")
                 updateUnlimitedAlt(get_player_color(player));
             }
             variable_instance_set(self, "savedUnlimitedAlt" + URL, unlimitedAlt);
         }
         prevAlt = get_player_color(player);
-        init_shader();
 
         // base x and y values
         temp_x = x + 8;
@@ -145,10 +152,12 @@ switch(unlimitedAltEvent){
         altEffectWarningY = temp_y + 34;
         break;
     case "css_update":
+        if(!("unlimitedAlt" in self)){
+            exit;
+        }
         var curGameAlt = get_player_color(player); // the current base game alt
-        loadUnlimitedAlt(); // the currently selected unlimited alt
 
-        if(curGameAlt != prevAlt){ // you switched alt
+        if(curGameAlt != prevAlt && allowUnlimitedSwitching){ // you switched alt
             if((curGameAlt > prevAlt && curGameAlt < prevAlt + 8) || curGameAlt < prevAlt - 8){ // You increased your alt. This accounts for going from the highest alt to the smallest alt and skipping alts because of other players.
                 unlimitedAlt++; // increase your unlimited alt
                 if(unlimitedAlt == array_length(altName)){ // if you've passed the number of unlimited alts you have
@@ -163,11 +172,13 @@ switch(unlimitedAltEvent){
             }
             prevAlt = curGameAlt;
             updateUnlimitedAlt(unlimitedAlt);
+            print("hi")
         }
+        allowUnlimitedSwitching = false;
         // You don't need this if you don't have a rainbow alt [Edit optional]
-        if(unlimitedAlt == rainbowAlt){
-            init_shader(); // run init_shader to update the hue
-        }
+        // if(unlimitedAlt == rainbowAlt){
+        //     init_shader(); // run init_shader to update the hue
+        // }
 
 
         if (onlineCSS){ // got this from Lilac which I think got it from Dr. Flux
@@ -246,6 +257,15 @@ switch(unlimitedAltEvent){
     case "css_draw":
         // This is an edit of Muno's CSS template: https://pastebin.com/uquifNY8
 
+        allowUnlimitedSwitching = true;
+
+        if(cssUnlimitedPrevTimer == cssUnlimitedTimer-1) // avoids overwriting the game's calls to init_shader with a call that will get cancelled
+            init_shader();
+        
+        if("cssUnlimitedTimer" in self){
+            cssUnlimitedTimer++;
+        }
+
         // This offsets the alt name stuff when on the online CSS so that the picture thing doesn't cover it up. Set this to 0 if you don't like it. [Edit optional]
         var bottomPartOffset = onlineCSS ? -10 : 0;
 
@@ -273,6 +293,16 @@ switch(unlimitedAltEvent){
         textDraw(temp_x + 2, temp_y + bottomPartOffset + 124 - 5*(ceil(array_length(altName)/16)-1), "fName", c_white, 0, 1000, 1, true, 1, "Alt. " + (unlimitedAlt < 9 ? "0" : "") + string(unlimitedAlt+1) + ": " + altName[unlimitedAlt]);
         break;
     case "init_shader":
+        /*
+            This prevents this code from running too early when loading your character.
+            The game will crash if you try to get values from the extra color profile slots too early.
+        */
+        if("cursor_id" in self){
+            if(!("cssUnlimitedTimer" in self) || !("cssUnlimitedPrevTimer" in self) || cssUnlimitedPrevTimer != cssUnlimitedTimer-1){
+                exit;
+            }
+            cssUnlimitedPrevTimer++;
+        }
         if(!("unlimitedAlt" in self)){
             if("onlineCSS" in self && onlineCSS){
                 var savePlayer = player;
@@ -312,7 +342,7 @@ switch(unlimitedAltEvent){
             sameAltPlayers[i] = false;
         }
         with oPlayer{
-            if(url == other.url && player < other.player && unlimitedAlt == other.unlimitedAlt){
+            if(player < other.player && url == other.url && unlimitedAlt == other.unlimitedAlt){
                 sameAltPlayers[player] = true; // I'm doing this like this to avoid double counting clones
             }
         }
@@ -406,22 +436,61 @@ switch(unlimitedAltEvent){
         if(unlimitedAlt == rainbowAlt){
             init_shader(); // run init_shader to update the hue
         }
-        break;
-    case "hit_player":
-        // [Random alt on hit feature]
-        // Random alt on hit
-        if(randomAltOnHit){ // if "random alt on hit" activated
-            if(HAS_RANDOM_ALT){
-                unlimitedAlt = random_func(0, array_length(altName)-1, true);
-                if(unlimitedAlt >= randomAlt){
-                    unlimitedAlt++;
+        if(randomAltOnHit){
+            with pHitBox {
+                if(player == other.player && type == 2){
+                    if(has_hit){
+                        with other{
+                            if(HAS_RANDOM_ALT){
+                                unlimitedAlt = random_func(0, array_length(altName)-1, true);
+                                if(unlimitedAlt >= randomAlt){
+                                    unlimitedAlt++;
+                                }
+                            } else if(HAS_RANDOM_ALT){
+                                unlimitedAlt = random_func(0, array_length(altName), true);
+                            }
+                            init_shader(); // update the alt visually
+                        }
+                    }
                 }
-            } else if(HAS_RANDOM_ALT){
-                unlimitedAlt = random_func(0, array_length(altName), true);
             }
-            init_shader(); // update the alt visually
         }
         break;
+    case "hitbox_update":
+        if(player == other.player){
+            other.has_hit = false;
+        }
+        break;
+    case "attack_update":
+        if(randomAltOnHit){
+            if(has_hit && hitstop == hitstop_full-1){
+                if(HAS_RANDOM_ALT){
+                    unlimitedAlt = random_func(0, array_length(altName)-1, true);
+                    if(unlimitedAlt >= randomAlt){
+                        unlimitedAlt++;
+                    }
+                } else if(HAS_RANDOM_ALT){
+                    unlimitedAlt = random_func(0, array_length(altName), true);
+                }
+                init_shader(); // update the alt visually
+            }
+        }
+        break;
+    // case "hit_player":
+    //     // [Random alt on hit feature]
+    //     // Random alt on hit
+    //     if(randomAltOnHit && hit_player != player){ // if "random alt on hit" activated
+    //         if(HAS_RANDOM_ALT){
+    //             unlimitedAlt = random_func(0, array_length(altName)-1, true);
+    //             if(unlimitedAlt >= randomAlt){
+    //                 unlimitedAlt++;
+    //             }
+    //         } else if(HAS_RANDOM_ALT){
+    //             unlimitedAlt = random_func(0, array_length(altName), true);
+    //         }
+    //         init_shader(); // update the alt visually
+    //     }
+    //     break;
     case "pre_draw":
         if(ghostMode){
             gpu_push_state();
@@ -482,7 +551,9 @@ newSyncedVar += syncedVar >> (LAST_BIT_UNLIMITED+1) << (LAST_BIT_UNLIMITED+1);
 newSyncedVar += (unlimitedAlt & ((1 << (LAST_BIT_UNLIMITED-FIRST_BIT_UNLIMITED+1))-1)) << FIRST_BIT_UNLIMITED;
 newSyncedVar += syncedVar & ((1 << (FIRST_BIT_UNLIMITED))-1);
 set_synced_var(player, newSyncedVar);
-init_shader();
+if(!("cursor_id" in self)){
+    init_shader();
+}
 
 #define textDraw(x, y, font, color, lineb, linew, scale, outline, alpha, string)
 

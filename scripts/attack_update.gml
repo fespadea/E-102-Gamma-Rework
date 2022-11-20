@@ -5,6 +5,9 @@ if (attack == AT_FSPECIAL || attack == AT_DSPECIAL || attack == AT_USPECIAL){
     trigger_b_reverse();
 }
 
+unlimitedAltEvent = "attack_update";
+user_event(0);
+
 if(!hitpause){
 	switch(attack){
 		case AT_DSPECIAL: // Dspecial Charge
@@ -71,8 +74,9 @@ if(!hitpause){
 				can_shield = true;
 				can_fast_fall = false;
 				can_wall_jump = true;
+				can_special = true;
 				move_cooldown[AT_USPECIAL] = 999;
-				if special_down {
+				if(up_down || special_down){
 					vsp = -1.5*(runeB ? 2 : 1);
 				}
 			}
@@ -97,6 +101,11 @@ if(!hitpause){
 			}
 			break;
 		case AT_DATTACK: // Dash Attack transitions into dash
+			if(was_parried){
+        		set_attack_value(attack, AG_USES_CUSTOM_GRAVITY, false);
+			} else if (has_hit){
+        		set_attack_value(attack, AG_USES_CUSTOM_GRAVITY, true);
+			}
 			if (state == PS_ATTACK_GROUND){
 				if(was_parried){
 					hsp = dash_speed*spr_dir;

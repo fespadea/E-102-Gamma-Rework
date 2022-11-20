@@ -44,7 +44,7 @@ if (floatable) {
 	if (vsp < 0) {
 		goingUp = true;
 	} else {
-		if (jump_down || (up_down && can_tap_jump())) {
+		if (jump_down || up_down) {
 			if (goingUp || djumps == max_djumps || aerialFSpecialActive) {
 				floatActive = true;
 			}
@@ -60,7 +60,7 @@ if floatActive {
 	if (vsp > 3) {
 		vsp = 3;
 	}
-	if (!(jump_down || (up_down && can_tap_jump())) || !floatable) {
+	if (!(jump_down || up_down) || !floatable) {
 		floatActive = false;
 	}
 } else {

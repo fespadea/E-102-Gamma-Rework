@@ -1,5 +1,7 @@
 // css init
 
+// if choclate == false
+
 unlimitedAltEvent = "css_init";
 user_event(0);
 

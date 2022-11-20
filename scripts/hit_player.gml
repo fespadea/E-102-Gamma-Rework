@@ -1,7 +1,7 @@
 //hit_player
 
-unlimitedAltEvent = "hit_player";
-user_event(0);
+// unlimitedAltEvent = "hit_player";
+// user_event(0);
 
 var dattackException = my_hitboxID.attack == AT_DATTACK && my_hitboxID.hbox_num < 6;
 var uairException = my_hitboxID.attack == AT_UAIR && my_hitboxID.hbox_num < 5;
