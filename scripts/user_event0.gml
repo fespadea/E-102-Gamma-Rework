@@ -111,8 +111,8 @@ switch(unlimitedAltEvent){
         // player is set to 0 online
         onlineCSS = player == 0; // true if on the online CSS
 
-        cssUnlimitedTimer = 0;
-        cssUnlimitedPrevTimer = 0;
+        // cssUnlimitedTimer = 0;
+        // cssUnlimitedPrevTimer = 0;
 
         // this is necessary to prevent your alt from switching before the character has fully loaded
         allowUnlimitedSwitching = true;
@@ -245,12 +245,13 @@ switch(unlimitedAltEvent){
 
         allowUnlimitedSwitching = true;
 
-        if(cssUnlimitedPrevTimer == cssUnlimitedTimer-1) // avoids overwriting the game's calls to init_shader with a call that will get cancelled
-            init_shader();
+        init_shader();
+        // if(cssUnlimitedPrevTimer == cssUnlimitedTimer-1) // avoids overwriting the game's calls to init_shader with a call that will get cancelled
+        //     init_shader();
         
-        if("cssUnlimitedTimer" in self){
-            cssUnlimitedTimer++;
-        }
+        // if("cssUnlimitedTimer" in self){
+        //     cssUnlimitedTimer++;
+        // }
 
         
         var positions = [124, 124, 362, 600, 838]; // hopefully the online css also starts at 124
@@ -338,12 +339,12 @@ switch(unlimitedAltEvent){
             This prevents this code from running too early when loading your character.
             The game will crash if you try to get values from the extra color profile slots too early.
         */
-        if("cursor_id" in self){
-            if(!("cssUnlimitedTimer" in self) || !("cssUnlimitedPrevTimer" in self) || cssUnlimitedPrevTimer != cssUnlimitedTimer-1){
-                exit;
-            }
-            cssUnlimitedPrevTimer++;
-        }
+        // if("cursor_id" in self){
+        //     if(!("cssUnlimitedTimer" in self) || !("cssUnlimitedPrevTimer" in self) || cssUnlimitedPrevTimer != cssUnlimitedTimer-1){
+        //         exit;
+        //     }
+        //     cssUnlimitedPrevTimer++;
+        // }
         if(!("unlimitedAlt" in self)){
             if("onlineCSS" in self && onlineCSS){
                 var savePlayer = player;

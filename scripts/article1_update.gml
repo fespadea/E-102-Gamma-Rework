@@ -34,59 +34,60 @@ switch(state){
     case 1: // windbox state
         vsp = hover()
         if(state_timer == 1){ // also create a vfx eventually
-            with oPlayer {
-                if(player != other.player_id.player && !(get_player_team(player) == get_player_team(other.player_id.player) && !get_match_setting(SET_TEAMATTACK))){
-                    if(collision_circle(other.x, other.y, 120, id, false, false)){
-                        var windboxAngle = point_direction(other.x, other.y, x, y - char_height/2);
-                        var horizontalMultiplier = 1;
-                        var verticalMultiplier = 1;
-                        if(!free){
-                            if(windboxAngle > 180 && windboxAngle < 360){
-                                if(windboxAngle > 270){
-                                    windboxAngle = 0;
-                                } else{
-                                    windboxAngle = 180;
-                                }
-                            }
-                            powerMultiplier = ground_friction*5;
-                        } else{
-                            verticalMultiplier = gravity_speed*3;
-                        }
-                        var windboxPower = 1;
-                        if(other.player_id != other.kirby && other.player_id.runeH){
-                            windboxPower *= 2;
-                        }
-                        var windHSP = windboxPower*dcos(windboxAngle);
-                        var windVSP = -windboxPower*dsin(windboxAngle);
-                        switch(state){
-                            case PS_DASH:
-                            case PS_DASH_START:
-                            case PS_WALK:
-                                set_state(PS_IDLE);
-                                break;
-                            case PS_DOUBLE_JUMP:
-                            case PS_FIRST_JUMP:
-                            case PS_WALL_JUMP:
-                                set_state(PS_IDLE_AIR);
-                                break;
-                        }
-                        if((other.x < x && hsp < 0) || (other.x > x && hsp > 0)){
-                            hsp = 0;
-                        }
-                        if((other.y < y && vsp < 0) || (other.y > y && vsp > 0)){
-                            vsp = 0;
-                        }
-                        var enemyDistance = 240/point_distance(other.x, other.y, x, y-char_height/2);
-                        hsp += windHSP*enemyDistance*horizontalMultiplier;
-                        vsp += windVSP*enemyDistance*verticalMultiplier;
-                        if(!free){
-                            if(vsp > -gravity_speed){
-                                vsp = 0;
-                            }
-                        }
-                    }
-                }
-            }
+            // with oPlayer {
+            //     if(player != other.player_id.player && !(get_player_team(player) == get_player_team(other.player_id.player) && !get_match_setting(SET_TEAMATTACK))){
+            //         if(collision_circle(other.x, other.y, 120, id, false, false)){
+            //             var windboxAngle = point_direction(other.x, other.y, x, y - char_height/2);
+            //             var horizontalMultiplier = 1;
+            //             var verticalMultiplier = 1;
+            //             if(!free){
+            //                 if(windboxAngle > 180 && windboxAngle < 360){
+            //                     if(windboxAngle > 270){
+            //                         windboxAngle = 0;
+            //                     } else{
+            //                         windboxAngle = 180;
+            //                     }
+            //                 }
+            //                 powerMultiplier = ground_friction*5;
+            //             } else{
+            //                 verticalMultiplier = gravity_speed*3;
+            //             }
+            //             var windboxPower = 1;
+            //             if(other.player_id != other.kirby && other.player_id.runeH){
+            //                 windboxPower *= 2;
+            //             }
+            //             var windHSP = windboxPower*dcos(windboxAngle);
+            //             var windVSP = -windboxPower*dsin(windboxAngle);
+            //             switch(state){
+            //                 case PS_DASH:
+            //                 case PS_DASH_START:
+            //                 case PS_WALK:
+            //                     set_state(PS_IDLE);
+            //                     break;
+            //                 case PS_DOUBLE_JUMP:
+            //                 case PS_FIRST_JUMP:
+            //                 case PS_WALL_JUMP:
+            //                     set_state(PS_IDLE_AIR);
+            //                     break;
+            //             }
+            //             if((other.x < x && hsp < 0) || (other.x > x && hsp > 0)){
+            //                 hsp = 0;
+            //             }
+            //             if((other.y < y && vsp < 0) || (other.y > y && vsp > 0)){
+            //                 vsp = 0;
+            //             }
+            //             var enemyDistance = 240/point_distance(other.x, other.y, x, y-char_height/2);
+            //             hsp += windHSP*enemyDistance*horizontalMultiplier;
+            //             vsp += windVSP*enemyDistance*verticalMultiplier;
+            //             if(!free){
+            //                 if(vsp > -gravity_speed){
+            //                     vsp = 0;
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+            create_hitbox(AT_NSPECIAL, 4, x, y).isGammaKirby = player_id == kirby;
             spawn_hit_fx(x, y, 195);
             sound_play(orig_player_id.sfxBirdSidespecialStartSound);
         } else if(state_timer > 20){

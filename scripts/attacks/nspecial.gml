@@ -11,7 +11,7 @@ set_window_value(AT_NSPECIAL, 1, AG_WINDOW_LENGTH, 20);
 set_window_value(AT_NSPECIAL, 1, AG_WINDOW_ANIM_FRAMES, 2);
 set_window_value(AT_NSPECIAL, 1, AG_WINDOW_ANIM_FRAME_START, 0);
 
-set_num_hitboxes(AT_NSPECIAL, 3);
+set_num_hitboxes(AT_NSPECIAL, 4);
 
 set_hitbox_value(AT_NSPECIAL, 1, HG_HITBOX_TYPE, 2);
 set_hitbox_value(AT_NSPECIAL, 1, HG_LIFETIME, 600);
@@ -74,3 +74,27 @@ set_hitbox_value(AT_NSPECIAL, 3, HG_PROJECTILE_GRAVITY, 0.5);
 set_hitbox_value(AT_NSPECIAL, 3, HG_PROJECTILE_GROUND_FRICTION, 100);
 set_hitbox_value(AT_NSPECIAL, 3, HG_PROJECTILE_AIR_FRICTION, 0.03);
 set_hitbox_value(AT_NSPECIAL, 3, HG_IGNORES_PROJECTILES, 1);
+
+set_hitbox_value(AT_NSPECIAL, 4, HG_HITBOX_TYPE, 2);//The windbox hitbox
+set_hitbox_value(AT_NSPECIAL, 4, HG_LIFETIME, 2);
+set_hitbox_value(AT_NSPECIAL, 4, HG_SHAPE, 0);
+set_hitbox_value(AT_NSPECIAL, 4, HG_WIDTH, 120);
+set_hitbox_value(AT_NSPECIAL, 4, HG_HEIGHT, 120);
+set_hitbox_value(AT_NSPECIAL, 4, HG_PRIORITY, 1);
+set_hitbox_value(AT_NSPECIAL, 4, HG_DAMAGE, 0);
+set_hitbox_value(AT_NSPECIAL, 4, HG_EFFECT, 9);
+set_hitbox_value(AT_NSPECIAL, 4, HG_ANGLE_FLIPPER, 8);
+set_hitbox_value(AT_NSPECIAL, 4, HG_BASE_KNOCKBACK, 0);
+set_hitbox_value(AT_NSPECIAL, 4, HG_KNOCKBACK_SCALING, 0);
+set_hitbox_value(AT_NSPECIAL, 4, HG_BASE_HITPAUSE, 0);
+set_hitbox_value(AT_NSPECIAL, 4, HG_HITSTUN_MULTIPLIER, 2);
+set_hitbox_value(AT_NSPECIAL, 4, HG_VISUAL_EFFECT, 1);
+set_hitbox_value(AT_NSPECIAL, 4, HG_PROJECTILE_SPRITE, asset_get("empty_sprite"));
+set_hitbox_value(AT_NSPECIAL, 4, HG_PROJECTILE_MASK, -1);
+set_hitbox_value(AT_NSPECIAL, 4, HG_PROJECTILE_GROUND_BEHAVIOR, 1);
+set_hitbox_value(AT_NSPECIAL, 4, HG_PROJECTILE_WALL_BEHAVIOR, 1);
+set_hitbox_value(AT_NSPECIAL, 4, HG_PROJECTILE_ENEMY_BEHAVIOR, 1);
+set_hitbox_value(AT_NSPECIAL, 4, HG_PROJECTILE_UNBASHABLE, 1);
+set_hitbox_value(AT_NSPECIAL, 4, HG_PROJECTILE_IS_TRANSCENDENT, 1);
+set_hitbox_value(AT_NSPECIAL, 4, HG_PROJECTILE_DOES_NOT_REFLECT, 1);
+set_hitbox_value(AT_NSPECIAL, 4, HG_PROJECTILE_PLASMA_SAFE, 1);

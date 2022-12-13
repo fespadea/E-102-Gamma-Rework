@@ -12,3 +12,40 @@ var ftiltException = my_hitboxID.attack == AT_FTILT && my_hitboxID.hbox_num < 2;
 if(dattackException || uairException || ustrongException || dairException || jabException || ftiltException){
     hit_player_obj.should_make_shockwave = false;
 }
+
+if(my_hitboxID.attack == AT_NSPECIAL){
+    if(my_hitboxID.hbox_num == 4){
+        var windboxAngle = point_direction(my_hitboxID.x, my_hitboxID.y, hit_player_obj.x, hit_player_obj.y - hit_player_obj.char_height/2);
+        if(!hit_player_obj.free){
+            if(windboxAngle > 0 && windboxAngle < 180){
+                if(windboxAngle > 90){
+                    windboxAngle = 180;
+                } else{
+                    windboxAngle = 0;
+                }
+            }
+        }
+        var windboxPower = 10;
+        if(!my_hitboxID.isGammaKirby && runeH){
+            windboxPower *= 2;
+        }
+        var windHSP = windboxPower*dcos(windboxAngle);
+        var windVSP = -windboxPower*dsin(windboxAngle);
+        with hit_player_obj{
+            switch(state){
+                case PS_DASH:
+                case PS_DASH_START:
+                case PS_WALK:
+                    set_state(PS_IDLE);
+                    break;
+                case PS_DOUBLE_JUMP:
+                case PS_FIRST_JUMP:
+                case PS_WALL_JUMP:
+                    set_state(PS_IDLE_AIR);
+                    break;
+            }
+        }
+        hit_player_obj.hsp += windHSP;
+        hit_player_obj.vsp += windVSP;
+    }
+}
