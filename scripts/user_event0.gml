@@ -285,24 +285,26 @@ switch(unlimitedAltEvent){
         // }
         // print(isCPU)
 
-        if (onlineCSS){ // got this from Lilac which I think got it from Dr. Flux
-            unlimitedRowButtonX = temp_x + 172;
-            unlimitedRowButtonY = temp_y + 30;
-            // unlimitedRowButtonX = temp_x + 26;
-            // unlimitedRowButtonY = temp_y + 139;
-        } else{
-            if (get_player_hud_color(player) == 8421504)
-            {
-                unlimitedRowButtonX = temp_x + 52;
-                unlimitedRowButtonY = temp_y + 169;
-            }
-            else
-            {
-                unlimitedRowButtonX = temp_x + 67;
-                unlimitedRowButtonY = temp_y + 169;
-            }
-        }
-
+        // if (onlineCSS){ // got this from Lilac which I think got it from Dr. Flux
+        //     unlimitedRowButtonX = temp_x + 170;
+        //     unlimitedRowButtonY = temp_y + 30;
+        //     // unlimitedRowButtonX = temp_x + 26;
+        //     // unlimitedRowButtonY = temp_y + 139;
+        // } else{
+        //     if (get_player_hud_color(player) == 8421504)
+        //     {
+        //         unlimitedRowButtonX = temp_x + 52;
+        //         unlimitedRowButtonY = temp_y + 169;
+        //     }
+        //     else
+        //     {
+        //         unlimitedRowButtonX = temp_x + 67;
+        //         unlimitedRowButtonY = temp_y + 169;
+        //     }
+        // }
+        unlimitedRowButtonX = temp_x + 170;
+        unlimitedRowButtonY = temp_y + 30;
+        
         // This offsets the alt name stuff when on the online CSS so that the picture thing doesn't cover it up. Set this to 0 if you don't like it. [Edit optional]
         var bottomPartOffset = onlineCSS ? -10 : 0;
 

@@ -120,9 +120,11 @@ switch(attack){
             var yOffset = y - distance*dsin(proj_angle);
             with pHitBox{
                 if(player != other.player && !(get_player_team(player) == get_player_team(other.player) && !get_match_setting(SET_TEAMATTACK))){
-                    if(collision_circle(xOffset, yOffset, 10, self, false, false)){
-                        other.destroyed = true;
-                        break;
+                    if(hit_priority > 0){
+                        if(collision_circle(xOffset, yOffset, 10, self, false, false)){
+                            other.destroyed = true;
+                            break;
+                        }
                     }
                 }
             }

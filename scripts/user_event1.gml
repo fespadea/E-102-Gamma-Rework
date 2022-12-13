@@ -398,9 +398,14 @@ switch(fspecialEvent){
     case "got_hit":
         //don't leave people marked if FSPECIAL was canceled
         if(attack == AT_FSPECIAL){
+            for(var i = 0; i < array_length(drawTargets); i++){
+                drawTargets[i] = false;
+            }
             for(var i = 0; i < array_length(markedPlayers); i++){
                 if(instance_exists(markedPlayers[i])){
-                    markedPlayers[i].gammaRocketMarked[player] = false;
+                    if("gammaRocketMarked" in markedPlayers[i]){
+                        markedPlayers[i].gammaRocketMarked[player] = false;
+                    }
                 }
             }
             markedPlayers = [];
@@ -408,7 +413,9 @@ switch(fspecialEvent){
                 if(orig_player == other.player && attack == AT_FSPECIAL && hbox_num == 1){
                     if(instance_exists(targetPlayer)){
                         other.markedPlayers[array_length(other.markedPlayers)] = targetPlayer;
-                        targetPlayer.gammaRocketMarked[other.player] = true;
+                        if("gammaRocketMarked" in targetPlayer){
+                            targetPlayer.gammaRocketMarked[orig_player] = true;
+                        } 
                     }
                 }
             }
