@@ -444,13 +444,14 @@ switch(unlimitedAltEvent){
 
         // [Random Alt]
         // Check if the random alt is selected
-        if(unlimitedAlt == randomAlt){ //
+        if(unlimitedAlt == randomAlt){
             unlimitedAlt = random_func(0, array_length(altName)-1, true);
             if(unlimitedAlt >= randomAlt){
                 unlimitedAlt++;
             }
             init_shader();
         }
+        set_color_profile_slot(0, 8, unlimitedAlt, -1, -1);
         break;
     case "update":
         var toggleRequirement = taunt_down && down_down && jump_down;
@@ -572,6 +573,10 @@ switch(unlimitedAltEvent){
             gpu_pop_state();
         }
         break;
+    case "results_pre_draw":
+        unlimitedAlt = get_color_profile_slot_r(0, 8);
+        init_shader();
+        break;
 }
 
 
@@ -583,6 +588,7 @@ unlimitedAlt = (syncedVar >> FIRST_BIT_UNLIMITED) & ((1 << (LAST_BIT_UNLIMITED-F
 
 
 #define updateUnlimitedAlt(newUnlimitedAlt)
+var prevUnlimitedAlt = unlimitedAlt;
 unlimitedAlt = newUnlimitedAlt;
 if(("savedUnlimitedAlt" + URL) in self){
     variable_instance_set(self, "savedUnlimitedAlt" + URL, unlimitedAlt);
@@ -595,6 +601,11 @@ newSyncedVar += syncedVar & ((1 << (FIRST_BIT_UNLIMITED))-1);
 set_synced_var(player, newSyncedVar);
 if(!("cursor_id" in self)){
     init_shader();
+    with oPlayer {
+        if(player > other.player && "url" in self && url == other.url && (unlimitedAlt == other.unlimitedAlt || unlimitedAlt == prevUnlimitedAlt)){
+            init_shader();
+        }
+    }
 }
 
 #define textDraw(x, y, font, color, lineb, linew, scale, outline, alpha, string)
