@@ -169,9 +169,6 @@ nspecialSwallowIconSprite = sprite_get("nspecial_swallow_icon");
 nspecialParrotIconSprite = sprite_get("nspecial_parrot_icon");
 nspecialFlickyIconSprite = sprite_get("nspecial_flicky_icon");
 jetpackSprite = sprite_get("jetpack");
-gammaNspecialSprite = sprite_get("gamma_nspecial");
-gammaNspecialHurtSprite = sprite_get("gamma_nspecial_hurt");
-gammaNspecialKirbyIcon = sprite_get("Gamma_nspecial_kirby_icon");
 idleSprite = sprite_get("idle");
 nspecialFlickySprite = sprite_get("nspecial_flicky");
 emptySprite = asset_get("empty_sprite");
@@ -206,6 +203,7 @@ EggBreakerTauntSfx = sound_get("MoreTheMerrier");
 kirbyability = 16;
 swallowed = 0;
 kirbyBetaSfx = sound_get("kirbyBeta");
+gammaNspecialKirbyIcon = sprite_get("kirby_nspecial_icon");
 kirbies = []
 var largestPlayerNumber = 0;
 with oPlayer{

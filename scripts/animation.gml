@@ -41,7 +41,7 @@ switch (state){
 		switch(attack){
 			case AT_DSPECIAL:
 				if(window == 2){
-					image_index = 6 + ((mine_charge % 12 > 5) ? 1 : 0);
+					image_index = 5 + ((mine_charge % 12 > 5) ? 1 : 0);
 				}
 				break;
 			case AT_FSTRONG:

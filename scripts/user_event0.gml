@@ -9,7 +9,7 @@ know what it is, so you don't need to touch it if you don't. [Edit necessary]
 #macro LAST_BIT_UNLIMITED 31
 
 // set this to the number of color rows you use (Rivals has a max of 8)
-#macro NUM_COLOR_ROWS 8
+#macro NUM_COLOR_ROWS 3
 
 /*
 Set this to some unique value that other characters won't use.
