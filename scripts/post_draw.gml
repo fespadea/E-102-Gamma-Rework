@@ -10,7 +10,7 @@ if(attack == AT_NSPECIAL && special_down && (state == PS_ATTACK_GROUND || state 
     var right_winner = ((right_winner < up_counter && right_winner < down_counter && right_winner < left_counter && right_pressed) || right_down) && !down_winner;
     var left_winner = ((left_winner < up_counter && left_winner < right_counter && left_winner < down_counter && left_pressed) || left_down) && !down_winner && !right_winner;
     var up_winner = ((up_winner < down_counter && up_winner < right_counter && up_winner < left_counter && up_pressed) || up_down) && !down_winner && !right_winner && !left_winner;
-    var neutralWinner = !down_winner && !right_winner && left_winner && up_winner;
+    var neutralWinner = !down_winner && !right_winner && !left_winner && !up_winner;
     if(!noPeacock){
         draw_sprite_ext(nspecialPeacockIconSprite, 0, x+10, y-10, 1, 1, 0, c_gray, .7);
         draw_sprite_ext(nspecialPeacockIconSprite, 0, x-10, y-10, -1, 1, 0, c_gray, .7);
