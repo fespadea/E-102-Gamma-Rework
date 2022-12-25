@@ -25,7 +25,8 @@ if(my_hitboxID.attack == AT_NSPECIAL){
                 }
             }
         }
-        var windboxPower = 10;
+        var windboxPower = get_kb_formula(get_player_damage(hit_player_obj.player), hit_player_obj.knockback_adj, get_match_setting(SET_SCALING), 0, 10, 1.0);
+        print(windboxPower)
         if(!my_hitboxID.isGammaKirby && runeH){
             windboxPower *= 2;
         }
