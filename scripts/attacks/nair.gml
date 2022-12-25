@@ -20,7 +20,7 @@ set_window_value(AT_NAIR, 2, AG_WINDOW_HAS_WHIFFLAG, 10);
 set_window_value(AT_NAIR, 3, AG_WINDOW_LENGTH, 6);
 set_window_value(AT_NAIR, 3, AG_WINDOW_ANIM_FRAMES, 2);
 set_window_value(AT_NAIR, 3, AG_WINDOW_ANIM_FRAME_START, 8);
-set_window_value(AT_NAIR, 3, AG_WINDOW_HAS_WHIFFLAG, 10);
+set_window_value(AT_NAIR, 3, AG_WINDOW_HAS_WHIFFLAG, true);
 
 set_num_hitboxes(AT_NAIR,1);
 

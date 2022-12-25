@@ -13,12 +13,11 @@ set_window_value(AT_UTILT, 2, AG_WINDOW_HAS_SFX, 1);
 set_window_value(AT_UTILT, 2, AG_WINDOW_SFX, asset_get("sfx_swipe_medium1"));
 set_window_value(AT_UTILT, 2, AG_WINDOW_SFX_FRAME, 1);
 set_window_value(AT_UTILT, 2, AG_WINDOW_ANIM_FRAME_START, 2);
-set_window_value(AT_UTILT, 2, AG_WINDOW_HAS_WHIFFLAG, 10);
 
 set_window_value(AT_UTILT, 3, AG_WINDOW_LENGTH, 6);
 set_window_value(AT_UTILT, 3, AG_WINDOW_ANIM_FRAMES, 2);
 set_window_value(AT_UTILT, 3, AG_WINDOW_ANIM_FRAME_START, 4);
-set_window_value(AT_UTILT, 3, AG_WINDOW_HAS_WHIFFLAG, 10);
+set_window_value(AT_UTILT, 3, AG_WINDOW_HAS_WHIFFLAG, true);
 
 set_num_hitboxes(AT_UTILT,1);
 

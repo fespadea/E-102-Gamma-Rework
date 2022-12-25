@@ -21,6 +21,7 @@ set_window_value(AT_BAIR, 2, AG_WINDOW_HSPEED_TYPE, 0);
 set_window_value(AT_BAIR, 3, AG_WINDOW_LENGTH, 18);
 set_window_value(AT_BAIR, 3, AG_WINDOW_ANIM_FRAMES, 6);
 set_window_value(AT_BAIR, 3, AG_WINDOW_ANIM_FRAME_START, 10);
+set_window_value(AT_BAIR, 3, AG_WINDOW_HAS_WHIFFLAG, true);
 
 
 set_num_hitboxes(AT_BAIR,2);

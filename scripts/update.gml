@@ -26,7 +26,7 @@ if (playingJabSFX && !(attack == AT_JAB && window == get_attack_value( AT_JAB, A
 	playingJabSFX = false;
 }
 
-if (!(state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR) || (!(attack == AT_UAIR && window == get_attack_value( AT_UAIR, AG_NUM_WINDOWS)-1) && !(attack == AT_USTRONG && window == get_attack_value( AT_USTRONG, AG_NUM_WINDOWS)-1) && attack != AT_FSTRONG && !(attack == AT_DAIR && window == get_attack_value( AT_DAIR, AG_NUM_WINDOWS)-1))){
+if (!(state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR) || (!(attack == AT_UAIR && window == get_attack_value( AT_UAIR, AG_NUM_WINDOWS)-1) && !(attack == AT_USTRONG && window < get_attack_value(AT_USTRONG, AG_NUM_WINDOWS) && window > 2) && attack != AT_FSTRONG && !(attack == AT_DAIR && window == get_attack_value( AT_DAIR, AG_NUM_WINDOWS)-1))){
 	sound_stop(gammaElectricitySoundInstance);
 	playingDairSFX = false;
 }

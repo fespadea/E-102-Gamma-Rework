@@ -228,7 +228,7 @@ if(!hitpause){
 			break;
 		case AT_USTRONG:
 			if(!runeC){
-				if(window == 2){
+				if(window == 3){
 					if(window_timer == 1){
 						gammaElectricitySoundInstance = sound_play(gammaElectricitySound);
 					}

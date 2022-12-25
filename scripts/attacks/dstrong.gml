@@ -20,6 +20,7 @@ set_window_value(AT_DSTRONG, 3, AG_WINDOW_SFX, asset_get("sfx_abyss_explosion_bi
 set_window_value(AT_DSTRONG, 4, AG_WINDOW_LENGTH, 18);
 set_window_value(AT_DSTRONG, 4, AG_WINDOW_ANIM_FRAMES, 6);
 set_window_value(AT_DSTRONG, 4, AG_WINDOW_ANIM_FRAME_START, 9);
+set_window_value(AT_DSTRONG, 4, AG_WINDOW_HAS_WHIFFLAG, true);
 
 
 set_num_hitboxes(AT_DSTRONG, 2);
