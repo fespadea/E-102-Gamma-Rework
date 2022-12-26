@@ -15,6 +15,8 @@ free = true;
 hitstop = 0;
 
 despawn = false;
+mineHitbox = noone;
+windboxCooldown = 0;
 
 if(!("kirby" in self)){
     kirby = -1;

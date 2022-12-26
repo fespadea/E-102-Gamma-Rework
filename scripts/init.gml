@@ -139,6 +139,9 @@ goingUp = false;
 playingJabSFX = false;
 playingDairSFX = false;
 
+//VFX
+reverseWindEffect = hit_fx_create(sprite_get("nspecial_reverse_wind_effect"), 10);
+
 //SFXInstanceIDs
 tauntSoundInstance = -1;
 gammaFanSoundInstance = -1;
@@ -204,7 +207,7 @@ kirbyability = 16;
 swallowed = 0;
 kirbyBetaSfx = sound_get("kirbyBeta");
 gammaNspecialKirbyIcon = sprite_get("kirby_nspecial_icon");
-kirbies = []
+kirbies = [];
 var largestPlayerNumber = 0;
 with oPlayer{
     if(player > largestPlayerNumber){

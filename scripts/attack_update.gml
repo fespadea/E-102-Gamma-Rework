@@ -205,7 +205,7 @@ if(!hitpause){
 					} else{
 						with obj_article1 {
 							if(player_id == other.id && kirby == -1){
-								if(state == 0){
+								if(state == 0 || state == 4){
 									state = 2;
 									state_timer = 0;
 								}

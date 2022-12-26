@@ -91,8 +91,10 @@ sprite_change_offset("dspecial_bars", 1, 46);
 sprite_change_offset("dspecial_cooldown", 0, 0);
 sprite_change_offset("dspecial_charge", 0, 0);
 
+// vfx
+sprite_change_offset("nspecial_reverse_wind_effect", sprite_get_width(sprite_get("nspecial_reverse_wind_effect"))/2, sprite_get_height(sprite_get("nspecial_reverse_wind_effect"))/2);
+
 // Kirby
-sprite_change_offset("gamma_nspecial", 120, 132);
 sprite_change_offset("Gamma_nspecial_kirby_icon", 0, 6);
 
 // Feri
