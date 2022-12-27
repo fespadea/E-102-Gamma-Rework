@@ -16,8 +16,8 @@
 //     draw_circle_color(x + 4*spr_dir - 14 + hsp, y + 12 + 13 + vsp, 1, c_red, c_red, false);
 // }
 
-with pHitBox{
-    if "targetX" in self{
-        draw_circle_color(targetX, targetY, 1, c_red, c_red, -1);
-    }
-}
+// with pHitBox{
+//     if "targetX" in self{
+//         draw_circle_color(targetX, targetY, 1, c_red, c_red, -1);
+//     }
+// }
