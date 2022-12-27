@@ -218,6 +218,9 @@ for(var i = 0; i <= largestPlayerNumber; i++){
     kirbies[i] = -1;
 }
 
+// Dream Collection Kirby support
+TCG_Kirby_Copy = 3;
+
 // TCO Support
 tcoart = sprite_get("tcoartGamma");
 
