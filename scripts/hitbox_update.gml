@@ -107,7 +107,7 @@ switch(attack){
                 targetY = get_instance_y(targetPlayer) - ("char_height" in targetPlayer ? targetPlayer.char_height/2 : 0);
                 if(isOrbitter){
                     var distanceToTarget = point_distance(x, y, targetX, targetY);
-                    var orbitDistance = 200;
+                    var orbitDistance = 150;
                     var angleToBeta = point_direction(x, y, targetX, targetY);
                     var angle = angleToBeta - darctan2(orbitDistance, distanceToTarget);
                     var distance = sqrt(sqr(orbitDistance) + sqr(distanceToTarget));
