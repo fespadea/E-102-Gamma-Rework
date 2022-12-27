@@ -47,8 +47,6 @@ if(activeMines){
     shader_end();
 }
 
-unlimitedAltEvent = "pre_draw";
-user_event(0);
-
+// unlimitedAltEvent = "pre_draw" is called in user_event1
 fspecialEvent = "pre_draw";
 user_event(1);

@@ -50,6 +50,10 @@ switch (state){
 						image_index = 7 + floor(strong_charge/3) % 5;
 				}
 				break;
+			case AT_FSPECIAL:
+				fspecialEvent = "animation";
+				user_event(1);
+				break;
 		}
     
     default: break;

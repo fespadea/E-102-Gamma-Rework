@@ -11,6 +11,7 @@ switch(fspecialEvent){
         drawTargeter = false;
         targerterRotation = 0;
         targeterRotationRad = 0;
+        targeterDir = spr_dir;
         targerterDir = 1;
         laserX = 0.0;
         laserY = 0.0;
@@ -63,6 +64,13 @@ switch(fspecialEvent){
         // rocket VFX
         rocketMarked = sprite_get("fspecial_marked");
         rocketFollowerVFX = hit_fx_create(sprite_get("fspecial_proj_follower"), 18);
+
+        //sprites
+        fspecialBackwardSprite = sprite_get("fspecial_backward");
+        fspecialAirBackwardSprite = sprite_get("fspecial_air_backward");
+        fspecialAirFloatHurtBackwardSprite = sprite_get("fspecial_air_float_backward_hurt");
+        fspecialAirHurtBackwardSprite = sprite_get("fspecial_air_backward_hurt");
+        fspecialHurtBackwardSprite = sprite_get("fspecial_backward_hurt");
         break;
     case "attack_update":
         //float mechanic
@@ -74,6 +82,7 @@ switch(fspecialEvent){
             }
         } else {
             set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, fspecialHurtSprite);
+            set_attack_value(AT_FSPECIAL, AG_HURTBOX_SPRITE, fspecialHurtSprite);
         }
         hurtboxID.sprite_index = get_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE);
         if(state == PS_ATTACK_GROUND){
@@ -111,6 +120,7 @@ switch(fspecialEvent){
                             targeterRotation = max(targeterRotation + (real(joy_dir - 360 - targeterRotation)/30.0), minNegativeRotation);
                         } else if (left_down){
                             targeterDir = -1;
+                            targeterRotation *= -1;
                         }
                     } else {
                         if (joy_dir >= 180 && joy_dir < 270 || down_down){
@@ -119,8 +129,23 @@ switch(fspecialEvent){
                             targeterRotation = max(targeterRotation + (real(joy_dir - 180 - targeterRotation)/30.0), minNegativeRotation);
                         } else if (right_down){
                             targeterDir = 1;
+                            targeterRotation *= -1;
                         }
                     }
+                }
+                if(targeterDir != spr_dir){
+                    targeterBaseX += 20*spr_dir;
+                    if(state == PS_ATTACK_AIR){
+                        if(floatActive){
+                            set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, fspecialAirFloatHurtBackwardSprite);
+                        } else {
+                            set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, fspecialAirHurtBackwardSprite);
+                        }
+                    } else {
+                        set_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE, fspecialHurtBackwardSprite);
+                        set_attack_value(AT_FSPECIAL, AG_HURTBOX_SPRITE, fspecialHurtBackwardSprite);
+                    }
+                    hurtboxID.sprite_index = get_attack_value(AT_FSPECIAL, AG_HURTBOX_AIR_SPRITE);
                 }
                 targeterRotationRad = degtorad(targeterRotation);
                 laserX = targeterBaseX + targeterDir * distanceToTargetPoint*cos(targeterRotationRad + angleToTargetPoint * targeterDir);
@@ -293,15 +318,16 @@ switch(fspecialEvent){
                     sound_play(targetConfirmedSound);
                 }
                 if (state_timer > 130){
-                    if(array_length(markedPlayers) == 0)
-                        window = 4;
-                    else
-                        window = 3;
+                    window = 3;
                     set_window_value(AT_FSPECIAL, 2, AG_WINDOW_TYPE, 0);
                 }
             }
         } else if (window == 3){
             if(window_timer == 1){
+                if(targeterDir != spr_dir){
+                    targeterDir = spr_dir;
+                    targeterRotation *= -1;
+                }
                 while(rocketsShot < array_length(markedPlayers)*multiplier && !instance_exists(markedPlayers[floor(rocketsShot/multiplier)])){
                     rocketsShot++;
                 } 
@@ -394,35 +420,14 @@ switch(fspecialEvent){
     case "other_post_draw": // this stuff is just done in other_post_draw.gml
         break;
     case "post_draw":
-        //drawing the laser targeter for Fspecial
-        if(attack == AT_FSPECIAL && (state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR)){
-            if(window == 1){
-                if(image_index > 0){
-                    draw_sprite_ext(fspecialTargetingSprite, image_index-1, targeterBaseX, targeterBaseY, spr_dir, 1, 0, -1, 1);
-                }
-            } else if (window == 2){
-                draw_sprite_ext(fspecialTargetingSprite, 3, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
-            } else {
-                if(image_index < 10){
-                draw_sprite_ext(fspecialTargetingSprite, 3, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
-                } else if(image_index < 13){
-                draw_sprite_ext(fspecialTargetingSprite, 12 - image_index, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
-                }
-            }
-        }
+        if(targeterDir == spr_dir)
+            drawTheTargeter();
 
         unlimitedAltEvent = "post_draw"; // this is called here to have the 
         user_event(0);
 
-        //drawing the laser for Fspecial
-        if(attack == AT_FSPECIAL && (state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR)){
-            if (window == 2){
-                if(state_timer < 100)
-                    draw_sprite_ext(fspecialLaser, 0, laserX, laserY, targeterDir*lengthLaser, 1, targeterRotation, -1, 0.3);
-                else
-                    draw_sprite_ext(fspecialLaserOld, 0, laserX, laserY, targeterDir*lengthLaser, 1, targeterRotation, -1, 0.3-(state_timer-100)/100);
-            }
-        }
+        if(targeterDir == spr_dir)
+            drawLaser();
 
         //draw mark effect on gamma if a rocket gets reflected
         if(gammaRocketMarked[player]){
@@ -456,10 +461,23 @@ switch(fspecialEvent){
         rocketsShot = 0;
         break;
     case "pre_draw":
+        unlimitedAltEvent = "pre_draw";
+        user_event(0);
+        
+        if(targeterDir != spr_dir)
+            drawTheTargeter();
+
+        if(targeterDir != spr_dir){
+            gpu_push_state();
+            gpu_set_blendmode(bm_normal);
+            drawLaser();
+            gpu_pop_state();
+        }
+        
         // draw the jetpack during fspecial if floating
         if(attack == AT_FSPECIAL && state == PS_ATTACK_AIR && floatActive){
             shader_start();
-            draw_sprite_ext(jetpackSprite, state_timer*jump_anim_speed, x, y, spr_dir, 1, 0, -1, 1);
+            draw_sprite_ext(jetpackSprite, state_timer*jump_anim_speed, x + (targeterDir != spr_dir ? -8*spr_dir : 0), y, spr_dir*targeterDir, 1, 0, -1, 1);
             shader_end();
         }
         break;
@@ -491,6 +509,17 @@ switch(fspecialEvent){
             activeRockets = array_length(markedPlayers) > 0;
         }
         break;
+    case "animation":
+        if(window == 2){
+            if(targeterDir != spr_dir){
+                if(state == PS_ATTACK_AIR){
+                    sprite_index = fspecialAirBackwardSprite;
+                } else{
+                    sprite_index = fspecialBackwardSprite;
+                }
+            }
+        }
+        break;
 }
 
 
@@ -519,3 +548,33 @@ if (runeO || collision_line(ox,oy,dx,dy,object,prec,notme) < 0) {
 	distance = point_distance(ox,oy,dx,dy);
 }
 return distance;
+
+
+#define drawTheTargeter()
+//drawing the laser targeter for Fspecial
+if(attack == AT_FSPECIAL && (state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR)){
+    if(window == 1){
+        if(image_index > 0){
+            draw_sprite_ext(fspecialTargetingSprite, image_index-1, targeterBaseX, targeterBaseY, spr_dir, 1, 0, -1, 1);
+        }
+    } else if (window == 2){
+        draw_sprite_ext(fspecialTargetingSprite, 3, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
+    } else {
+        if(image_index < 10){
+        draw_sprite_ext(fspecialTargetingSprite, 3, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
+        } else if(image_index < 13){
+        draw_sprite_ext(fspecialTargetingSprite, 12 - image_index, targeterBaseX, targeterBaseY, targeterDir, 1, targeterRotation, -1, 1);
+        }
+    }
+}
+
+#define drawLaser()
+//drawing the laser for Fspecial
+if(attack == AT_FSPECIAL && (state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR)){
+    if (window == 2){
+        if(state_timer < 100)
+            draw_sprite_ext(fspecialLaser, 0, laserX, laserY, targeterDir*lengthLaser, 1, targeterRotation, -1, 0.3);
+        else
+            draw_sprite_ext(fspecialLaserOld, 0, laserX, laserY, targeterDir*lengthLaser, 1, targeterRotation, -1, 0.3-(state_timer-100)/100);
+    }
+}
