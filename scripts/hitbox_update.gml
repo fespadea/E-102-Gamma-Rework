@@ -72,38 +72,49 @@ switch(attack){
                 }
             }
             if(instance_exists(targetPlayer)){
-                var markedPlayersPosition = -1;
-                for(var i = 0; i < array_length(player_id.markedPlayers); i++){
-                    if(player_id.markedPlayers[i] == targetPlayer){
-                        markedPlayersPosition = i;
+                var isOrbitter = ("isGammaOrbittable" in targetPlayer) && targetPlayer.isGammaOrbittable;
+                if(isOrbitter){
+                    var markedOrbitsPosition = -1;
+                    for(var i = 0; i < array_length(player_id.markedOrbits); i++){
+                        if(player_id.markedOrbits[i] == targetPlayer){
+                            markedOrbitsPosition = i;
+                        }
                     }
-                }
-                var isOrbitter = "isGammaOrbittable" in targetPlayer && targetPlayer.isGammaOrbittable;
-                if(markedPlayersPosition >= 0){
-                    player_id.drawTargets[markedPlayersPosition] = true;
+                    targetPlayer.gammaRocketMarked[orig_player] = true;
+                    if(markedOrbitsPosition < 0){
+                        player_id.markedOrbits[array_length(player_id.markedOrbits)] = targetPlayer;
+                        player_id.activeOrbits = true;
+                    }
                 } else{
-                    if("gammaRocketMarked" in targetPlayer){
-                        targetPlayer.gammaRocketMarked[orig_player] = true;
-                    } 
-                    player_id.drawTargets[array_length(player_id.markedPlayers)] = true;
-                    if(!isOrbitter){
+                    var markedPlayersPosition = -1;
+                    for(var i = 0; i < array_length(player_id.markedPlayers); i++){
+                        if(player_id.markedPlayers[i] == targetPlayer){
+                            markedPlayersPosition = i;
+                        }
+                    }
+                    if(markedPlayersPosition >= 0){
+                        player_id.drawTargets[markedPlayersPosition] = true;
+                    } else{
+                        if("gammaRocketMarked" in targetPlayer){
+                            targetPlayer.gammaRocketMarked[orig_player] = true;
+                        } 
+                        player_id.drawTargets[array_length(player_id.markedPlayers)] = true;
                         player_id.activeRockets = true;
                         player_id.markedPlayers[array_length(player_id.markedPlayers)] = targetPlayer;
-                    } else{
-                        player_id.markedOrbits[array_length(player_id.markedPlayers)] = targetPlayer;
                     }
                 }
                 targetX = get_instance_x(targetPlayer) + ("gammaTargetWidth" in targetPlayer ? targetPlayer.gammaTargetWidth/2 : 0);
                 targetY = get_instance_y(targetPlayer) - ("char_height" in targetPlayer ? targetPlayer.char_height/2 : 0);
                 if(isOrbitter){
                     var distanceToTarget = point_distance(x, y, targetX, targetY);
-                    var orbitDistance = 100;
+                    var orbitDistance = 200;
                     var angleToBeta = point_direction(x, y, targetX, targetY);
                     var angle = angleToBeta - darctan2(orbitDistance, distanceToTarget);
                     var distance = sqrt(sqr(orbitDistance) + sqr(distanceToTarget));
                     targetX = x + distance*dcos(angle);
                     targetY = y - distance*dsin(angle);
                     length = (hitbox_timer+1)*2+30;
+                    MAX_ANGLE_CHANGE = 5;
                 }
                 angleToTarget = point_direction(x, y, targetX, targetY);
                 if(hitbox_timer < length - 30){

@@ -384,7 +384,7 @@ switch(unlimitedAltEvent){
             sameAltPlayers[i] = false;
         }
         with oPlayer{
-            if(player < other.player && url == other.url && unlimitedAlt == other.unlimitedAlt){
+            if(player < other.player && "url" in self && url == other.url && unlimitedAlt == other.unlimitedAlt){
                 sameAltPlayers[player] = true; // I'm doing this like this to avoid double counting clones
             }
         }

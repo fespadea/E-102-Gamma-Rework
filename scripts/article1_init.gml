@@ -17,7 +17,16 @@ hitstop = 0;
 despawn = false;
 mineHitbox = noone;
 windboxCooldown = 0;
-isGammaOrbittable = true;
+isGammaOrbittable = true
+var largestPlayerNumber = 0;
+with oPlayer{
+    if(player > largestPlayerNumber){
+        largestPlayerNumber = player;
+    }
+}
+for(var i = 0; i <= largestPlayerNumber; i++){
+    gammaRocketMarked[i] = false;
+}
 
 if(!("kirby" in self)){
     kirby = -1;

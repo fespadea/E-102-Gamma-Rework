@@ -26,6 +26,7 @@ switch(fspecialEvent){
         drawTargets = [];
         rocketsShot = 0;
         activeRockets = false;
+        activeOrbits = false;
         targetConfirmedSound = sound_get("TargetConfirmed");
         var largestPlayerNumber = 0;
         with oPlayer{
@@ -159,8 +160,9 @@ switch(fspecialEvent){
                                     }
                                 }
                                 if(unMarkedPlayer){
-                                    targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, id, false, false);
+                                    targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, hurtboxID, false, false);
                                     if(targetedPlayer != noone){
+                                        targetedPlayer = self;
                                         other.drawTargets[array_length(other.markedPlayers)] = false;
                                         other.markedPlayers[array_length(other.markedPlayers)] = targetedPlayer;
                                         gammaRocketMarked[other.player] = true;
@@ -183,7 +185,7 @@ switch(fspecialEvent){
                             if(unMarkedOrbit){
                                 targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, id, false, false);
                                 if(targetedPlayer != noone){
-                                    other.drawTargets[array_length(other.markedPlayers)] = true;
+                                    other.drawTargets[array_length(other.markedPlayers)] = false;
                                     other.markedPlayers[array_length(other.markedPlayers)] = targetedPlayer;
                                     other.markedOrbits[array_length(other.markedOrbits)] = targetedPlayer;
                                     for(k = ("gammaRocketMarked" in self ? array_length(gammaRocketMarked) : 0); k <= largestPlayerNumber; k++){
@@ -306,6 +308,7 @@ switch(fspecialEvent){
                 if(rocketsShot >= array_length(markedPlayers)*multiplier){
                     window = 4;
                     activeRockets = true;
+                    activeOrbits = true;
                 }
             }else if(window_timer == 2){
                 while(rocketsShot < array_length(markedPlayers)*multiplier && !instance_exists(markedPlayers[floor(rocketsShot/multiplier)])){
@@ -326,6 +329,37 @@ switch(fspecialEvent){
         for(var i = 0; i < min(array_length(markedPlayers), floor(rocketsShot/multiplier)); i++){
             drawTargets[i] = false;
         }
+        if(activeOrbits && !((state == PS_ATTACK_AIR || state == PS_ATTACK_GROUND) && attack == AT_FSPECIAL && window < 3)){
+            if(((state == PS_ATTACK_AIR || state == PS_ATTACK_GROUND) && attack == AT_FSPECIAL && window == 3)){
+                var tmpMarkedOrbits = markedOrbits;
+                markedOrbits = [];
+                for(var i = 0; i < array_length(tmpMarkedOrbits); i++){
+                    if(instance_exists(tmpMarkedOrbits[i])){
+                        var newOrbit = false;
+                        for(var j = 0; j < array_length(markedPlayers); j++){
+                            if(markedPlayers[j] == tmpMarkedOrbits[i]){
+                                newOrbit = true;
+                                break;
+                            }
+                        }
+                        if(newOrbit){
+                            markedOrbits[array_length(markedOrbits)] = tmpMarkedOrbits[i];
+                        } else{
+                            tmpMarkedOrbits[i].gammaRocketMarked[player] = false;
+                        }
+                    }
+                }
+                activeOrbits = false;
+            } else{
+                for(var i = 0; i < array_length(markedOrbits); i++){
+                    if(instance_exists(markedOrbits[i])){
+                        markedOrbits[i].gammaRocketMarked[player] = false;
+                    }
+                }
+                markedOrbits = [];
+                activeOrbits = false;
+            }
+        }
         if(activeRockets || state == PS_PARRY_START){ // This is undone in hitbox_update.gml if there is still an active rocket (using fact that update.gml runs first)
             move_cooldown[AT_FSPECIAL] = 140;
             for(var i = 0; i < array_length(markedPlayers); i++){
@@ -336,7 +370,6 @@ switch(fspecialEvent){
                 }
             }
             markedPlayers = [];
-            markedOrbits = [];
             activeRockets = false;
         } else {
             move_cooldown[AT_FSPECIAL] = 0;
