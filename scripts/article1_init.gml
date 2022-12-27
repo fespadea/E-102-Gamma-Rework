@@ -17,6 +17,7 @@ hitstop = 0;
 despawn = false;
 mineHitbox = noone;
 windboxCooldown = 0;
+isGammaOrbittable = true;
 
 if(!("kirby" in self)){
     kirby = -1;

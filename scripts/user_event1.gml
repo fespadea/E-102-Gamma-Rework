@@ -22,6 +22,7 @@ switch(fspecialEvent){
         distanceToTargetPoint = sqrt(xDistanceToTargetPoint*xDistanceToTargetPoint + yDistanceToTargetPoint*yDistanceToTargetPoint);
         angleToTargetPoint = arctan(yDistanceToTargetPoint/xDistanceToTargetPoint);
         markedPlayers = [];
+        markedOrbits = [];
         drawTargets = [];
         rocketsShot = 0;
         activeRockets = false;
@@ -172,7 +173,41 @@ switch(fspecialEvent){
                 }
                 for(i = 0; i < (runeG ? array_length(articles) : NORMAL_ARTICLES_ARRAY); i++){
                     with articles[i] {
-                        if(player != other.player && !(get_player_team(player) == get_player_team(other.player) && get_match_setting(SET_TEAMATTACK) == false)){
+                        if("isGammaOrbittable" in self && isGammaOrbittable){
+                            unMarkedOrbit = true;
+                            for(j = 0; j < array_length(other.markedOrbits); j++){
+                                if(other.markedOrbits[j] == self){
+                                    unMarkedOrbit = false;
+                                }
+                            }
+                            if(unMarkedOrbit){
+                                targetedPlayer = collision_line(other.laserX, other.laserY, other.laserX + xLength, other.laserY - yLength, id, false, false);
+                                if(targetedPlayer != noone){
+                                    other.drawTargets[array_length(other.markedPlayers)] = true;
+                                    other.markedPlayers[array_length(other.markedPlayers)] = targetedPlayer;
+                                    other.markedOrbits[array_length(other.markedOrbits)] = targetedPlayer;
+                                    for(k = ("gammaRocketMarked" in self ? array_length(gammaRocketMarked) : 0); k <= largestPlayerNumber; k++){
+                                        gammaRocketMarked[k] = false;
+                                    }
+                                    gammaRocketMarked[other.player] = true;
+                                    playTargetConfirmedSound = true;
+                                    if(!("char_height" in self)){
+                                        if(sprite_index == other.emptySprite){
+                                            char_height = (sprite_get_yoffset(mask_index) - sprite_get_height(mask_index)/2)*2;
+                                        } else{
+                                            char_height = (sprite_get_yoffset(sprite_index) - sprite_get_height(sprite_index)/2)*2;
+                                        }
+                                    }
+                                    if(!("gammaTargetWidth" in self)){
+                                        if(sprite_index == other.emptySprite){
+                                            gammaTargetWidth = (sprite_get_xoffset(mask_index) - sprite_get_width(mask_index)/2)*2;
+                                        } else{
+                                            gammaTargetWidth = (sprite_get_xoffset(sprite_index) - sprite_get_width(sprite_index)/2)*2;
+                                        }
+                                    }
+                                }
+                            }
+                        } else if(player != other.player && !(get_player_team(player) == get_player_team(other.player) && get_match_setting(SET_TEAMATTACK) == false)){
                             if((other.runeG && other.articles[i] != obj_stage_article_platform && other.articles[i] != obj_stage_article_solid) || is_hittable){
                                 unMarkedPlayer = true;
                                 for(j = 0; j < array_length(other.markedPlayers); j++){
@@ -301,6 +336,7 @@ switch(fspecialEvent){
                 }
             }
             markedPlayers = [];
+            markedOrbits = [];
             activeRockets = false;
         } else {
             move_cooldown[AT_FSPECIAL] = 0;
@@ -358,7 +394,7 @@ switch(fspecialEvent){
         //draw mark effect on gamma if a rocket gets reflected
         if(gammaRocketMarked[player]){
             shader_start();
-            draw_sprite_ext(rocketMarked, state_timer/6, x, y - char_height/2, 1, 1, 0, -1, .5);
+            draw_sprite_ext(rocketMarked, get_gameplay_time()/6, x, y - char_height/2, 1, 1, 0, -1, .5);
             shader_end();
         }
 
@@ -367,11 +403,11 @@ switch(fspecialEvent){
             if(drawTargets[i] && instance_exists(markedPlayers[i])){
                 if(!("object_index" in markedPlayers[i])){
                     shader_start();
-                    draw_sprite_ext(rocketMarked, state_timer/6, get_instance_x(markedPlayers[i]), get_instance_y(markedPlayers[i]), 1, 1, 0, -1, .5);
+                    draw_sprite_ext(rocketMarked, get_gameplay_time()/6, get_instance_x(markedPlayers[i]), get_instance_y(markedPlayers[i]), 1, 1, 0, -1, .5);
                     shader_end();
                 }else if(markedPlayers[i].object_index != oPlayer){
                     shader_start();
-                    draw_sprite_ext(rocketMarked, state_timer/6, markedPlayers[i].x + markedPlayers[i].gammaTargetWidth/2, markedPlayers[i].y - markedPlayers[i].char_height/2, 1, 1, 0, -1, .5);
+                    draw_sprite_ext(rocketMarked, get_gameplay_time()/6, markedPlayers[i].x + markedPlayers[i].gammaTargetWidth/2, markedPlayers[i].y - markedPlayers[i].char_height/2, 1, 1, 0, -1, .5);
                     shader_end();
                 }
             }

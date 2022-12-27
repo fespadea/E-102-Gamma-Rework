@@ -78,23 +78,40 @@ switch(attack){
                         markedPlayersPosition = i;
                     }
                 }
+                var isOrbitter = "isGammaOrbittable" in targetPlayer && targetPlayer.isGammaOrbittable;
                 if(markedPlayersPosition >= 0){
-                    player_id.drawTargets[markedPlayersPosition] = targetPlayer;
+                    player_id.drawTargets[markedPlayersPosition] = true;
                 } else{
                     if("gammaRocketMarked" in targetPlayer){
                         targetPlayer.gammaRocketMarked[orig_player] = true;
                     } 
-                    player_id.drawTargets[array_length(player_id.markedPlayers)] = targetPlayer;
-                    player_id.markedPlayers[array_length(player_id.markedPlayers)] = targetPlayer;
-                    player_id.activeRockets = true;
+                    player_id.drawTargets[array_length(player_id.markedPlayers)] = true;
+                    if(!isOrbitter){
+                        player_id.activeRockets = true;
+                        player_id.markedPlayers[array_length(player_id.markedPlayers)] = targetPlayer;
+                    } else{
+                        player_id.markedOrbits[array_length(player_id.markedPlayers)] = targetPlayer;
+                    }
                 }
-                angleToTarget = point_direction(x, y, get_instance_x(targetPlayer) + ("gammaTargetWidth" in targetPlayer ? targetPlayer.gammaTargetWidth/2 : 0), get_instance_y(targetPlayer) - ("char_height" in targetPlayer ? targetPlayer.char_height/2 : 0));
+                targetX = get_instance_x(targetPlayer) + ("gammaTargetWidth" in targetPlayer ? targetPlayer.gammaTargetWidth/2 : 0);
+                targetY = get_instance_y(targetPlayer) - ("char_height" in targetPlayer ? targetPlayer.char_height/2 : 0);
+                if(isOrbitter){
+                    var distanceToTarget = point_distance(x, y, targetX, targetY);
+                    var orbitDistance = 100;
+                    var angleToBeta = point_direction(x, y, targetX, targetY);
+                    var angle = angleToBeta - darctan2(orbitDistance, distanceToTarget);
+                    var distance = sqrt(sqr(orbitDistance) + sqr(distanceToTarget));
+                    targetX = x + distance*dcos(angle);
+                    targetY = y - distance*dsin(angle);
+                    length = (hitbox_timer+1)*2+30;
+                }
+                angleToTarget = point_direction(x, y, targetX, targetY);
                 if(hitbox_timer < length - 30){
                     if(hitbox_timer < (length-30)/2) percentAngle = ease_circIn(0, 1, hitbox_timer, (length - 30)/2);
                     else percentAngle = ease_circIn(1, 0, hitbox_timer, length - 30);
                     if(proj_angle > angleToTarget + 180) proj_angle -= 360;
                     else if (angleToTarget > proj_angle + 180) proj_angle += 360;
-                    newAngle = lerp(proj_angle, angleToTarget, percentAngle*min(0.7, point_distance(x, y, get_instance_x(targetPlayer), get_instance_y(targetPlayer) - ("char_height" in targetPlayer ? targetPlayer.char_height/2 : 0))/100.0));
+                    newAngle = lerp(proj_angle, angleToTarget, percentAngle*min(0.7, point_distance(x, y, targetX, targetY)/100.0));
                     if(newAngle > proj_angle + MAX_ANGLE_CHANGE){
                         newAngle = proj_angle + MAX_ANGLE_CHANGE;
                     } else if (newAngle < proj_angle - MAX_ANGLE_CHANGE){
