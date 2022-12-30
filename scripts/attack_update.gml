@@ -226,7 +226,7 @@ if(!hitpause){
 				}
 			}
 			break;
-		case AT_USTRONG:
+		case AT_DSTRONG:
 			if(!runeC){
 				if(window == 3){
 					if(window_timer == 1){
@@ -239,6 +239,16 @@ if(!hitpause){
 			if(window == 2){
 				if(window_timer == 1){
 					gammaElectricitySoundInstance = sound_play(gammaElectricitySound);
+				}
+			}
+			break;
+		case AT_USTRONG:
+			hud_offset = 40;
+			if(window == 3){
+				if(window_timer == 1){
+					animationTimer = animationLength;
+					animationX = x + get_hitbox_value(AT_USTRONG, 1, HG_HITBOX_X)*spr_dir;
+					animationY = y + get_hitbox_value(AT_USTRONG, 1, HG_HITBOX_Y);
 				}
 			}
 			break;

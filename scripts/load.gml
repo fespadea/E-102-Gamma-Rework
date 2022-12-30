@@ -47,11 +47,12 @@ sprite_change_offset("dair", 128, 158);
 sprite_change_offset("dair_old", 128, 158);
 sprite_change_offset("fstrong", 93, 151);
 sprite_change_offset("fstrong_old", 72, 171);
-sprite_change_offset("ustrong", 114, 153);
+sprite_change_offset("ustrong", 128, 160);
 sprite_change_offset("ustrong_old", 210, 130);
 sprite_change_offset("nspecial", 126, 160);
 sprite_change_offset("nspecial_air", 134, 152);
-sprite_change_offset("dstrong", 120, 148);
+sprite_change_offset("dstrong", 114, 153);
+sprite_change_offset("dstrong_old", 120, 148);
 sprite_change_offset("dspecial", 112, 148);
 sprite_change_offset("fspecial", 119, 161);
 sprite_change_offset("fspecial_backward", 119, 161);
@@ -96,6 +97,7 @@ sprite_change_offset("dspecial_charge", 0, 0);
 
 // vfx
 sprite_change_offset("nspecial_reverse_wind_effect", sprite_get_width(sprite_get("nspecial_reverse_wind_effect"))/2, sprite_get_height(sprite_get("nspecial_reverse_wind_effect"))/2);
+sprite_change_offset("ustrong_explosion", floor(sprite_get_width(sprite_get("ustrong_explosion"))/2), floor(sprite_get_height(sprite_get("ustrong_explosion"))/2));
 
 // Kirby
 sprite_change_offset("Gamma_nspecial_kirby_icon", 0, 6);

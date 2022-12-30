@@ -4,6 +4,11 @@
 fspecialEvent = "post_draw";
 user_event(1);
 
+// exlosion for ustrong
+if(animationTimer > 0){
+    draw_sprite(ustrongExplosionSprite, floor((animationLength - animationTimer)/3), animationX, animationY);
+}
+
 //Bird overlay for nspecial
 if(attack == AT_NSPECIAL && special_down && (state == PS_ATTACK_GROUND || state == PS_ATTACK_AIR)){
     var down_winner = (down_counter < up_counter && down_counter < right_counter && down_counter < left_counter && down_pressed) || down_down;

@@ -142,6 +142,13 @@ playingDairSFX = false;
 //VFX
 reverseWindEffect = hit_fx_create(sprite_get("nspecial_reverse_wind_effect"), 10);
 
+// ustrong
+ustrongExplosionSprite = sprite_get("ustrong_explosion");
+animationLength = 36;
+animationTimer = 0;
+animationX = 0;
+animationY = 0;
+
 //SFXInstanceIDs
 tauntSoundInstance = -1;
 gammaFanSoundInstance = -1;
