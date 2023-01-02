@@ -244,11 +244,11 @@ if(!hitpause){
 			break;
 		case AT_USTRONG:
 			hud_offset = 40;
-			if(window == 3){
-				if(window_timer == 1){
+			if(window == 2){
+				if(window_timer == get_window_value(attack, window, AG_WINDOW_LENGTH)){
 					animationTimer = animationLength;
-					animationX = x + get_hitbox_value(AT_USTRONG, 1, HG_HITBOX_X)*spr_dir;
-					animationY = y + get_hitbox_value(AT_USTRONG, 1, HG_HITBOX_Y);
+					animationX = x + get_hitbox_value(attack, 1, HG_HITBOX_X)*spr_dir;
+					animationY = y + get_hitbox_value(attack, 1, HG_HITBOX_Y);
 				}
 			}
 			break;

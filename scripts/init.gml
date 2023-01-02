@@ -144,7 +144,8 @@ reverseWindEffect = hit_fx_create(sprite_get("nspecial_reverse_wind_effect"), 10
 
 // ustrong
 ustrongExplosionSprite = sprite_get("ustrong_explosion");
-animationLength = 36;
+animationLength = 24;
+animationFrames = sprite_get_number(sprite_get("ustrong_explosion"));
 animationTimer = 0;
 animationX = 0;
 animationY = 0;

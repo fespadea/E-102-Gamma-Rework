@@ -6,7 +6,7 @@ user_event(1);
 
 // exlosion for ustrong
 if(animationTimer > 0){
-    draw_sprite(ustrongExplosionSprite, floor((animationLength - animationTimer)/3), animationX, animationY);
+    draw_sprite(ustrongExplosionSprite, floor((animationLength - animationTimer)*(animationFrames/animationLength)), animationX, animationY);
 }
 
 //Bird overlay for nspecial
