@@ -290,19 +290,19 @@ set_color_profile_slot( 38, 2, 248, 200, 56 ); //Accessory Bright
 set_color_profile_slot( 38, 3, 56, 192, 0 ); //Eyes
 set_color_profile_slot( 38, 4, 20, 168, 255 ); //Light Strip
 
-// Wireframe
-set_color_profile_slot( 39, 0, 32, 32, 32 ); //Metal
-set_color_profile_slot( 39, 1, 248, 32, 0 ); //Main Bright
-set_color_profile_slot( 39, 2, 248, 200, 56 ); //Accessory Bright
-set_color_profile_slot( 39, 3, 56, 192, 0 ); //Eyes
-set_color_profile_slot( 39, 4, 20, 168, 255 ); //Light Strip
-
 // Random
-set_color_profile_slot( 40, 0, 255, 255, 255 ); //Metal
-set_color_profile_slot( 40, 1, 255, 255, 255 ); //Main Bright
-set_color_profile_slot( 40, 2, 255, 255, 255 ); //Accessory Bright
-set_color_profile_slot( 40, 3, 255, 255, 255 ); //Eyes
-set_color_profile_slot( 40, 4, 255, 255, 255 ); //Light Strip
+set_color_profile_slot( 39, 0, 255, 255, 255 ); //Metal
+set_color_profile_slot( 39, 1, 255, 255, 255 ); //Main Bright
+set_color_profile_slot( 39, 2, 255, 255, 255 ); //Accessory Bright
+set_color_profile_slot( 39, 3, 255, 255, 255 ); //Eyes
+set_color_profile_slot( 39, 4, 255, 255, 255 ); //Light Strip
+
+// Wireframe
+set_color_profile_slot( 40, 0, 32, 32, 32 ); //Metal
+set_color_profile_slot( 40, 1, 248, 32, 0 ); //Main Bright
+set_color_profile_slot( 40, 2, 248, 200, 56 ); //Accessory Bright
+set_color_profile_slot( 40, 3, 56, 192, 0 ); //Eyes
+set_color_profile_slot( 40, 4, 20, 168, 255 ); //Light Strip
 
 
 /* This is a comment used by that one RoA colors.gml generator tool to store palette data. You can safely keep it in your colors.gml if you plan to re-use the tool later, or safely remove it if you don't.

@@ -75,16 +75,21 @@ altName[altNum++] = "Bomb";
 altName[altNum++] = "Abyss";
 altName[altNum++] = "Early Access";
 altName[altNum++] = "Rainbow";
-altName[altNum++] = "Wireframe";
 altName[altNum++]  = "Random"; // Only put as many names as you have alts
 
+var numAlts = array_length(altName);
+
+// secret alts
+altName[altNum++] = "Wireframe";
+
+var numTotalAlts = array_length(altName);
 
 // You can manually set these values if you want
 var randomAlt = -1;
 var eaAlt = -1;
 var rainbowAlt = -1;
 var wireframeAlt = -1;
-for(var i = 0; i < array_length(altName); i++){
+for(var i = 0; i < numTotalAlts; i++){
     switch(altName[i]){
         case "Random":
             if(HAS_RANDOM_ALT)
@@ -107,6 +112,11 @@ for(var i = 0; i < array_length(altName); i++){
 
 
 switch(unlimitedAltEvent){
+    case "colors":
+        for(var i = numAlts; i < numTotalAlts*3; i++){ // I had to multiply by 3 because I kept getting an error due to it multiplying the shade number by 3 when I tried to access it
+            set_color_profile_slot( 0, i, 0, -1, -1);
+        }
+        break;
     case "css_init":
         // player is set to 0 online
         onlineCSS = player == 0; // true if on the online CSS
@@ -122,7 +132,15 @@ switch(unlimitedAltEvent){
             updateUnlimitedAlt(variable_instance_get(self, "savedUnlimitedAlt" + URL));
         } else{
             loadUnlimitedAlt();
-            if(unlimitedAlt >= array_length(altName)){
+            var validAlt = false;
+            if(unlimitedAlt < 0){
+                validAlt = false;
+            } else if(unlimitedAlt < numAlts){
+                validAlt = true;
+            } else if(unlimitedAlt < numTotalAlts){
+                validAlt = get_color_profile_slot_r(0, unlimitedAlt);
+            }
+            if(!validAlt){
                 updateUnlimitedAlt(get_player_color(player));
             }
             variable_instance_set(self, "savedUnlimitedAlt" + URL, unlimitedAlt);
@@ -151,6 +169,59 @@ switch(unlimitedAltEvent){
 
         altEffectWarningX = temp_x;
         altEffectWarningY = temp_y + 34;
+        
+        // array to hold inputtable cheats
+        unlimitedCheats = [];
+        
+        // cheat code menu input (left, left, A, back, A)
+        codeMenuCheat = array_length(unlimitedCheats);
+        unlimitedCheats[codeMenuCheat] = ["left", "left", "menu_a", "back", "menu_a"];
+        
+        // needed variables for input detection
+        unlimitedInputs = ["left", "right", "up", "down", "start", "back", "menu_a", "menu_b", "menu_x", "menu_y", "menu_lb", "menu_rb"];
+        allowNewUnlimitedInput = array_create(array_length(unlimitedCheats), true);
+        unlimitedCheatProgress = array_create(array_length(unlimitedCheats), 0);
+        unlimitedCheatActivated = array_create(array_length(unlimitedCheats), false);
+        
+        //code menu sprites
+        codeButtonSprite = sprite_get("css_code_button");
+        codeExitButtonSprite = sprite_get("css_code_exit_button");
+
+        //code menu variables
+        curCode = "";
+        numCodeButtons = 12;
+        codeButtonPosX = array_create(numCodeButtons, 0);
+        codeButtonPosY = array_create(numCodeButtons, 0);
+        codeButtonWidth = sprite_get_width(codeButtonSprite);
+        codeButtonHeight = sprite_get_height(codeButtonSprite);
+        codeButtonImageIndex = array_create(numCodeButtons, 0);
+        codeButtonString = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "C/←", "0", "E"];
+        codeX = 0;
+        codeY = 0;
+        codeWidth = 0;
+        codeHeight = 0;
+        maxCodeLength = 13;
+        codeButtonBackSfx = asset_get("mfx_back");
+        codeButtonSfx = asset_get("mfx_forward");
+        codeExitButtonPosX = 0;
+        codeExitButtonPosY = 0;
+        codeExitButtonWidth = sprite_get_width(codeExitButtonSprite);
+        codeExitButtonHeight = sprite_get_height(codeExitButtonSprite);
+        codeExitButtonImageIndex = 0;
+        
+        // the array for the code menu cheats
+        codes = [];
+        altCodesMap = array_create(numTotalAlts, -1);
+        
+        wireFrameCheat = array_length(codes);
+        codes[wireFrameCheat] = convertStringToCode("wire");
+        altCodesMap[wireframeAlt] = wireFrameCheat;
+        
+        // array to keep track of activated codes (add all the codes to the codes array before this line)
+        codeActivated = array_create(array_length(codes), false);
+        
+        // check if some codes were already activated
+        // codeActivated[wireFrameCheat] = get_color_profile_slot_r(0, wireframeAlt);
 
         cpu_hover_init();
         break;
@@ -166,13 +237,26 @@ switch(unlimitedAltEvent){
         if(curGameAlt != prevAlt && allowUnlimitedSwitching){ // you switched alt
             if((curGameAlt > prevAlt && curGameAlt < prevAlt + 8) || curGameAlt < prevAlt - 8){ // You increased your alt. This accounts for going from the highest alt to the smallest alt and skipping alts because of other players.
                 unlimitedAlt++; // increase your unlimited alt
-                if(unlimitedAlt == array_length(altName)){ // if you've passed the number of unlimited alts you have
-                    unlimitedAlt = 0; // reset your unlimited alt to the default alt
+                if(unlimitedAlt >= numAlts){ // if you've passed the number of unlimited alts you have
+                    for(var i = unlimitedAlt; i <= numTotalAlts; i++){
+                        if(i == numTotalAlts){
+                            unlimitedAlt = 0; // reset your unlimited alt to the default alt
+                        } else if(codeActivated[altCodesMap[i]]){
+                            unlimitedAlt = i;
+                            break;
+                        }
+                    }
                 }
-
             } else{ // You decreased your alt. This accounts for going from the smallest alt to the highest alt and skipping alts because of other players.
                 if(unlimitedAlt == 0){ // if you're the smallest unlimited alt
-                    unlimitedAlt = array_length(altName); // set the current alt to the number of alts you have (this will get decreased since you start counting alts at 0)
+                    for(var i = numTotalAlts; i >= numAlts; i--){
+                        if(i == numAlts){
+                            unlimitedAlt = numAlts; // set the current alt to the number of alts you have (this will get decreased since you start counting alts at 0)
+                        } else if(codeActivated[altCodesMap[i-1]]){
+                            unlimitedAlt = i;
+                            break;
+                        }
+                    }
                 }
                 unlimitedAlt--; // decrease your unlimited alt
             }
@@ -186,7 +270,8 @@ switch(unlimitedAltEvent){
         // }
 
         if(get_instance_x(cursor_id) >= unlimitedRowButtonX && get_instance_x(cursor_id) <= unlimitedRowButtonX + sprite_get_width(cssUnlimitedRowButton) 
-            && get_instance_y(cursor_id) >= unlimitedRowButtonY && get_instance_y(cursor_id) <= unlimitedRowButtonY + sprite_get_height(cssUnlimitedRowButton)){
+            && get_instance_y(cursor_id) >= unlimitedRowButtonY && get_instance_y(cursor_id) <= unlimitedRowButtonY + sprite_get_height(cssUnlimitedRowButton)
+            && !unlimitedCheatActivated[codeMenuCheat]){
             hoverUnlimitedRowButton = true;
             suppress_cursor = true;
             if(menu_a_pressed){
@@ -194,8 +279,19 @@ switch(unlimitedAltEvent){
                     holdUnlimitedRowButton = true;
                     sound_play(altSwitchSound);
                     unlimitedAlt += 16;
-                    if(unlimitedAlt >= array_length(altName)){
-                        unlimitedAlt = unlimitedAlt % 16;
+                    if(unlimitedAlt >= numAlts){
+                        while(true){
+                            if(unlimitedAlt < numTotalAlts){
+                                if(codeActivated[altCodesMap[unlimitedAlt]]){
+                                    break;
+                                } else{
+                                    unlimitedAlt += 16;
+                                }
+                            } else{
+                                unlimitedAlt = unlimitedAlt % 16;
+                                break;
+                            }
+                        }
                     }
                     updateUnlimitedAlt(unlimitedAlt);
                 }
@@ -205,8 +301,13 @@ switch(unlimitedAltEvent){
                     sound_play(altSwitchSound);
                     unlimitedAlt -= 16;
                     if(unlimitedAlt < 0){
-                        while(unlimitedAlt+16 < array_length(altName)){ // could not think of better math cause dumb
+                        while(unlimitedAlt+16 < numTotalAlts){ // could not think of better math cause dumb
                             unlimitedAlt += 16;
+                        }
+                        while(unlimitedAlt >= numAlts){
+                            if(!codeActivated[altCodesMap[unlimitedAlt]]){
+                                unlimitedAlt -= 16;
+                            }
                         }
                     }
                     updateUnlimitedAlt(unlimitedAlt);
@@ -216,8 +317,15 @@ switch(unlimitedAltEvent){
                     holdUnlimitedRowButton = true;
                     sound_play(altSwitchSound);
                     unlimitedAlt++;
-                    if(unlimitedAlt == array_length(altName)){
-                        unlimitedAlt = 0;
+                    if(unlimitedAlt >= numAlts){
+                        for(var i = unlimitedAlt; i <= numTotalAlts; i++){
+                            if(i == numTotalAlts){
+                                unlimitedAlt = 0;
+                            } else if(codeActivated[altCodesMap[i]]){
+                                unlimitedAlt = i;
+                                break;
+                            }
+                        }
                     }
                     updateUnlimitedAlt(unlimitedAlt);
                 }
@@ -226,7 +334,14 @@ switch(unlimitedAltEvent){
                     holdUnlimitedRowButton = true;
                     sound_play(altSwitchSound);
                     if(unlimitedAlt == 0){
-                        unlimitedAlt = array_length(altName); 
+                        for(var i = numTotalAlts; i >= numAlts; i--){
+                            if(i == numAlts){
+                                unlimitedAlt = numAlts;
+                            } else if(codeActivated[altCodesMap[i-1]]){
+                                unlimitedAlt = i;
+                                break;
+                            }
+                        }
                     }
                     unlimitedAlt--;
                     updateUnlimitedAlt(unlimitedAlt);
@@ -239,6 +354,121 @@ switch(unlimitedAltEvent){
             hoverUnlimitedRowButton = false;
             suppress_cursor = false;
         }
+        
+        // detect inputted cheats
+        for(var i = 0; i < array_length(unlimitedCheats); i++){
+            if(unlimitedCheatActivated[i]){
+                continue;
+            }
+            var cheat = unlimitedCheats[i];
+            var cheatProgress = unlimitedCheatProgress[i];
+            var curInput = cheat[cheatProgress];
+            var prevInput = cheatProgress > 0 ? cheat[cheatProgress-1] : "";
+            var curDown = variable_instance_get(self, curInput + "_down");
+            var prevDown = prevInput != "" ? variable_instance_get(self, prevInput + "_down") : false;
+            if(!allowNewUnlimitedInput[i]){
+                allowNewUnlimitedInput[i] = !prevDown;
+            }
+            var allowNewInput = allowNewUnlimitedInput[i];
+            for(var j = 0; j < array_length(unlimitedInputs); j++){
+                var input = unlimitedInputs[j];
+                if(!(input == curInput || (input == prevInput && curInput != prevInput))){
+                    if(variable_instance_get(self, input + "_down")){
+                        unlimitedCheatProgress[i] = 0;
+                        allowNewUnlimitedInput[i] = true;
+                        allowNewInput = false;
+                        break;
+                    }
+                }
+            }
+            if(allowNewInput){
+                if(curDown){
+                    unlimitedCheatProgress[i]++;
+                    allowNewUnlimitedInput[i] = false;
+                }
+            }
+            if(unlimitedCheatProgress[i] >= array_length(cheat)){
+                unlimitedCheatActivated[i] = true;
+                unlimitedCheatProgress[i] = 0;
+                allowNewUnlimitedInput[i] = true;
+            }
+        }
+        
+        // cheat code menu button detection
+        if(unlimitedCheatActivated[codeMenuCheat]){
+            if(get_instance_x(cursor_id) >= codeX && get_instance_x(cursor_id) <= codeX + codeWidth
+                && get_instance_y(cursor_id) >= codeY && get_instance_y(cursor_id) <= codeY + codeHeight){
+                suppress_cursor = true;
+            } else{
+                suppress_cursor = false;
+            }
+            
+            if(get_instance_x(cursor_id) >= codeExitButtonPosX && get_instance_x(cursor_id) <= codeExitButtonPosX + codeExitButtonWidth
+                && get_instance_y(cursor_id) >= codeExitButtonPosY && get_instance_y(cursor_id) <= codeExitButtonPosY + codeExitButtonHeight){
+                if(menu_a_pressed){
+                    if(codeExitButtonImageIndex != 2){
+                        codeExitButtonImageIndex = 2;
+                        unlimitedCheatActivated[codeMenuCheat] = false;
+                        sound_play(codeButtonBackSfx);
+                    }
+                } else if(!menu_a_down){
+                    codeExitButtonImageIndex = 1;
+                }
+            } else if(codeExitButtonImageIndex){
+                codeExitButtonImageIndex = 0;
+            }
+            
+            for(var i = 0; i < numCodeButtons; i++){
+                if(get_instance_x(cursor_id) >= codeButtonPosX[i] && get_instance_x(cursor_id) <= codeButtonPosX[i] + codeButtonWidth
+                    && get_instance_y(cursor_id) >= codeButtonPosY[i] && get_instance_y(cursor_id) <= codeButtonPosY[i] + codeButtonHeight){
+                    if(menu_a_pressed){
+                        if(codeButtonImageIndex[i] != 2){
+                            codeButtonImageIndex[i] = 2;
+                            switch(i){
+                                case 9:
+                                    curCode = string_copy(curCode, 1, string_length(curCode)-1);
+                                    sound_play(codeButtonBackSfx);
+                                    break;
+                                case 11:
+                                    var codeIndex = array_find_index(codes, curCode);
+                                    if(codeIndex >= 0){
+                                        codeActivated[codeIndex] = true;
+                                    }
+                                    break;
+                                default:
+                                    if(string_length(curCode) <= maxCodeLength){
+                                        curCode += codeButtonString[i];
+                                        sound_play(codeButtonSfx);
+                                    } else{
+                                        sound_play(codeButtonBackSfx);
+                                    }
+                                    break;
+                            }
+                        }
+                    } else if(menu_b_pressed){
+                        if(codeButtonImageIndex[i] != 2){
+                            codeButtonImageIndex[i] = 2;
+                            switch(i){
+                                case 9:
+                                    curCode = "";
+                                    sound_play(codeButtonBackSfx);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    } else if(!menu_a_down && !menu_b_down){
+                        codeButtonImageIndex[i] = 1;
+                    }
+                } else if(codeButtonImageIndex[i]){
+                    codeButtonImageIndex[i] = 0;
+                }
+            }
+        }
+        
+        // update unlocked alts in color slots
+        set_color_profile_slot(0, wireframeAlt, codeActivated[wireFrameCheat], -1, -1);
+        
         break;
     case "css_draw":
         // This is an edit of Muno's CSS template: https://pastebin.com/uquifNY8
@@ -287,37 +517,42 @@ switch(unlimitedAltEvent){
         //     }
         // }
         // print(isCPU)
-
-        // if (onlineCSS){ // got this from Lilac which I think got it from Dr. Flux
-        //     unlimitedRowButtonX = temp_x + 170;
-        //     unlimitedRowButtonY = temp_y + 30;
-        //     // unlimitedRowButtonX = temp_x + 26;
-        //     // unlimitedRowButtonY = temp_y + 139;
-        // } else{
-        //     if (get_player_hud_color(player) == 8421504)
-        //     {
-        //         unlimitedRowButtonX = temp_x + 52;
-        //         unlimitedRowButtonY = temp_y + 169;
-        //     }
-        //     else
-        //     {
-        //         unlimitedRowButtonX = temp_x + 67;
-        //         unlimitedRowButtonY = temp_y + 169;
-        //     }
-        // }
-        unlimitedRowButtonX = temp_x + 170;
-        unlimitedRowButtonY = temp_y + 30;
+        
+        // got this from Lilac which I think got it from Dr. Flux
+        if (onlineCSS){
+            unlimitedRowButtonX = temp_x + 170;
+            unlimitedRowButtonY = temp_y + 30;
+            // unlimitedRowButtonX = temp_x + 26;
+            // unlimitedRowButtonY = temp_y + 139;
+        } else{
+            if (get_player_hud_color(player) == 8421504 || get_match_setting(SET_TEAMS))
+            {
+                unlimitedRowButtonX = temp_x + 52;
+                unlimitedRowButtonY = temp_y + 169;
+            }
+            else
+            {
+                unlimitedRowButtonX = temp_x + 67;
+                unlimitedRowButtonY = temp_y + 169;
+            }
+        }
         
         // This offsets the alt name stuff when on the online CSS so that the picture thing doesn't cover it up. Set this to 0 if you don't like it. [Edit optional]
         var bottomPartOffset = onlineCSS ? -10 : 0;
 
         rectDraw(temp_x, temp_y + 135, temp_x + 201, temp_y + 142, c_black);
 
-        for(var i = 0; i < ceil(array_length(altName)/16); i++){ // draw the rectangles for every unlimited alt
-            for(var j = 0; j < min(array_length(altName)-i*16, 16); j++){
-                var draw_color = (j+16*i == unlimitedAlt) ? c_white : c_gray;
-                var draw_x = temp_x + 2 + 10 * j;
-                rectDraw(draw_x, temp_y + bottomPartOffset + 137 - 5*i, draw_x + 7, temp_y + bottomPartOffset + 140 - 5*i, draw_color);
+        var alt = 0;
+        var maxUnlockedAlt = 0;
+        for(var i = 0; i < ceil(numTotalAlts/16); i++){ // draw the rectangles for every unlimited alt
+            for(var j = 0; j < min(numTotalAlts-i*16, 16); j++){
+                if(alt < numAlts || codeActivated[altCodesMap[alt]]){
+                    var draw_color = (alt == unlimitedAlt) ? c_white : c_gray;
+                    var draw_x = temp_x + 2 + 10 * j;
+                    rectDraw(draw_x, temp_y + bottomPartOffset + 137 - 5*i, draw_x + 7, temp_y + bottomPartOffset + 140 - 5*i, draw_color);
+                    maxUnlockedAlt = alt;
+                }
+                alt++;
             }
         }
 
@@ -325,15 +560,55 @@ switch(unlimitedAltEvent){
         draw_set_halign(fa_left);
 
         // draw the CSS button
-        draw_sprite_ext(cssUnlimitedRowButton, holdUnlimitedRowButton ? 2 : (hoverUnlimitedRowButton ? 1 : 0), unlimitedRowButtonX, unlimitedRowButtonY, 1, 1, 0, c_white, 1);
+        if(!unlimitedCheatActivated[codeMenuCheat])
+            draw_sprite_ext(cssUnlimitedRowButton, holdUnlimitedRowButton ? 2 : (hoverUnlimitedRowButton ? 1 : 0), unlimitedRowButtonX, unlimitedRowButtonY, 1, 1, 0, c_white, 1);
         // draw the alt effect warning
         draw_sprite_ext(cssAltEffectWarning, get_player_color(player) == 13 ? 2 : (get_player_color(player) == 18 ? 1 : 0), altEffectWarningX, altEffectWarningY, 1, 1, 0, c_white, 1);
 
 
         //include alt. name
         // display the name of the currently selected alt
-        textDraw(temp_x + 2, temp_y + bottomPartOffset + 124 - 5*(ceil(array_length(altName)/16)-1), "fName", c_white, 0, 1000, 1, true, 1, "Alt. " + (unlimitedAlt < 9 ? "0" : "") + string(unlimitedAlt+1) + ": " + altName[unlimitedAlt]);
-
+        textDraw(temp_x + 2, temp_y + bottomPartOffset + 124 - 5*(ceil(maxUnlockedAlt/16)-1), "fName", c_white, 0, 1000, 1, true, 1, "Alt. " + (unlimitedAlt < 9 ? "0" : "") + string(unlimitedAlt+1) + ": " + altName[unlimitedAlt]);
+        
+        if(unlimitedCheatActivated[codeMenuCheat]){
+            codeX = temp_x+2;
+            codeY = temp_y;
+            codeWidth = 200;
+            codeHeight = 142;
+            draw_rectangle_color(codeX,codeY,codeX+codeWidth,codeY+codeHeight,c_dkgray,c_dkgray,c_dkgray,c_dkgray,-1);
+            var codeBarX = codeX+6;
+            var codeBarY = codeY+34;
+            var codeBarWidth = 124;
+            var codeBarHeight = 20;
+            draw_roundrect_color(codeBarX, codeBarY, codeBarX+codeBarWidth, codeBarY+codeBarHeight, c_black, c_black, -1);
+            var textX = codeBarX + 6;
+            var textY = codeBarY  + codeBarHeight/2 - (string_height(curCode)-11)/2;
+            textDraw(textX, textY, "fName", c_white, 0, codeBarWidth, 1, true, 1, curCode);
+            var buttonMarginX = 10;
+            var buttonMarginY = 2;
+            var buttonsPerRow = numCodeButtons/4;
+            var buttonsPerCol = numCodeButtons/3;
+            var buttonNumber = 0;
+            for(var j = 0; j < buttonsPerCol; j++){
+                for(var i = 0; i < buttonsPerRow; i++){
+                    var buttonX = floor(codeBarX + buttonMarginX + i*(codeBarWidth - buttonMarginX*2 - codeButtonWidth)/(buttonsPerRow-1));
+                    var buttonY = floor(codeBarY + codeBarHeight + buttonMarginY + j*((codeY + codeHeight - (codeBarY + codeBarHeight)) - buttonMarginY*2 - codeButtonHeight)/(buttonsPerCol-1));
+                    var buttonColor = buttonNumber == 9 ? c_blue : (buttonNumber == 11 ? c_green : c_white);
+                    draw_sprite_ext(codeButtonSprite, codeButtonImageIndex[buttonNumber], buttonX, buttonY, 1, 1, 0, buttonColor, 1);
+                    codeButtonPosX[buttonNumber] = buttonX;
+                    codeButtonPosY[buttonNumber] = buttonY;
+                    var buttonLabel = codeButtonString[buttonNumber];
+                    var labelX = floor(buttonX + codeButtonWidth/2 - (string_width(buttonLabel)-2)/2);
+                    var labelY = floor(buttonY + codeButtonHeight/2 - (string_height(buttonLabel)-9)/2);
+                    textDraw(labelX, labelY, "fName", c_white, 0, codeButtonWidth, 1, true, 1, buttonLabel);
+                    buttonNumber++;
+                }
+            }
+            codeExitButtonPosX = codeX + 70;
+            codeExitButtonPosY = codeY + 4;
+            draw_sprite(codeExitButtonSprite, codeExitButtonImageIndex, codeExitButtonPosX, codeExitButtonPosY);
+        }
+        
         cpu_hover_draw();
         break;
     case "init_shader":
@@ -386,7 +661,7 @@ switch(unlimitedAltEvent){
             sameAltPlayers[i] = false;
         }
         with oPlayer{
-            if(player < other.player && "url" in self && url == other.url && unlimitedAlt == other.unlimitedAlt){
+            if(player < other.player && ("url" in self) && url == other.url && unlimitedAlt == other.unlimitedAlt){
                 sameAltPlayers[player] = true; // I'm doing this like this to avoid double counting clones
             }
         }
@@ -447,7 +722,7 @@ switch(unlimitedAltEvent){
         // [Random Alt]
         // Check if the random alt is selected
         if(unlimitedAlt == randomAlt){
-            unlimitedAlt = random_func(0, array_length(altName)-1, true);
+            unlimitedAlt = random_func(0, numAlts-1, true);
             if(unlimitedAlt >= randomAlt){
                 unlimitedAlt++;
             }
@@ -487,12 +762,12 @@ switch(unlimitedAltEvent){
                     if(has_hit){
                         with other{
                             if(HAS_RANDOM_ALT){
-                                unlimitedAlt = random_func(0, array_length(altName)-1, true);
+                                unlimitedAlt = random_func(0, numAlts-1, true);
                                 if(unlimitedAlt >= randomAlt){
                                     unlimitedAlt++;
                                 }
-                            } else if(HAS_RANDOM_ALT){
-                                unlimitedAlt = random_func(0, array_length(altName), true);
+                            } else{
+                                unlimitedAlt = random_func(0, numAlts, true);
                             }
                             init_shader(); // update the alt visually
                         }
@@ -510,12 +785,12 @@ switch(unlimitedAltEvent){
         if(randomAltOnHit){
             if(has_hit && hitstop == hitstop_full-1){
                 if(HAS_RANDOM_ALT){
-                    unlimitedAlt = random_func(0, array_length(altName)-1, true);
+                    unlimitedAlt = random_func(0, numAlts-1, true);
                     if(unlimitedAlt >= randomAlt){
                         unlimitedAlt++;
                     }
-                } else if(HAS_RANDOM_ALT){
-                    unlimitedAlt = random_func(0, array_length(altName), true);
+                } else{
+                    unlimitedAlt = random_func(0, numAlts, true);
                 }
                 init_shader(); // update the alt visually
             }
@@ -526,12 +801,12 @@ switch(unlimitedAltEvent){
     //     // Random alt on hit
     //     if(randomAltOnHit && hit_player != player){ // if "random alt on hit" activated
     //         if(HAS_RANDOM_ALT){
-    //             unlimitedAlt = random_func(0, array_length(altName)-1, true);
+    //             unlimitedAlt = random_func(0, numAlts-1, true);
     //             if(unlimitedAlt >= randomAlt){
     //                 unlimitedAlt++;
     //             }
-    //         } else if(HAS_RANDOM_ALT){
-    //             unlimitedAlt = random_func(0, array_length(altName), true);
+    //         } else{
+    //             unlimitedAlt = random_func(0, numAlts, true);
     //         }
     //         init_shader(); // update the alt visually
     //     }
@@ -604,7 +879,7 @@ set_synced_var(player, newSyncedVar);
 if(!("cursor_id" in self)){
     init_shader();
     with oPlayer {
-        if(player > other.player && "url" in self && url == other.url && (unlimitedAlt == other.unlimitedAlt || unlimitedAlt == prevUnlimitedAlt)){
+        if(player > other.player && ("url" in self) && url == other.url && (unlimitedAlt == other.unlimitedAlt || unlimitedAlt == prevUnlimitedAlt)){
             init_shader();
         }
     }
@@ -718,3 +993,60 @@ if (cpu_hover_time > 0) {
     draw_debug_text(plate_bounds[2]-17, plate_bounds[3]+1, `P${cpu_hovering_player}`);
     draw_set_alpha(1);
 }
+
+#define convertStringToCode(codeString)
+codeString = string_lower(codeString);
+var code = "";
+for(var i = 1; i <= string_length(codeString); i++){
+    switch string_char_at(codeString, i){
+        default:
+            code += "0";
+            break;
+        case " ":
+            code += "1";
+            break;
+        case "a":
+        case "b":
+        case "c":
+            code += "2";
+            break;
+        case "d":
+        case "e":
+        case "f":
+            code += "3";
+            break;
+        case "g":
+        case "h":
+        case "i":
+            code += "4";
+            break;
+        case "j":
+        case "k":
+        case "l":
+            code += "5";
+            break;
+        case "m":
+        case "n":
+        case "o":
+            code += "6";
+            break;
+        case "p":
+        case "q":
+        case "r":
+        case "s":
+            code += "7";
+            break;
+        case "t":
+        case "u":
+        case "v":
+            code += "8";
+            break;
+        case "w":
+        case "x":
+        case "y":
+        case "z":
+            code += "9";
+            break;
+    }
+}
+return code;

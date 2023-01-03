@@ -2,7 +2,7 @@
 
 var needColors = false;
 with oPlayer{
-    if(player != other.player_id.player && !(get_player_team(player) == get_player_team(other.player_id.player) && !get_match_setting(SET_TEAMATTACK)) && "url" in self && url == other.player_id.url){
+    if(player != other.player_id.player && !(get_player_team(player) == get_player_team(other.player_id.player) && !get_match_setting(SET_TEAMATTACK)) && ("url" in self) && url == other.player_id.url){
         needColors = true;
     }
 }

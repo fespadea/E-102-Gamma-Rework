@@ -15,7 +15,6 @@ free = true;
 hitstop = 0;
 uses_shader = false;
 
-despawn = false;
 mineHitbox = noone;
 windboxCooldown = 0;
 isGammaOrbittable = true
