@@ -44,4 +44,17 @@ else if (attack == AT_FSPECIAL && hbox_num == 1){
         timeToRejuvinate[i] = can_hit[i]*31-1; // set to 30 if can_hit[i] is 1 and -1 if can_hit[i] is 0 so that we don't refresh can_hit[i] if it was never true
     }
     depth = player_id.depth + 1;
+
+    // create an article to draw the player's color behind the bird
+    var needColors = false;
+    with oPlayer{
+        if(player != other.player_id.player && !(get_player_team(player) == get_player_team(other.player_id.player) && !get_match_setting(SET_TEAMATTACK)) && "url" in self && url == other.player_id.url){
+            needColors = true;
+        }
+    }
+    if(needColors){
+        var colorArticle = instance_create(x, y, "obj_article2");
+        colorArticle.birdHitbox = self;
+        colorArticle.depth = depth+1;
+    }
 }

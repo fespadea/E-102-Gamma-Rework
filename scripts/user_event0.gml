@@ -253,6 +253,8 @@ switch(unlimitedAltEvent){
         //     cssUnlimitedTimer++;
         // }
 
+        // I don't want the shader to affect anything here.
+        shader_end();
         
         var positions = [124, 124, 362, 600, 838]; // hopefully the online css also starts at 124
         var myPositionObject = noone;
@@ -358,14 +360,14 @@ switch(unlimitedAltEvent){
 
         // You can get rid of this part if none of your alts change the default shading [Edit optional]
         // set the shading of the color slots
-        if(unlimitedAlt == eaAlt || unlimitedAlt == rainbowAlt){ // EA alt and rainbow alt need no shading (shading just looks bad on rainbow)
+        if(unlimitedAlt == eaAlt){ // EA alt and rainbow alt need no shading (shading just looks bad on rainbow)
             // set shading to 0 for every color slot
-            for(var i = 0; i < 8; i++){
+            for(var i = 1; i < NUM_COLOR_ROWS; i++){
                 set_character_color_shading(i, 0);
             }
         } else{ // normal alt
             // set shading to normal for every color slot
-            for(var i = 0; i < 8; i++){
+            for(var i = 0; i < NUM_COLOR_ROWS; i++){
                 set_character_color_shading(i, 1);
             }
         }

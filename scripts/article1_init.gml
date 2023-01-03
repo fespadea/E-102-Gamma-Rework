@@ -13,6 +13,7 @@ can_be_grounded = false;
 ignores_walls = true;
 free = true;
 hitstop = 0;
+uses_shader = false;
 
 despawn = false;
 mineHitbox = noone;
