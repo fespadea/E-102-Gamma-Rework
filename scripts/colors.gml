@@ -1,3 +1,11 @@
+// code for unlimited Alts
+with asset_get("cs_playerbg_obj"){
+    if(player == get_instance_player(other)){
+        unlimitedAltEvent = "colors";
+        user_event(0);
+    }
+}
+
 // DEFAULT COLOR
 
 // Metal
@@ -22,7 +30,7 @@ set_color_profile_slot_range( 4, 1, 29, 1 );
 
 
 // ALTERNATE COLORS
-set_num_palettes( 41 );
+set_num_palettes( 49 );
 
 // E-101 Beta
 set_color_profile_slot( 1, 0, 32, 32, 32 ); //Metal
@@ -297,12 +305,68 @@ set_color_profile_slot( 39, 2, 255, 255, 255 ); //Accessory Bright
 set_color_profile_slot( 39, 3, 255, 255, 255 ); //Eyes
 set_color_profile_slot( 39, 4, 255, 255, 255 ); //Light Strip
 
+// Random Alt On Hit
+set_color_profile_slot( 40, 0, 255, 255, 255 ); //Metal
+set_color_profile_slot( 40, 1, 255, 255, 255 ); //Main Bright
+set_color_profile_slot( 40, 2, 255, 255, 255 ); //Accessory Bright
+set_color_profile_slot( 40, 3, 255, 255, 255 ); //Eyes
+set_color_profile_slot( 40, 4, 255, 255, 255 ); //Light Strip
+
 // Wireframe
-set_color_profile_slot( 40, 0, 32, 32, 32 ); //Metal
-set_color_profile_slot( 40, 1, 248, 32, 0 ); //Main Bright
-set_color_profile_slot( 40, 2, 248, 200, 56 ); //Accessory Bright
-set_color_profile_slot( 40, 3, 56, 192, 0 ); //Eyes
-set_color_profile_slot( 40, 4, 20, 168, 255 ); //Light Strip
+set_color_profile_slot( 41, 0, 32, 32, 32 ); //Metal
+set_color_profile_slot( 41, 1, 248, 32, 0 ); //Main Bright
+set_color_profile_slot( 41, 2, 248, 200, 56 ); //Accessory Bright
+set_color_profile_slot( 41, 3, 56, 192, 0 ); //Eyes
+set_color_profile_slot( 41, 4, 20, 168, 255 ); //Light Strip
+
+// Random Rainbow
+set_color_profile_slot( 42, 0, 255, 255, 255 ); //Metal
+set_color_profile_slot( 42, 1, 255, 255, 255 ); //Main Bright
+set_color_profile_slot( 42, 2, 255, 255, 255 ); //Accessory Bright
+set_color_profile_slot( 42, 3, 255, 255, 255 ); //Eyes
+set_color_profile_slot( 42, 4, 255, 255, 255 ); //Light Strip
+
+// True Random
+set_color_profile_slot( 43, 0, 255, 255, 255 ); //Metal
+set_color_profile_slot( 43, 1, 255, 255, 255 ); //Main Bright
+set_color_profile_slot( 43, 2, 255, 255, 255 ); //Accessory Bright
+set_color_profile_slot( 43, 3, 255, 255, 255 ); //Eyes
+set_color_profile_slot( 43, 4, 255, 255, 255 ); //Light Strip
+
+// True Random Alt On Hit
+set_color_profile_slot( 44, 0, 255, 255, 255 ); //Metal
+set_color_profile_slot( 44, 1, 255, 255, 255 ); //Main Bright
+set_color_profile_slot( 44, 2, 255, 255, 255 ); //Accessory Bright
+set_color_profile_slot( 44, 3, 255, 255, 255 ); //Eyes
+set_color_profile_slot( 44, 4, 255, 255, 255 ); //Light Strip
+
+// True Random Rainbow
+set_color_profile_slot( 45, 0, 255, 255, 255 ); //Metal
+set_color_profile_slot( 45, 1, 255, 255, 255 ); //Main Bright
+set_color_profile_slot( 45, 2, 255, 255, 255 ); //Accessory Bright
+set_color_profile_slot( 45, 3, 255, 255, 255 ); //Eyes
+set_color_profile_slot( 45, 4, 255, 255, 255 ); //Light Strip
+
+// Full Random
+set_color_profile_slot( 46, 0, 255, 255, 255 ); //Metal
+set_color_profile_slot( 46, 1, 255, 255, 255 ); //Main Bright
+set_color_profile_slot( 46, 2, 255, 255, 255 ); //Accessory Bright
+set_color_profile_slot( 46, 3, 255, 255, 255 ); //Eyes
+set_color_profile_slot( 46, 4, 255, 255, 255 ); //Light Strip
+
+// Full Random Alt On Hit
+set_color_profile_slot( 47, 0, 255, 255, 255 ); //Metal
+set_color_profile_slot( 47, 1, 255, 255, 255 ); //Main Bright
+set_color_profile_slot( 47, 2, 255, 255, 255 ); //Accessory Bright
+set_color_profile_slot( 47, 3, 255, 255, 255 ); //Eyes
+set_color_profile_slot( 47, 4, 255, 255, 255 ); //Light Strip
+
+// Full Random Rainbow
+set_color_profile_slot( 48, 0, 255, 255, 255 ); //Metal
+set_color_profile_slot( 48, 1, 255, 255, 255 ); //Main Bright
+set_color_profile_slot( 48, 2, 255, 255, 255 ); //Accessory Bright
+set_color_profile_slot( 48, 3, 255, 255, 255 ); //Eyes
+set_color_profile_slot( 48, 4, 255, 255, 255 ); //Light Strip
 
 
 /* This is a comment used by that one RoA colors.gml generator tool to store palette data. You can safely keep it in your colors.gml if you plan to re-use the tool later, or safely remove it if you don't.

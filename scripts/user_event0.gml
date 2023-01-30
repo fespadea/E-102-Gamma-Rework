@@ -23,9 +23,16 @@ You can't access the url value on the CSS, so you have to set it manually here.
 #macro HAS_EA_ALT true
 #macro HAS_RAINBOW_ALT true
 #macro HAS_WIREFRAME_ALT true
+#macro HAS_TRUE_RANDOM_ALT true
+#macro HAS_FULL_RANDOM_ALT true
+#macro HAS_RANDOM_ALT_ON_HIT true
+#macro HAS_TRUE_RANDOM_ALT_ON_HIT true
+#macro HAS_FULL_RANDOM_ALT_ON_HIT true
+#macro HAS_RANDOM_RAINBOW_ALT true
+#macro HAS_TRUE_RANDOM_RAINBOW_ALT true
+#macro HAS_FULL_RANDOM_RAINBOW_ALT true
 
 // Feature toggles
-#macro RANDOM_ALT_ON_HIT true
 #macro GHOST_MODE true
 #macro INVISIBLE_MODE true
 #macro CSS_BUTTON true
@@ -80,7 +87,19 @@ altName[altNum++]  = "Random"; // Only put as many names as you have alts
 var numAlts = array_length(altName);
 
 // secret alts
+var altCodes = [];
+altCodes[altNum-numAlts] = "raoh";
+altName[altNum++] = "Random On Hit";
+altCodes[altNum-numAlts] = "wire";
 altName[altNum++] = "Wireframe";
+altCodes[altNum-numAlts] = "trueR";
+altName[altNum++] = "True Random";
+altCodes[altNum-numAlts] = "traoh";
+altName[altNum++] = "True Random on Hit";
+altCodes[altNum-numAlts] = "fullR";
+altName[altNum++] = "Full Random";
+altCodes[altNum-numAlts] = "fraoh";
+altName[altNum++] = "Full Random On Hit";
 
 var numTotalAlts = array_length(altName);
 
@@ -89,6 +108,11 @@ var randomAlt = -1;
 var eaAlt = -1;
 var rainbowAlt = -1;
 var wireframeAlt = -1;
+var trueRandomAlt = -1;
+var fullRandomAlt = -1;
+var randomAltOnHitAlt = -1;
+var trueRandomAltOnHitAlt = -1;
+var fullRandomAltOnHitAlt = -1;
 for(var i = 0; i < numTotalAlts; i++){
     switch(altName[i]){
         case "Random":
@@ -107,15 +131,47 @@ for(var i = 0; i < numTotalAlts; i++){
             if(HAS_WIREFRAME_ALT)
                 wireframeAlt = i;
             break;
+        case "True Random":
+            if(HAS_TRUE_RANDOM_ALT)
+                trueRandomAlt = i;
+            break;
+        case "Full Random":
+            if(HAS_FULL_RANDOM_ALT)
+                fullRandomAlt = i;
+            break;
+        case "Random On Hit":
+            if(HAS_RANDOM_ALT_ON_HIT)
+                randomAltOnHitAlt = i;
+            break;
+        case "True Random on Hit":
+            if(HAS_TRUE_RANDOM_ALT_ON_HIT)
+                trueRandomAltOnHitAlt = i;
+            break;
+        case "Full Random On Hit":
+            if(HAS_FULL_RANDOM_ALT_ON_HIT)
+                fullRandomAltOnHitAlt = i;
+            break;
     }
 }
 
+// bit distributions for non-alt stuff
+var GIModeLastBit = LAST_BIT_UNLIMITED;
+var GIModeFirstBit = GIModeLastBit - (ceil(log2(1 + GHOST_MODE + INVISIBLE_MODE))-1);
 
 switch(unlimitedAltEvent){
     case "colors":
         for(var i = numAlts; i < numTotalAlts*3; i++){ // I had to multiply by 3 because I kept getting an error due to it multiplying the shade number by 3 when I tried to access it
             set_color_profile_slot( 0, i, 0, -1, -1);
         }
+        
+        /* // Make sure you remember to re-add this code to colors.gml each time you update it.
+        with asset_get("cs_playerbg_obj"){
+            if(player == get_instance_player(other)){
+                unlimitedAltEvent = "colors";
+                user_event(0);
+            }
+        }
+        */
         break;
     case "css_init":
         // player is set to 0 online
@@ -186,6 +242,8 @@ switch(unlimitedAltEvent){
         //code menu sprites
         codeButtonSprite = sprite_get("css_code_button");
         codeExitButtonSprite = sprite_get("css_code_exit_button");
+        codeBorderSprite = sprite_get("css_code_border");
+        codeBackgroundSprite = sprite_get("css_code_background");
 
         //code menu variables
         curCode = "";
@@ -203,25 +261,65 @@ switch(unlimitedAltEvent){
         maxCodeLength = 13;
         codeButtonBackSfx = asset_get("mfx_back");
         codeButtonSfx = asset_get("mfx_forward");
+        codeSucessSfx = asset_get("mfx_coin");
         codeExitButtonPosX = 0;
         codeExitButtonPosY = 0;
         codeExitButtonWidth = sprite_get_width(codeExitButtonSprite);
         codeExitButtonHeight = sprite_get_height(codeExitButtonSprite);
         codeExitButtonImageIndex = 0;
+        codesSectionX = 0;
+        codesSectionY = 0;
+        codesSectionWidth = 0;
+        codesSectionHeight = 0;
+        minCodeBaseY = 0;
+        maxCodeBaseY = 0;
+        codeBaseY = 0;
+        codesHeight = 0;
         
         // the array for the code menu cheats
         codes = [];
+        codeNames = [];
         altCodesMap = array_create(numTotalAlts, -1);
         
-        wireFrameCheat = array_length(codes);
-        codes[wireFrameCheat] = convertStringToCode("wire");
-        altCodesMap[wireframeAlt] = wireFrameCheat;
+        // alt cheats
+        altCheat = array_create(numTotalAlts-numAlts, 0);
+        var maxAltCodeLength = min(6, maxCodeLength);
+        for(var i = 0; i < array_length(altCheat); i++){
+            altCheat[i] = array_length(codes);
+            if(i < array_length(altCodes) && altCodes[i] != ""){ // altCodes is defined above with the secret alts in altName
+                codes[altCheat[i]] = convertStringToCode(altCodes[i]);
+            } else{
+                codes[altCheat[i]] = convertStringToCode(string_copy(altName[numAlts+i], 1, min(string_pos(" ", altName[numAlts+i])-1, maxAltCodeLength)));
+            }
+            codeNames[altCheat[i]] = altName[numAlts+i];
+            altCodesMap[numAlts+i] = altCheat[i];
+        }
+        
+        // ghost mode cheat
+        ghostModeCheat = array_length(codes);
+        codes[ghostModeCheat] = convertStringToCode("ghost");
+        codeNames[ghostModeCheat] = "Ghost Mode";
+        
+        // invisible mode cheat
+        invisibleModeCheat = array_length(codes);
+        codes[invisibleModeCheat] = convertStringToCode("invis");
+        codeNames[invisibleModeCheat] = "Invisible Mode";
         
         // array to keep track of activated codes (add all the codes to the codes array before this line)
         codeActivated = array_create(array_length(codes), false);
+        codePosX = array_create(array_length(codes), 0);
+        codePosY = array_create(array_length(codes), 0);
+        codePosWidth = array_create(array_length(codes), 0);
+        codePosHeight = array_create(array_length(codes), 0);
+        codeHovered = array_create(array_length(codes), false);
+        codeHeld = array_create(array_length(codes), false);
         
         // check if some codes were already activated
-        // codeActivated[wireFrameCheat] = get_color_profile_slot_r(0, wireframeAlt);
+        for(var i = numAlts; i < numTotalAlts; i++){
+            codeActivated[altCodesMap[i]] = get_color_profile_slot_r(0, i);
+        }
+        codeActivated[ghostModeCheat] = getFromSyncedVar(GIModeFirstBit, GIModeLastBit) == 1;
+        codeActivated[invisibleModeCheat] = getFromSyncedVar(GIModeFirstBit, GIModeLastBit) == 1 + GHOST_MODE;
 
         cpu_hover_init();
         break;
@@ -231,6 +329,12 @@ switch(unlimitedAltEvent){
         }
 
         cpu_hover_update();
+        
+        // reset true random to white on CSS
+        for(var i = 0; i < NUM_COLOR_ROWS; i++){
+            set_color_profile_slot(trueRandomAlt, i, 255, 255, 255);
+            set_color_profile_slot(trueRandomAltOnHitAlt, i, 255, 255, 255);
+        }
 
         var curGameAlt = get_player_color(player); // the current base game alt
 
@@ -259,6 +363,9 @@ switch(unlimitedAltEvent){
                     }
                 }
                 unlimitedAlt--; // decrease your unlimited alt
+                while(unlimitedAlt >= numAlts && !codeActivated[altCodesMap[unlimitedAlt]]){
+                    unlimitedAlt--;
+                }
             }
             prevAlt = curGameAlt;
             updateUnlimitedAlt(unlimitedAlt);
@@ -344,6 +451,9 @@ switch(unlimitedAltEvent){
                         }
                     }
                     unlimitedAlt--;
+                    while(unlimitedAlt >= numAlts && !codeActivated[altCodesMap[unlimitedAlt]]){
+                        unlimitedAlt--;
+                    }
                     updateUnlimitedAlt(unlimitedAlt);
                 }
             }else if(!menu_a_down && !menu_b_down && !menu_lb_down && !menu_rb_down ){
@@ -433,6 +543,15 @@ switch(unlimitedAltEvent){
                                     var codeIndex = array_find_index(codes, curCode);
                                     if(codeIndex >= 0){
                                         codeActivated[codeIndex] = true;
+                                        if(codeIndex == ghostModeCheat){ // ghost mode and invisible mode cannot be activated at the same time
+                                            codeActivated[invisibleModeCheat] = false;
+                                        } else if(codeIndex == invisibleModeCheat){
+                                            codeActivated[ghostModeCheat] = false;
+                                        }
+                                        curCode = "";
+                                        sound_play(codeSucessSfx);
+                                    } else{
+                                        sound_play(codeButtonBackSfx);
                                     }
                                     break;
                                 default:
@@ -464,10 +583,49 @@ switch(unlimitedAltEvent){
                     codeButtonImageIndex[i] = 0;
                 }
             }
+            
+            if(get_instance_x(cursor_id) >= codesSectionX && get_instance_x(cursor_id) <= codesSectionX + codesSectionWidth
+                && get_instance_y(cursor_id) >= codesSectionY && get_instance_y(cursor_id) <= codesSectionY + codesSectionHeight){
+                if(menu_rb_down){
+                    if(codeBaseY + codesHeight > maxCodeBaseY){
+                        codeBaseY -= 2;
+                    }
+                } else if(menu_lb_down){
+                    if(codeBaseY < minCodeBaseY){
+                        codeBaseY += 2;
+                    }
+                }
+            }
+            
+            for(var i = 0; i < array_length(codePosHeight); i++){
+                if(codePosHeight[i] != 0){
+                    if(get_instance_x(cursor_id) >= codePosX[i] && get_instance_x(cursor_id) <= codePosX[i] + codePosWidth[i]
+                        && get_instance_y(cursor_id) >= codePosY[i] && get_instance_y(cursor_id) <= codePosY[i] + codePosHeight[i]){
+                        codeHovered[i] = true;
+                        if(menu_b_pressed){
+                            codeHeld[i] = true;
+                        } else if(!menu_b_down){
+                            if(codeHeld[i]){
+                                codeHeld[i] = false;
+                                sound_play(codeButtonBackSfx);
+                                codeActivated[i] = false;
+                            }
+                        }
+                    } else{
+                        codeHovered[i] = false;
+                        codeHeld[i] = false;
+                    }
+                }
+            }
         }
         
         // update unlocked alts in color slots
-        set_color_profile_slot(0, wireframeAlt, codeActivated[wireFrameCheat], -1, -1);
+        for(var i = 0; i < array_length(altCheat); i++){
+            set_color_profile_slot(0, numAlts + i, codeActivated[altCheat[i]], -1, -1);
+        }
+        
+        // update modes in synced var
+        saveToSyncedVar(codeActivated[invisibleModeCheat] ? 1 + GHOST_MODE : (codeActivated[ghostModeCheat] ? 1 : 0), GIModeFirstBit, GIModeLastBit);
         
         break;
     case "css_draw":
@@ -549,6 +707,7 @@ switch(unlimitedAltEvent){
                 if(alt < numAlts || codeActivated[altCodesMap[alt]]){
                     var draw_color = (alt == unlimitedAlt) ? c_white : c_gray;
                     var draw_x = temp_x + 2 + 10 * j;
+                    rectDraw(draw_x-1, temp_y + bottomPartOffset + 137 - 5*i-1, draw_x + 7 +1, temp_y + bottomPartOffset + 140 - 5*i + 1, c_black);
                     rectDraw(draw_x, temp_y + bottomPartOffset + 137 - 5*i, draw_x + 7, temp_y + bottomPartOffset + 140 - 5*i, draw_color);
                     maxUnlockedAlt = alt;
                 }
@@ -575,7 +734,8 @@ switch(unlimitedAltEvent){
             codeY = temp_y;
             codeWidth = 200;
             codeHeight = 142;
-            draw_rectangle_color(codeX,codeY,codeX+codeWidth,codeY+codeHeight,c_dkgray,c_dkgray,c_dkgray,c_dkgray,-1);
+            var backgroundColor = c_dkgray;
+            draw_rectangle_color(codeX,codeY,codeX+codeWidth,codeY+codeHeight,backgroundColor,backgroundColor,backgroundColor,backgroundColor,-1);
             var codeBarX = codeX+6;
             var codeBarY = codeY+34;
             var codeBarWidth = 124;
@@ -605,8 +765,110 @@ switch(unlimitedAltEvent){
                 }
             }
             codeExitButtonPosX = codeX + 70;
-            codeExitButtonPosY = codeY + 4;
+            codeExitButtonPosY = codeY + 3;
             draw_sprite(codeExitButtonSprite, codeExitButtonImageIndex, codeExitButtonPosX, codeExitButtonPosY);
+            var codesSectionMarginX = 10;
+            var codesSectionMarginY = 24;
+            codesSectionX = codeBarX + codeBarWidth + codesSectionMarginX;
+            codesSectionY = codeBarY;
+            codesSectionWidth = codeX + codeWidth - codesSectionX - codesSectionMarginX;
+            codesSectionHeight = codeY + codeHeight - codesSectionY - codesSectionMarginY;
+            draw_rectangle_color(codesSectionX, codesSectionY, codesSectionX + codesSectionWidth, codesSectionY + codesSectionHeight, c_gray, c_gray, c_gray, c_gray, false);
+            minCodeBaseY = codesSectionY + 4;
+            maxCodeBaseY = codesSectionY + codesSectionHeight - 2 + 4;
+            if(codeBaseY == 0){
+                codeBaseY = minCodeBaseY;
+            }
+            var minDrawCodeBaseY = minCodeBaseY - 4;
+            var maxDrawCodeBaseY = maxCodeBaseY - 4;
+            var localCodeBaseY = codeBaseY;
+            var codeBaseX = codesSectionX + 4;
+            var codeBaseWidth = codesSectionX + codesSectionWidth - codeBaseX - 4;
+            // the y positions of the rectangles that cover codes that go out of bounds
+            var coverTopY = codesSectionY - 1;
+            var coverTopHeight = coverTopY - codeY;
+            var coverBottomY = codesSectionY + codesSectionHeight + 1;
+            var coverBottomHeight = codeY + codeHeight - coverBottomY;
+            for(var i = 0; i < array_length(codeActivated); i++){
+                print(i)
+                print(array_length(codeActivated))
+                if(codeActivated[i]){
+                    var colorShade = codeHeld[i] ? c_dkgray : (codeHovered[i] ? c_ltgray : c_white);
+                    var codeTitle = codeNames[i];
+                    var scale = 1;
+                    var lineSep = -1;
+                    var maxTextWidth = codeBaseWidth-4;
+                    // var maxTextHeight = min(coverTopHeight, coverBottomHeight);
+                    var maxTextHeight = 50;
+                    var textWidth = string_width_ext(codeTitle, lineSep, maxTextWidth/scale)*scale;
+                    var textHeight = string_height_ext(codeTitle, lineSep, maxTextWidth/scale)*scale;
+                    while (textWidth >= maxTextWidth || textHeight >= maxTextHeight){
+                        scale *= 0.9;
+                        textWidth = string_width_ext(codeTitle, lineSep, maxTextWidth/scale)*scale;
+                        textHeight = string_height_ext(codeTitle, lineSep, maxTextWidth/scale)*scale;
+                    }
+                    var minCodeBaseHeight = 20;
+                    var codeBaseHeight = max(textHeight, minCodeBaseHeight);
+                    var minCodeDrawY = max(localCodeBaseY, coverTopY - coverTopHeight+1);
+                    var maxCodeDrawHeight = min(codeBaseHeight, coverBottomY + coverBottomHeight - localCodeBaseY) - (minCodeDrawY - localCodeBaseY);
+                    if(localCodeBaseY < maxDrawCodeBaseY && localCodeBaseY + codeBaseHeight - minDrawCodeBaseY > 0){
+                        draw_sprite_ext(codeBackgroundSprite, 0, codeBaseX, minCodeDrawY, (codeBaseWidth+1)/2, (maxCodeDrawHeight+1)/2, 0, colorShade, 1);
+                        drawBorder(codeBaseX, minCodeDrawY, codeBaseWidth, maxCodeDrawHeight);
+                        var drawCodeTitle = codeTitle;
+                        var codeTitleX = floor(codeBaseX + codeBaseWidth/2 - (textWidth-2*scale)/2);
+                        var codeTitleY = floor(localCodeBaseY + codeBaseHeight/2 - (textHeight-11*scale)/2);
+                        var textDrawHeight = string_height_ext(drawCodeTitle, lineSep, maxTextWidth/scale)*scale;
+                        while(codeTitleY < minCodeDrawY){
+                            var firstIndexSpace = string_pos(" ", drawCodeTitle);
+                            if(firstIndexSpace == 0){
+                                break;
+                            }
+                            drawCodeTitle = string_copy(drawCodeTitle, firstIndexSpace+1, string_length(drawCodeTitle) - firstIndexSpace);
+                            var newTextDrawHeight = string_height_ext(drawCodeTitle, lineSep, maxTextWidth/scale)*scale;
+                            codeTitleY += textDrawHeight - newTextDrawHeight;
+                            textDrawHeight = newTextDrawHeight;
+                        }
+                        while(textDrawHeight > maxCodeDrawHeight + (minCodeDrawY - localCodeBaseY)){
+                            var lastIndexSpace = 0;
+                            for(var j = string_length(drawCodeTitle); j > 0; j--){ // Why don't we have access to string_last_pos?
+                                if(string_char_at(drawCodeTitle, j) == " "){
+                                    lastIndexSpace = j;
+                                    break;
+                                }
+                            }
+                            if(lastIndexSpace == 0){
+                                break;
+                            }
+                            drawCodeTitle = string_copy(drawCodeTitle, 1, lastIndexSpace-1);
+                            textDrawHeight = string_height_ext(drawCodeTitle, lineSep, maxTextWidth/scale)*scale;
+                        }
+                        textDraw(codeTitleX, codeTitleY, "fName", c_white, -1, maxTextWidth/scale, scale, true, 1, drawCodeTitle);
+                    }
+                    codePosWidth[i] = codeBaseWidth;
+                    codePosHeight[i] = max(min(codeBaseHeight, localCodeBaseY + codeBaseHeight - minDrawCodeBaseY, maxCodeBaseY - localCodeBaseY), 0);
+                    codePosX[i] = codeBaseX;
+                    codePosY[i] = max(localCodeBaseY, minDrawCodeBaseY);
+                    localCodeBaseY += codeBaseHeight + 6;
+                } else{
+                    codePosHeight[i] = 0;
+                }
+            }
+            codesHeight = localCodeBaseY - codeBaseY;
+            if(codesHeight > codesSectionHeight){
+                var scrollBarWidth = 4;
+                var scrollBarHeight = codesSectionHeight*(codesSectionHeight/codesHeight);
+                var scrollBarX = codesSectionX + codesSectionWidth - scrollBarWidth - 2;
+                var scrollBarY = codesSectionY + codesSectionHeight - scrollBarHeight - (codesSectionHeight-scrollBarHeight)*(((codeBaseY - (maxCodeBaseY - codesHeight))/(minCodeBaseY - (maxCodeBaseY - codesHeight))));
+                gpu_push_state();
+                gpu_set_blendmode_ext(bm_src_color, bm_inv_src_color);
+                draw_roundrect_color(scrollBarX, scrollBarY, scrollBarX + scrollBarWidth, scrollBarY + scrollBarHeight, c_ltgray, c_ltgray, false);
+                gpu_pop_state();
+            }
+            draw_rectangle_color(codesSectionX, coverTopY, codesSectionX + codesSectionWidth, coverTopY - coverTopHeight, backgroundColor, backgroundColor, backgroundColor, backgroundColor, false);
+            draw_rectangle_color(codesSectionX, coverBottomY, codesSectionX + codesSectionWidth, coverBottomY + coverBottomHeight, backgroundColor, backgroundColor, backgroundColor, backgroundColor, false);
+            drawBorder(codesSectionX, codesSectionY, codesSectionWidth, codesSectionHeight);
+            var codesTitleScale = 0.5;
+            textDraw(codesSectionX+6*codesTitleScale, codesSectionY-(string_height("Codes")-8)*codesTitleScale-1, "fName", c_white, -1, codesSectionWidth/codesTitleScale, codesTitleScale, true, 1, "Active Codes");
         }
         
         cpu_hover_draw();
@@ -635,9 +897,10 @@ switch(unlimitedAltEvent){
 
         // You can get rid of this part if none of your alts change the default shading [Edit optional]
         // set the shading of the color slots
-        if(unlimitedAlt == eaAlt){ // EA alt and rainbow alt need no shading (shading just looks bad on rainbow)
+        if(unlimitedAlt == eaAlt){ // EA alt needs no shading except for metal
+            var startingShade = unlimitedAlt == eaAlt ? 1 : 0;
             // set shading to 0 for every color slot
-            for(var i = 1; i < NUM_COLOR_ROWS; i++){
+            for(var i = startingShade; i < NUM_COLOR_ROWS; i++){
                 set_character_color_shading(i, 0);
             }
         } else{ // normal alt
@@ -688,7 +951,7 @@ switch(unlimitedAltEvent){
 
         // You can get rid of this if you don't have a rainbow alt [Edit optional]
         // rainbow alt
-        if(unlimitedAlt == rainbowAlt){ // make this check for your rainbow alt
+        if(unlimitedAlt == rainbowAlt){
             var hue;
             var color_hsv;
             var color_rgb;
@@ -706,70 +969,80 @@ switch(unlimitedAltEvent){
     case "init":
         // the currently selected unlimited alt
         loadUnlimitedAlt();
-
-        // [Random alt on hit feature]
-        randomAltOnHit = false; // holds whether this feature has been activated
-
-        // [Ghost mode feature]
-        ghostMode = false;
-
-        // [Invisible mode feature]
-        invisibleMode = false;
-
-        // variable to avoid changing toggle multiple times with single press
-        toggleHeld = false;
+        
+        // should random stuff also use the hidden alts
+        fullAlt = unlimitedAlt == fullRandomAlt || unlimitedAlt == fullRandomAltOnHitAlt;
 
         // [Random Alt]
         // Check if the random alt is selected
         if(unlimitedAlt == randomAlt){
-            unlimitedAlt = random_func(0, numAlts-1, true);
-            if(unlimitedAlt >= randomAlt){
-                unlimitedAlt++;
-            }
+            selectRandomAlt(fullAlt ? numTotalAlts : numAlts, [randomAlt, fullRandomAlt]);
+        }
+
+        // [Random alt on hit feature]
+        randomAltOnHit = unlimitedAlt == randomAltOnHitAlt || unlimitedAlt == fullRandomAltOnHitAlt; // holds whether this feature has been activated
+        if(randomAltOnHit){
+            selectRandomAlt(fullAlt ? numTotalAlts : numAlts, [randomAlt, fullRandomAlt, randomAltOnHitAlt, trueRandomAltOnHitAlt, fullRandomAltOnHitAlt]);
+        }
+
+        // [Ghost mode feature]
+        ghostMode = getFromSyncedVar(GIModeFirstBit, GIModeLastBit) == 1;
+
+        // [Invisible mode feature]
+        invisibleMode = getFromSyncedVar(GIModeFirstBit, GIModeLastBit) == 1 + GHOST_MODE;
+
+        // variable to avoid changing toggle multiple times with single press
+        toggleHeld = false;
+        
+        // [True Random Alt]
+        trueRandomAltOnHit = unlimitedAlt == trueRandomAltOnHitAlt;
+        selectTrueRandomAlt(trueRandomAltOnHitAlt);
+        selectTrueRandomAlt(trueRandomAlt);
+        if(unlimitedAlt == trueRandomAlt || trueRandomAltOnHit){
             init_shader();
         }
+        
+        randomOnHit = randomAltOnHit || trueRandomAltOnHit;
         set_color_profile_slot(0, 8, unlimitedAlt, -1, -1);
         break;
     case "update":
-        var toggleRequirement = taunt_down && down_down && jump_down;
-        if(toggleRequirement && special_down){
-            if(!toggleHeld){
-                toggleHeld = true;
-                randomAltOnHit = !randomAltOnHit; // activate "random alt on hit"
-            }
-        } else if(toggleRequirement && strong_down && attack_down){
-            if(!toggleHeld){
-                toggleHeld = true;
-                ghostMode = !ghostMode; // toggle ghost mode
-                invisibleMode = false;
-            }
-        } else if(toggleRequirement && strong_down && shield_down){
-            if(!toggleHeld){
-                toggleHeld = true;
-                ghostMode = false;
-                invisibleMode = !invisibleMode; // toggle invisible mode
-            }
-        } else{
-            toggleHeld = false;
-        }
+        // var toggleRequirement = taunt_down && down_down && jump_down;
+        // if(toggleRequirement && special_down){
+        //     if(!toggleHeld){
+        //         toggleHeld = true;
+        //         randomAltOnHit = !randomAltOnHit; // activate "random alt on hit"
+        //     }
+        // } else if(toggleRequirement && strong_down && attack_down){
+        //     if(!toggleHeld){
+        //         toggleHeld = true;
+        //         ghostMode = !ghostMode; // toggle ghost mode
+        //         invisibleMode = false;
+        //     }
+        // } else if(toggleRequirement && strong_down && shield_down){
+        //     if(!toggleHeld){
+        //         toggleHeld = true;
+        //         ghostMode = false;
+        //         invisibleMode = !invisibleMode; // toggle invisible mode
+        //     }
+        // } else{
+        //     toggleHeld = false;
+        // }
+        
         // You don't need this if you don't have a rainbow alt [Edit optional]
         if(unlimitedAlt == rainbowAlt){
             init_shader(); // run init_shader to update the hue
         }
-        if(randomAltOnHit){
+        if(randomOnHit){
             with pHitBox {
                 if(player == other.player && type == 2){
                     if(has_hit){
                         with other{
-                            if(HAS_RANDOM_ALT){
-                                unlimitedAlt = random_func(0, numAlts-1, true);
-                                if(unlimitedAlt >= randomAlt){
-                                    unlimitedAlt++;
-                                }
-                            } else{
-                                unlimitedAlt = random_func(0, numAlts, true);
+                            if(randomAltOnHit){
+                                selectRandomAlt(fullAlt ? numTotalAlts : numAlts, [randomAlt, fullRandomAlt, randomAltOnHitAlt, fullRandomAltOnHitAlt]);
+                            } else if(trueRandomAltOnHit){
+                                selectTrueRandomAlt(trueRandomAltOnHitAlt);
+                                init_shader();
                             }
-                            init_shader(); // update the alt visually
                         }
                     }
                 }
@@ -777,38 +1050,34 @@ switch(unlimitedAltEvent){
         }
         break;
     case "hitbox_update":
-        if(player == other.player){
-            other.has_hit = false;
+        if(randomOnHit){
+            if(player == other.player){
+                other.has_hit = false;
+            }
         }
         break;
     case "attack_update":
-        if(randomAltOnHit){
+        if(randomOnHit){
             if(has_hit && hitstop == hitstop_full-1){
-                if(HAS_RANDOM_ALT){
-                    unlimitedAlt = random_func(0, numAlts-1, true);
-                    if(unlimitedAlt >= randomAlt){
-                        unlimitedAlt++;
-                    }
-                } else{
-                    unlimitedAlt = random_func(0, numAlts, true);
+                if(randomAltOnHit){
+                    selectRandomAlt(fullAlt ? numTotalAlts : numAlts, [randomAlt, fullRandomAlt, randomAltOnHitAlt, fullRandomAltOnHitAlt]);
+                } else if(trueRandomAltOnHit){
+                    selectTrueRandomAlt(trueRandomAltOnHitAlt);
+                    init_shader();
                 }
-                init_shader(); // update the alt visually
             }
         }
         break;
     // case "hit_player":
     //     // [Random alt on hit feature]
     //     // Random alt on hit
-    //     if(randomAltOnHit && hit_player != player){ // if "random alt on hit" activated
-    //         if(HAS_RANDOM_ALT){
-    //             unlimitedAlt = random_func(0, numAlts-1, true);
-    //             if(unlimitedAlt >= randomAlt){
-    //                 unlimitedAlt++;
-    //             }
-    //         } else{
-    //             unlimitedAlt = random_func(0, numAlts, true);
-    //         }
-    //         init_shader(); // update the alt visually
+    //     if(randomOnHit && hit_player != player){ // if "random alt on hit" activated
+    //            if(randomAltOnHit){
+    //                selectRandomAlt(fullAlt ? numTotalAlts : numAlts, [randomAlt, fullRandomAlt, randomAltOnHitAlt, fullRandomAltOnHitAlt]);
+    //            } else if(trueRandomAltOnHit){
+    //                selectTrueRandomAlt(trueRandomAltOnHitAlt);
+    //                init_shader();
+    //            }
     //     }
     //     break;
     case "pre_draw":
@@ -859,9 +1128,10 @@ switch(unlimitedAltEvent){
 
 
 
-#define loadUnlimitedAlt
+#define loadUnlimitedAlt()
+var lastBitUnlimited = calcLastBitUnlimited();
 var syncedVar = get_synced_var(player);
-unlimitedAlt = (syncedVar >> FIRST_BIT_UNLIMITED) & ((1 << (LAST_BIT_UNLIMITED-FIRST_BIT_UNLIMITED+1))-1);
+unlimitedAlt = (syncedVar >> FIRST_BIT_UNLIMITED) & ((1 << (lastBitUnlimited-FIRST_BIT_UNLIMITED+1))-1);
 
 
 #define updateUnlimitedAlt(newUnlimitedAlt)
@@ -872,8 +1142,9 @@ if(("savedUnlimitedAlt" + URL) in self){
 }
 var syncedVar = get_synced_var(player);
 var newSyncedVar = 0;
-newSyncedVar += syncedVar >> (LAST_BIT_UNLIMITED+1) << (LAST_BIT_UNLIMITED+1);
-newSyncedVar += (unlimitedAlt & ((1 << (LAST_BIT_UNLIMITED-FIRST_BIT_UNLIMITED+1))-1)) << FIRST_BIT_UNLIMITED;
+var lastBitUnlimited = calcLastBitUnlimited();
+newSyncedVar += syncedVar >> (lastBitUnlimited+1) << (lastBitUnlimited+1);
+newSyncedVar += (unlimitedAlt & ((1 << (lastBitUnlimited-FIRST_BIT_UNLIMITED+1))-1)) << FIRST_BIT_UNLIMITED;
 newSyncedVar += syncedVar & ((1 << (FIRST_BIT_UNLIMITED))-1);
 set_synced_var(player, newSyncedVar);
 if(!("cursor_id" in self)){
@@ -885,6 +1156,23 @@ if(!("cursor_id" in self)){
     }
 }
 
+#define calcLastBitUnlimited()
+var lastBitUnlimited = LAST_BIT_UNLIMITED;
+lastBitUnlimited -= ceil(log2(1 + GHOST_MODE + INVISIBLE_MODE));
+return lastBitUnlimited;
+
+#define saveToSyncedVar(value, firstBit, LastBit)
+var syncedVar = get_synced_var(player);
+var newSyncedVar = 0;
+newSyncedVar += syncedVar >> (LastBit+1) << (LastBit+1);
+newSyncedVar += (value & ((1 << (LastBit-firstBit+1))-1)) << firstBit;
+newSyncedVar += syncedVar & ((1 << (firstBit))-1);
+set_synced_var(player, newSyncedVar);
+
+#define getFromSyncedVar(firstBit, LastBit)
+var syncedVar = get_synced_var(player);
+return (syncedVar >> firstBit) & ((1 << (LastBit-firstBit+1))-1);
+
 #define textDraw(x, y, font, color, lineb, linew, scale, outline, alpha, string)
 
 draw_set_font(asset_get(argument[2]));
@@ -892,7 +1180,7 @@ draw_set_font(asset_get(argument[2]));
 if argument[7]{ //outline. doesn't work lol
     for (var i = -1; i < 2; i++){
         for (var j = -1; j < 2; j++){
-            draw_text_ext_transformed_color(argument[0] + i * 2, argument[1] + j * 2, argument[9], argument[4], argument[5], argument[6], argument[6], 0, c_black, c_black, c_black, c_black, 1);
+            draw_text_ext_transformed_color(argument[0] + i * max(2 * scale, 1), argument[1] + j * max(2 * scale, 1), argument[9], argument[4], argument[5], argument[6], argument[6], 0, c_black, c_black, c_black, c_black, 1);
         }
     }
 }
@@ -1050,3 +1338,38 @@ for(var i = 1; i <= string_length(codeString); i++){
     }
 }
 return code;
+
+#define drawBorder(x, y, width, height)
+// corners
+draw_sprite_ext(codeBorderSprite, 0, x, y, 1, 1, 0, -1, 1);
+draw_sprite_ext(codeBorderSprite, 0, x + width-1, y, 1, 1, 0, -1, 1);
+draw_sprite_ext(codeBorderSprite, 0, x, y + height-1, 1, 1, 0, -1, 1);
+draw_sprite_ext(codeBorderSprite, 0, x + width-1, y + height-1, 1, 1, 0, -1, 1);
+// borders
+draw_sprite_ext(codeBorderSprite, 0, x+2, y-2, (width-3)/2, 1, 0, -1, 1);
+draw_sprite_ext(codeBorderSprite, 0, x + width+1, y+2, 1, (height-3)/2, 0, -1, 1);
+draw_sprite_ext(codeBorderSprite, 0, x+2, y + height+1, (width-3)/2, 1, 0, -1, 1);
+draw_sprite_ext(codeBorderSprite, 0, x-2, y + 2, 1, (height-3)/2, 0, -1, 1);
+
+#define selectRandomAlt(numOfAlts, altsToAvoid)
+realAlts = [];
+for(var i = 0; i < array_length(altsToAvoid); i++){
+    if(altsToAvoid[i] >= 0){
+        array_push(realAlts, altsToAvoid[i]);
+    }
+}
+array_sort(realAlts, true);
+unlimitedAlt = random_func(0, numOfAlts-array_length(realAlts), true);
+for(var i = 0; i < array_length(realAlts); i++){
+    if(unlimitedAlt >= realAlts[i]){
+        unlimitedAlt++;
+    }
+}
+init_shader();
+
+#define selectTrueRandomAlt(randomAlt)
+if(randomAlt != -1){
+    for(var i = 0; i < NUM_COLOR_ROWS; i++){
+        set_color_profile_slot(randomAlt, i, random_func(i*3, 256, true), random_func(i*3+1, 256, true), random_func(i*3+2, 256, true));
+    }
+}
